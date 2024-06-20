@@ -1,16 +1,17 @@
-// Immutable RuleDefinition Class
-class RuleDefinition {
+/// Immutable rule definition class.
+class VxRuleDefinition {
   final String id;
   final String validatorName;
   final Map<String, String> options;
 
-  const RuleDefinition({
+  /// Constructs a [VxRuleDefinition].
+  const VxRuleDefinition({
     required this.id,
     required this.validatorName,
     required this.options,
   });
 
-  // Serialize RuleDefinition to JSON
+  /// Serializes [VxRuleDefinition] to JSON.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -19,9 +20,9 @@ class RuleDefinition {
     };
   }
 
-  // Deserialize RuleDefinition from JSON
-  factory RuleDefinition.fromJson(Map<String, dynamic> json) {
-    return RuleDefinition(
+  /// Deserializes [VxRuleDefinition] from JSON.
+  factory VxRuleDefinition.fromJson(Map<String, dynamic> json) {
+    return VxRuleDefinition(
       id: json['id'],
       validatorName: json['validatorName'],
       options: Map<String, String>.from(json['options']),
@@ -29,17 +30,18 @@ class RuleDefinition {
   }
 }
 
-// Immutable RulesSet Class
-class RulesSet {
+/// Immutable rules set class.
+class VxRulesSet {
   final String id;
-  final List<RuleDefinition> rules;
+  final List<VxRuleDefinition> rules;
 
-  const RulesSet({
+  /// Constructs a [VxRulesSet].
+  const VxRulesSet({
     required this.id,
     required this.rules,
   });
 
-  // Serialize RulesSet to JSON
+  /// Serializes [VxRulesSet] to JSON.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -47,37 +49,45 @@ class RulesSet {
     };
   }
 
-  // Deserialize RulesSet from JSON
-  factory RulesSet.fromJson(Map<String, dynamic> json) {
-    return RulesSet(
+  /// Deserializes [VxRulesSet] from JSON.
+  factory VxRulesSet.fromJson(Map<String, dynamic> json) {
+    return VxRulesSet(
       id: json['id'],
       rules: (json['rules'] as List)
-          .map((ruleJson) => RuleDefinition.fromJson(ruleJson))
+          .map((ruleJson) => VxRuleDefinition.fromJson(ruleJson))
           .toList(),
     );
   }
 }
 
-// RuleDefinitionLocator Class
-class RuleDefinitionLocator {
-  final Map<String, RulesSet> _rulesSets = {};
+/// Class to manage VxRulesSet instances.
+class VxRuleDefinitionLocator {
+  final Map<String, VxRulesSet> _rulesSets = {};
+  final VxRuleDefinition defaultRuleDef;
 
-  // Register a RulesSet
-  void registerRulesSet(RulesSet rulesSet) {
+  /// Constructs a [VxRuleDefinitionLocator].
+  VxRuleDefinitionLocator({required this.defaultRuleDef});
+
+  /// Registers a [VxRulesSet].
+  void registerRulesSet(VxRulesSet rulesSet) {
     _rulesSets[rulesSet.id] = rulesSet;
   }
 
-  // Retrieve a RuleDefinition by RulesSet ID and RuleDefinition ID
-  RuleDefinition? getRuleDefinition(String rulesSetId, String ruleDefId) {
+  /// Retrieves a [VxRuleDefinition] by [rulesSetId] and [ruleDefId].
+  /// Returns [defaultRuleDef] if the rule is not found.
+  VxRuleDefinition getRuleDefinition({
+    required String rulesSetId,
+    required String ruleDefId,
+  }) {
     final rulesSet = _rulesSets[rulesSetId];
-    if (rulesSet == null) return null;
+    if (rulesSet == null) return defaultRuleDef;
     return rulesSet.rules.firstWhere(
       (rule) => rule.id == ruleDefId,
-      orElse: () => null,
+      orElse: () => defaultRuleDef,
     );
   }
 
-  // Clear all RulesSets
+  /// Clears all registered [VxRulesSet] instances.
   void clearAll() {
     _rulesSets.clear();
   }

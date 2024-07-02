@@ -56,6 +56,7 @@ void main() {
     late VxRulesSet rulesSet;
     late VxRuleDefinitionLocator locator;
     late ExMetricStoreHolder metricStoreHolder;
+    final count = ExMetricAggregations.count();
 
     setUp(() {
       defaultRule = VxRuleDefinition(
@@ -99,6 +100,18 @@ void main() {
       );
       expect(retrievedRule.id, 'default');
       expect(metricStoreHolder.store.length, 1);
+      expect(metricStoreHolder.store.aggregateAll(count).first.toJson(), {
+        'key': {
+          'name': ['validomix', 'getRuleDefinitionget-rule-definition'],
+          'dimensions': {
+            'level': 'ERROR',
+            'status': 'not-found',
+            'unit': 'count',
+            'aggregation': 'count'
+          }
+        },
+        'value': 1.0
+      });
     });
 
     test('Retrieve Non-Existent RuleSet', () {
@@ -111,6 +124,18 @@ void main() {
       );
       expect(retrievedRule.id, 'default');
       expect(metricStoreHolder.store.length, 1);
+      expect(metricStoreHolder.store.aggregateAll(count).first.toJson(), {
+        'key': {
+          'name': ['validomix', 'getRuleDefinitionget-rule-set'],
+          'dimensions': {
+            'level': 'ERROR',
+            'status': 'not-found',
+            'unit': 'count',
+            'aggregation': 'count'
+          }
+        },
+        'value': 1.0
+      });
     });
 
     test('Clear All RulesSets', () {

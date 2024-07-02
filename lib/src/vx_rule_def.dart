@@ -1,3 +1,7 @@
+import 'package:eagleyeix/metric.dart';
+
+import 'vx_metrics.dart';
+
 /// Immutable rule definition class.
 class VxRuleDefinition {
   final String id;
@@ -64,9 +68,11 @@ class VxRulesSet {
 class VxRuleDefinitionLocator {
   final Map<String, VxRulesSet> _rulesSets = {};
   final VxRuleDefinition defaultRuleDef;
+  final ExMetricStoreHolder metricStoreHolder;
 
   /// Constructs a [VxRuleDefinitionLocator].
-  VxRuleDefinitionLocator({required this.defaultRuleDef});
+  VxRuleDefinitionLocator(
+      {required this.defaultRuleDef, required this.metricStoreHolder});
 
   /// Registers a [VxRulesSet].
   void registerRulesSet(VxRulesSet rulesSet) {
@@ -80,10 +86,17 @@ class VxRuleDefinitionLocator {
     required String ruleDefId,
   }) {
     final rulesSet = _rulesSets[rulesSetId];
-    if (rulesSet == null) return defaultRuleDef;
+    if (rulesSet == null) {
+      metricStoreHolder.store.addMetric(VxMetrics.getRuleSetNotFound, 1);
+      return defaultRuleDef;
+    }
     return rulesSet.rules.firstWhere(
       (rule) => rule.id == ruleDefId,
-      orElse: () => defaultRuleDef,
+      orElse: () {
+        metricStoreHolder.store
+            .addMetric(VxMetrics.getRuleDefinitionNotFound, 1);
+        return defaultRuleDef;
+      },
     );
   }
 

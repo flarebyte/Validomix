@@ -1,3 +1,4 @@
+import 'package:eagleyeix/metric.dart';
 import 'package:test/test.dart';
 import 'package:validomix/src/vx_rule_def.dart';
 
@@ -54,6 +55,7 @@ void main() {
     late VxRuleDefinition rule1;
     late VxRulesSet rulesSet;
     late VxRuleDefinitionLocator locator;
+    late ExMetricStoreHolder metricStoreHolder;
 
     setUp(() {
       defaultRule = VxRuleDefinition(
@@ -72,8 +74,9 @@ void main() {
         id: 'rulesSet1',
         rules: [rule1],
       );
-
-      locator = VxRuleDefinitionLocator(defaultRuleDef: defaultRule);
+      metricStoreHolder = ExMetricStoreHolder();
+      locator = VxRuleDefinitionLocator(
+          defaultRuleDef: defaultRule, metricStoreHolder: metricStoreHolder);
     });
 
     test('Register and Retrieve RuleDefinition', () {
@@ -84,6 +87,7 @@ void main() {
         ruleDefId: 'rule1',
       );
       expect(retrievedRule.id, 'rule1');
+      expect(metricStoreHolder.store.isEmpty, true);
     });
 
     test('Retrieve Non-Existent RuleDefinition', () {
@@ -94,6 +98,19 @@ void main() {
         ruleDefId: 'nonExistentRule',
       );
       expect(retrievedRule.id, 'default');
+      expect(metricStoreHolder.store.length, 1);
+    });
+
+    test('Retrieve Non-Existent RuleSet', () {
+      locator.registerRulesSet(rulesSet);
+      locator.clearAll();
+
+      final retrievedRule = locator.getRuleDefinition(
+        rulesSetId: 'nonExistentrulesSet',
+        ruleDefId: 'rule1',
+      );
+      expect(retrievedRule.id, 'default');
+      expect(metricStoreHolder.store.length, 1);
     });
 
     test('Clear All RulesSets', () {

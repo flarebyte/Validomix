@@ -87,14 +87,15 @@ class VxRuleDefinitionLocator {
   }) {
     final rulesSet = _rulesSets[rulesSetId];
     if (rulesSet == null) {
-      metricStoreHolder.store.addMetric(VxMetrics.getRuleSetNotFound, 1);
+      metricStoreHolder.store
+          .addMetric(VxMetrics.getRuleSetNotFound(rulesSetId), 1);
       return defaultRuleDef;
     }
     return rulesSet.rules.firstWhere(
       (rule) => rule.id == ruleDefId,
       orElse: () {
         metricStoreHolder.store
-            .addMetric(VxMetrics.getRuleDefinitionNotFound, 1);
+            .addMetric(VxMetrics.getRuleDefinitionNotFound(ruleDefId), 1);
         return defaultRuleDef;
       },
     );

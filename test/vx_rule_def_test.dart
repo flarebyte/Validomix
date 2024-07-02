@@ -102,8 +102,11 @@ void main() {
       expect(metricStoreHolder.store.length, 1);
       expect(metricStoreHolder.store.aggregateAll(count).first.toJson(), {
         'key': {
-          'name': ['validomix', 'getRuleDefinitionget-rule-definition'],
+          'name': ['get-rule-definition'],
           'dimensions': {
+            'package': 'validomix',
+            'method': 'getRuleDefinition',
+            'id': 'nonExistentRule',
             'level': 'ERROR',
             'status': 'not-found',
             'unit': 'count',
@@ -126,8 +129,11 @@ void main() {
       expect(metricStoreHolder.store.length, 1);
       expect(metricStoreHolder.store.aggregateAll(count).first.toJson(), {
         'key': {
-          'name': ['validomix', 'getRuleDefinitionget-rule-set'],
+          'name': ['get-rule-set'],
           'dimensions': {
+            'package': 'validomix',
+            'method': 'getRuleDefinition',
+            'id': 'nonExistentrulesSet',
             'level': 'ERROR',
             'status': 'not-found',
             'unit': 'count',

@@ -100,9 +100,4 @@ class VxRuleDefinitionLocator {
       },
     );
   }
-
-  /// Clears all registered [VxRulesSet] instances.
-  void clearAll() {
-    _rulesSets.clear();
-  }
 }

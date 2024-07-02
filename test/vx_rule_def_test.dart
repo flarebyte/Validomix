@@ -119,7 +119,6 @@ void main() {
 
     test('Retrieve Non-Existent RuleSet', () {
       locator.registerRulesSet(rulesSet);
-      locator.clearAll();
 
       final retrievedRule = locator.getRuleDefinition(
         rulesSetId: 'nonExistentrulesSet',
@@ -142,17 +141,6 @@ void main() {
         },
         'value': 1.0
       });
-    });
-
-    test('Clear All RulesSets', () {
-      locator.registerRulesSet(rulesSet);
-      locator.clearAll();
-
-      final retrievedRule = locator.getRuleDefinition(
-        rulesSetId: 'rulesSet1',
-        ruleDefId: 'rule1',
-      );
-      expect(retrievedRule.id, 'default');
     });
   });
 }

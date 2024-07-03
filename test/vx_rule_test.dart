@@ -1,6 +1,5 @@
 import 'package:eagleyeix/metric.dart';
 import 'package:test/test.dart';
-import 'package:validomix/src/vx_metrics.dart';
 import 'package:validomix/validomix.dart';
 
 import 'vx_fixtures.dart';

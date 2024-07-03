@@ -105,6 +105,7 @@ void main() {
           'name': ['get-rule-definition'],
           'dimensions': {
             'package': 'validomix',
+            'class': 'VxRuleDefinitionLocator',
             'method': 'getRuleDefinition',
             'id': 'nonExistentRule',
             'level': 'ERROR',
@@ -131,6 +132,7 @@ void main() {
           'name': ['get-rule-set'],
           'dimensions': {
             'package': 'validomix',
+            'class': 'VxRuleDefinitionLocator',
             'method': 'getRuleDefinition',
             'id': 'nonExistentrulesSet',
             'level': 'ERROR',

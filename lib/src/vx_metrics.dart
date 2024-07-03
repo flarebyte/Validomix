@@ -9,6 +9,7 @@ class VxMetrics {
       'get-rule-set'
     ], dimensions: {
       ...lib,
+      'class': 'VxRuleDefinitionLocator',
       'method': 'getRuleDefinition',
       'id': id,
       ExMetricDimLevel.key: ExMetricDimLevel.error,
@@ -22,7 +23,22 @@ class VxMetrics {
       'get-rule-definition'
     ], dimensions: {
       ...lib,
+      'class': 'VxRuleDefinitionLocator',
       'method': 'getRuleDefinition',
+      'id': id,
+      ExMetricDimLevel.key: ExMetricDimLevel.error,
+      ExMetricDimStatus.key: ExMetricDimStatus.notFound,
+      ExMetricDimUnit.key: ExMetricDimUnit.count
+    });
+  }
+
+  static ExMetricKey getRuleNotFound(String id) {
+    return ExMetricKey(name: [
+      'get-rule'
+    ], dimensions: {
+      ...lib,
+      'class': 'VxRuleLocator',
+      'method': 'getRule',
       'id': id,
       ExMetricDimLevel.key: ExMetricDimLevel.error,
       ExMetricDimStatus.key: ExMetricDimStatus.notFound,

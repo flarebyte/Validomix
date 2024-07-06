@@ -3,19 +3,22 @@ import 'package:test/test.dart';
 import 'package:validomix/validomix.dart';
 
 void main() {
-  final metricStoreHolder = ExMetricStoreHolder();
-
   group('VxNumberRules - greaterThan', () {
     final successProducer = MySuccessProducer();
     final failureProducer = MyFailureProducer();
+    late ExMetricStoreHolder metricStoreHolder;
+    late VxNumberRule rule;
 
-    final rule = VxNumberRules.greaterThan<String>(
-      'example',
-      metricStoreHolder,
-      10,
-      successProducer: successProducer,
-      failureProducer: failureProducer,
-    );
+    setUp(() {
+      metricStoreHolder = ExMetricStoreHolder();
+      rule = VxNumberRules.greaterThan<String>(
+        'example',
+        metricStoreHolder,
+        10,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+      );
+    });
 
     test('value is greater than threshold', () {
       final options = {'example-threshold': '15'};
@@ -38,12 +41,52 @@ void main() {
     test('threshold key not found in options', () {
       final result = rule.validate({}, 20);
       expect(result, ['Success: 20 is valid.']);
+      final count = ExMetricAggregations.count();
+      final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
+
+      expect(aggregatedMetrics.first.toJson(), {
+        'key': {
+          'name': ['get-number-threshold'],
+          'dimensions': {
+            'package': 'validomix',
+            'class': 'VxNumberRule',
+            'class-specialisation': 'greater-than',
+            'method': 'validate',
+            'name': 'example',
+            'level': 'ERROR',
+            'status': 'not-found',
+            'unit': 'count',
+            'aggregation': 'count'
+          }
+        },
+        'value': 1.0
+      });
     });
 
     test('threshold key is invalid in options', () {
       final options = {'example-threshold': 'invalid'};
       final result = rule.validate(options, 20);
       expect(result, ['Success: 20 is valid.']);
+      final count = ExMetricAggregations.count();
+      final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
+
+      expect(aggregatedMetrics.first.toJson(), {
+        'key': {
+          'name': ['get-number-threshold'],
+          'dimensions': {
+            'package': 'validomix',
+            'class': 'VxNumberRule',
+            'class-specialisation': 'greater-than',
+            'method': 'validate',
+            'name': 'example',
+            'level': 'ERROR',
+            'error': 'format-exception',
+            'unit': 'count',
+            'aggregation': 'count'
+          }
+        },
+        'value': 1.0
+      });
     });
 
     test('edge case: value just above threshold', () {
@@ -84,6 +127,11 @@ void main() {
   });
 
   group('VxNumberRules - other comparators', () {
+    late ExMetricStoreHolder metricStoreHolder;
+
+    setUp(() {
+      metricStoreHolder = ExMetricStoreHolder();
+    });
     test('greaterThanOrEqual - value is greater than or equal to threshold',
         () {
       final rule = VxNumberRules.greaterThanOrEqual<String>(
@@ -145,13 +193,19 @@ void main() {
     final successProducer = MySuccessProducer();
     final failureProducer = MyFailureProducer();
 
-    final rule = VxNumberRules.multipleOf<String>(
-      'example',
-      metricStoreHolder,
-      5,
-      successProducer: successProducer,
-      failureProducer: failureProducer,
-    );
+    late ExMetricStoreHolder metricStoreHolder;
+    late VxNumberMultipleOf rule;
+
+    setUp(() {
+      metricStoreHolder = ExMetricStoreHolder();
+      rule = VxNumberRules.multipleOf<String>(
+        'example',
+        metricStoreHolder,
+        5,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+      );
+    });
 
     test('value is multiple of specified number', () {
       final options = {'example-multipleOf': '3'};
@@ -168,12 +222,50 @@ void main() {
     test('multipleOf key not found in options', () {
       final result = rule.validate({}, 10);
       expect(result, ['Success: 10 is valid.']);
+      final count = ExMetricAggregations.count();
+      final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
+
+      expect(aggregatedMetrics.first.toJson(), {
+        'key': {
+          'name': ['get-number-multiple-of'],
+          'dimensions': {
+            'package': 'validomix',
+            'class': 'VxNumberMultipleOf',
+            'method': 'validate',
+            'name': 'example',
+            'level': 'ERROR',
+            'status': 'not-found',
+            'unit': 'count',
+            'aggregation': 'count'
+          }
+        },
+        'value': 1.0
+      });
     });
 
     test('multipleOf key is invalid in options', () {
       final options = {'example-multipleOf': 'invalid'};
       final result = rule.validate(options, 10);
       expect(result, ['Success: 10 is valid.']);
+      final count = ExMetricAggregations.count();
+      final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
+
+      expect(aggregatedMetrics.first.toJson(), {
+        'key': {
+          'name': ['get-number-multiple-of'],
+          'dimensions': {
+            'package': 'validomix',
+            'class': 'VxNumberMultipleOf',
+            'method': 'validate',
+            'name': 'example',
+            'level': 'ERROR',
+            'error': 'format-exception',
+            'unit': 'count',
+            'aggregation': 'count'
+          }
+        },
+        'value': 1.0
+      });
     });
 
     test('edge case: value is zero', () {

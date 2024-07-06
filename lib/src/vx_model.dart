@@ -15,6 +15,9 @@ abstract class VxMessageProducer<MSG, V> {
 
 /// An abstract class defining the interface for number comparison.
 abstract class VxNumberComparator {
+  /// The name of the comparator.
+  String get name;
+
   /// Compares the given [value] against a [threshold].
   ///
   /// Returns `true` if the comparison meets the criteria, otherwise `false`.

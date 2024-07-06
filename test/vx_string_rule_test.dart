@@ -23,10 +23,11 @@ void main() {
     group('VxCharsLessThanRule', () {
       test('validate with producers', () {
         final rule = VxStringRules.charsLessThan<String>(
-            'test', metricStoreHolder, 10,
+            'test', metricStoreHolder, 1,
             successProducer: successProducer, failureProducer: failureProducer);
-        expect(rule.validate({}, 'short'), ['Success: Condition met.']);
-        expect(rule.validate({}, 'this is a long string'),
+        expect(rule.validate({'test-maxChars': "11"}, 'short'),
+            ['Success: Condition met.']);
+        expect(rule.validate({'test-maxChars': "11"}, 'this is a long string'),
             ['Failure: Condition not met.']);
       });
 

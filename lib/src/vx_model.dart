@@ -12,3 +12,11 @@ abstract class VxStringParser<V> {
 abstract class VxMessageProducer<MSG, V> {
   MSG produce(Map<String, String> options, V value);
 }
+
+/// An abstract class defining the interface for number comparison.
+abstract class VxNumberComparator {
+  /// Compares the given [value] against a [threshold].
+  ///
+  /// Returns `true` if the comparison meets the criteria, otherwise `false`.
+  bool compare(num value, num threshold);
+}

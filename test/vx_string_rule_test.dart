@@ -25,9 +25,9 @@ void main() {
         final rule = VxStringRules.charsLessThan<String>(
             'test', metricStoreHolder, 1,
             successProducer: successProducer, failureProducer: failureProducer);
-        expect(rule.validate({'test-maxChars': "11"}, 'short'),
+        expect(rule.validate({'test-maxChars': "10"}, 'short'),
             ['Success: Condition met.']);
-        expect(rule.validate({'test-maxChars': "11"}, 'this is a long string'),
+        expect(rule.validate({'test-maxChars': "10"}, 'this is a long string'),
             ['Failure: Condition not met.']);
       });
 
@@ -78,6 +78,75 @@ void main() {
             'dimensions': {
               'package': 'validomix',
               'class': 'VxCharsLessThanRule',
+              'method': 'validate',
+              'name': 'test',
+              'level': 'ERROR',
+              'error': 'format-exception',
+              'unit': 'count',
+              'aggregation': 'count'
+            }
+          },
+          'value': 1.0
+        });
+      });
+    });
+    group('VxCharsMoreThanRule', () {
+      test('validate with producers', () {
+        final rule = VxStringRules.charsMoreThan<String>(
+            'test', metricStoreHolder, 10,
+            successProducer: successProducer, failureProducer: failureProducer);
+        expect(rule.validate({'test-minChars': '10'}, 'this is a long string'),
+            ['Success: Condition met.']);
+        expect(rule.validate({'test-minChars': '10'}, 'short'),
+            ['Failure: Condition not met.']);
+      });
+
+      test('validate without producers', () {
+        final ruleWithoutProducers =
+            VxStringRules.charsMoreThan<String>('test', metricStoreHolder, 10);
+        expect(ruleWithoutProducers.validate({}, 'this is a long string'), []);
+        expect(ruleWithoutProducers.validate({}, 'short'), []);
+      });
+
+      test('KeyNotFound metric logging', () {
+        final ruleWithoutProducers =
+            VxStringRules.charsMoreThan<String>('test', metricStoreHolder, 10);
+        ruleWithoutProducers.validate({}, 'short');
+
+        final count = ExMetricAggregations.count();
+        final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
+
+        expect(aggregatedMetrics.first.toJson(), {
+          'key': {
+            'name': ['get-min-chars'],
+            'dimensions': {
+              'package': 'validomix',
+              'class': 'VxCharsMoreThanRule',
+              'method': 'validate',
+              'name': 'test',
+              'level': 'ERROR',
+              'status': 'not-found',
+              'unit': 'count',
+              'aggregation': 'count'
+            }
+          },
+          'value': 1.0
+        });
+      });
+      test('KeyInvalid metric logging', () {
+        final ruleWithoutProducers =
+            VxStringRules.charsMoreThan<String>('test', metricStoreHolder, 10);
+        ruleWithoutProducers.validate({'test-minChars': 'invalid'}, 'short');
+
+        final count = ExMetricAggregations.count();
+        final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
+
+        expect(aggregatedMetrics.first.toJson(), {
+          'key': {
+            'name': ['get-min-chars'],
+            'dimensions': {
+              'package': 'validomix',
+              'class': 'VxCharsMoreThanRule',
               'method': 'validate',
               'name': 'test',
               'level': 'ERROR',

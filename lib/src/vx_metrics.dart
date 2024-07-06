@@ -46,12 +46,12 @@ class VxMetrics {
     });
   }
 
-  static ExMetricKey getMaxCharsKeyNotFound(String name) {
+  static ExMetricKey getMaxCharsKeyNotFound(String className, String name) {
     return ExMetricKey(name: [
       'get-max-chars'
     ], dimensions: {
       ...lib,
-      'class': 'VxCharsLessThanRule',
+      'class': className,
       'method': 'validate',
       'name': name,
       ExMetricDimLevel.key: ExMetricDimLevel.error,
@@ -60,12 +60,12 @@ class VxMetrics {
     });
   }
 
-  static ExMetricKey getMaxCharsKeyInvalid(String name) {
+  static ExMetricKey getMaxCharsKeyInvalid(String className, String name) {
     return ExMetricKey(name: [
       'get-max-chars'
     ], dimensions: {
       ...lib,
-      'class': 'VxCharsLessThanRule',
+      'class': className,
       'method': 'validate',
       'name': name,
       ExMetricDimLevel.key: ExMetricDimLevel.error,
@@ -74,12 +74,12 @@ class VxMetrics {
     });
   }
 
-  static ExMetricKey getMinCharsKeyNotFound(String name) {
+  static ExMetricKey getMinCharsKeyNotFound(String className, String name) {
     return ExMetricKey(name: [
       'get-min-chars'
     ], dimensions: {
       ...lib,
-      'class': 'VxCharsMoreThanRule',
+      'class': className,
       'method': 'validate',
       'name': name,
       ExMetricDimLevel.key: ExMetricDimLevel.error,
@@ -88,12 +88,12 @@ class VxMetrics {
     });
   }
 
-  static ExMetricKey getMinCharsKeyInvalid(String name) {
+  static ExMetricKey getMinCharsKeyInvalid(String className, String name) {
     return ExMetricKey(name: [
       'get-min-chars'
     ], dimensions: {
       ...lib,
-      'class': 'VxCharsMoreThanRule',
+      'class': className,
       'method': 'validate',
       'name': name,
       ExMetricDimLevel.key: ExMetricDimLevel.error,
@@ -102,12 +102,12 @@ class VxMetrics {
     });
   }
 
-  static ExMetricKey getMaxWordsKeyNotFound(String name) {
+  static ExMetricKey getMaxWordsKeyNotFound(String className, String name) {
     return ExMetricKey(name: [
       'get-max-words'
     ], dimensions: {
       ...lib,
-      'class': 'VxWordsLessThanRule',
+      'class': className,
       'method': 'validate',
       'name': name,
       ExMetricDimLevel.key: ExMetricDimLevel.error,
@@ -116,12 +116,12 @@ class VxMetrics {
     });
   }
 
-  static ExMetricKey getMaxWordsKeyInvalid(String name) {
+  static ExMetricKey getMaxWordsKeyInvalid(String className, String name) {
     return ExMetricKey(name: [
       'get-max-words'
     ], dimensions: {
       ...lib,
-      'class': 'VxWordsLessThanRule',
+      'class': className,
       'method': 'validate',
       'name': name,
       ExMetricDimLevel.key: ExMetricDimLevel.error,
@@ -130,12 +130,12 @@ class VxMetrics {
     });
   }
 
-  static ExMetricKey getMinWordsKeyNotFound(String name) {
+  static ExMetricKey getMinWordsKeyNotFound(String className, String name) {
     return ExMetricKey(name: [
       'get-min-words'
     ], dimensions: {
       ...lib,
-      'class': 'VxWordsMoreThanOrEqualRule',
+      'class': className,
       'method': 'validate',
       'name': name,
       ExMetricDimLevel.key: ExMetricDimLevel.error,
@@ -144,12 +144,12 @@ class VxMetrics {
     });
   }
 
-  static ExMetricKey getMinWordsKeyInvalid(String name) {
+  static ExMetricKey getMinWordsKeyInvalid(String className, String name) {
     return ExMetricKey(name: [
       'get-min-words'
     ], dimensions: {
       ...lib,
-      'class': 'VxWordsMoreThanOrEqualRule',
+      'class': className,
       'method': 'validate',
       'name': name,
       ExMetricDimLevel.key: ExMetricDimLevel.error,

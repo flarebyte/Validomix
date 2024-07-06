@@ -131,7 +131,7 @@ void main() {
             'name': ['get-max-chars'],
             'dimensions': {
               'package': 'validomix',
-              'class': 'VxCharsLessThanRule',
+              'class': 'VxCharsLessThanOrEqualRule',
               'method': 'validate',
               'name': 'test',
               'level': 'ERROR',
@@ -157,7 +157,7 @@ void main() {
             'name': ['get-max-chars'],
             'dimensions': {
               'package': 'validomix',
-              'class': 'VxCharsLessThanRule',
+              'class': 'VxCharsLessThanOrEqualRule',
               'method': 'validate',
               'name': 'test',
               'level': 'ERROR',
@@ -271,7 +271,7 @@ void main() {
             'name': ['get-min-chars'],
             'dimensions': {
               'package': 'validomix',
-              'class': 'VxCharsMoreThanRule',
+              'class': 'VxCharsMoreThanOrEqualRule',
               'method': 'validate',
               'name': 'test',
               'level': 'ERROR',
@@ -296,7 +296,7 @@ void main() {
             'name': ['get-min-chars'],
             'dimensions': {
               'package': 'validomix',
-              'class': 'VxCharsMoreThanRule',
+              'class': 'VxCharsMoreThanOrEqualRule',
               'method': 'validate',
               'name': 'test',
               'level': 'ERROR',
@@ -317,8 +317,8 @@ void main() {
             successProducer: successProducer, failureProducer: failureProducer);
         expect(rule.validate({'test-maxWords': '3'}, createWords(2)),
             ['Success: Condition met.']);
-        expect(
-            rule.validate({}, createWords(3)), ['Failure: Condition not met.']);
+        expect(rule.validate({'test-maxWords': '3'}, createWords(3)),
+            ['Failure: Condition not met.']);
       });
 
       test('validate without producers', () {
@@ -387,8 +387,8 @@ void main() {
             successProducer: successProducer, failureProducer: failureProducer);
         expect(rule.validate({'test-maxWords': '3'}, createWords(3)),
             ['Success: Condition met.']);
-        expect(
-            rule.validate({}, createWords(4)), ['Failure: Condition not met.']);
+        expect(rule.validate({'test-maxWords': '3'}, createWords(4)),
+            ['Failure: Condition not met.']);
       });
 
       test('validate without producers', () {
@@ -411,7 +411,7 @@ void main() {
             'name': ['get-max-words'],
             'dimensions': {
               'package': 'validomix',
-              'class': 'VxWordsLessThanRule',
+              'class': 'VxWordsLessThanOrEqualRule',
               'method': 'validate',
               'name': 'test',
               'level': 'ERROR',
@@ -437,7 +437,7 @@ void main() {
             'name': ['get-max-words'],
             'dimensions': {
               'package': 'validomix',
-              'class': 'VxWordsLessThanRule',
+              'class': 'VxWordsLessThanOrEqualRule',
               'method': 'validate',
               'name': 'test',
               'level': 'ERROR',
@@ -481,7 +481,7 @@ void main() {
             'name': ['get-min-words'],
             'dimensions': {
               'package': 'validomix',
-              'class': 'VxWordsMoreThanOrEqualRule',
+              'class': 'VxWordsMoreThanRule',
               'method': 'validate',
               'name': 'test',
               'level': 'ERROR',
@@ -507,7 +507,7 @@ void main() {
             'name': ['get-min-words'],
             'dimensions': {
               'package': 'validomix',
-              'class': 'VxWordsMoreThanOrEqualRule',
+              'class': 'VxWordsMoreThanRule',
               'method': 'validate',
               'name': 'test',
               'level': 'ERROR',

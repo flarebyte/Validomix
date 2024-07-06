@@ -20,14 +20,14 @@ class VxCharsLessThanRule<MSG> extends VxBaseRule<MSG> {
     final maxChars = int.tryParse(options[maxCharsKey] ?? '');
 
     if (!options.containsKey(maxCharsKey)) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getMaxCharsKeyNotFound(name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getMaxCharsKeyNotFound('VxCharsLessThanRule', name), 1);
       return _evaluate(value, defaultMaxChars, options);
     }
 
     if (maxChars == null) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getMaxCharsKeyInvalid(name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getMaxCharsKeyInvalid('VxCharsLessThanRule', name), 1);
       return _evaluate(value, defaultMaxChars, options);
     }
 
@@ -65,14 +65,14 @@ class VxCharsMoreThanRule<MSG> extends VxBaseRule<MSG> {
     final minChars = int.tryParse(options[minCharsKey] ?? '');
 
     if (!options.containsKey(minCharsKey)) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getMinCharsKeyNotFound(name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getMinCharsKeyNotFound('VxCharsMoreThanRule', name), 1);
       return _evaluate(value, defaultMinChars, options);
     }
 
     if (minChars == null) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getMinCharsKeyInvalid(name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getMinCharsKeyInvalid('VxCharsMoreThanRule', name), 1);
       return _evaluate(value, defaultMinChars, options);
     }
 
@@ -111,14 +111,16 @@ class VxCharsLessThanOrEqualRule<MSG> extends VxBaseRule<MSG> {
     final maxChars = int.tryParse(options[maxCharsKey] ?? '');
 
     if (!options.containsKey(maxCharsKey)) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getMaxCharsKeyNotFound(name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getMaxCharsKeyNotFound('VxCharsLessThanOrEqualRule', name),
+          1);
       return _evaluate(value, defaultMaxChars, options);
     }
 
     if (maxChars == null) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getMaxCharsKeyInvalid(name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getMaxCharsKeyInvalid('VxCharsLessThanOrEqualRule', name),
+          1);
       return _evaluate(value, defaultMaxChars, options);
     }
 
@@ -157,14 +159,16 @@ class VxCharsMoreThanOrEqualRule<MSG> extends VxBaseRule<MSG> {
     final minChars = int.tryParse(options[minCharsKey] ?? '');
 
     if (!options.containsKey(minCharsKey)) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getMinCharsKeyNotFound(name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getMinCharsKeyNotFound('VxCharsMoreThanOrEqualRule', name),
+          1);
       return _evaluate(value, defaultMinChars, options);
     }
 
     if (minChars == null) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getMinCharsKeyInvalid(name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getMinCharsKeyInvalid('VxCharsMoreThanOrEqualRule', name),
+          1);
       return _evaluate(value, defaultMinChars, options);
     }
 
@@ -202,14 +206,14 @@ class VxWordsLessThanRule<MSG> extends VxBaseRule<MSG> {
     final maxWords = int.tryParse(options[maxWordsKey] ?? '');
 
     if (!options.containsKey(maxWordsKey)) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getMaxWordsKeyNotFound(name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getMaxWordsKeyNotFound('VxWordsLessThanRule', name), 1);
       return _evaluate(value, defaultMaxWords, options);
     }
 
     if (maxWords == null) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getMaxWordsKeyInvalid(name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getMaxWordsKeyInvalid('VxWordsLessThanRule', name), 1);
       return _evaluate(value, defaultMaxWords, options);
     }
 
@@ -248,14 +252,14 @@ class VxWordsMoreThanRule<MSG> extends VxBaseRule<MSG> {
     final minWords = int.tryParse(options[minWordsKey] ?? '');
 
     if (!options.containsKey(minWordsKey)) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getMinWordsKeyNotFound(name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getMinWordsKeyNotFound('VxWordsMoreThanRule', name), 1);
       return _evaluate(value, defaultMinWords, options);
     }
 
     if (minWords == null) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getMinWordsKeyInvalid(name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getMinWordsKeyInvalid('VxWordsMoreThanRule', name), 1);
       return _evaluate(value, defaultMinWords, options);
     }
 
@@ -302,14 +306,16 @@ class VxWordsMoreThanOrEqualRule<MSG> extends VxBaseRule<MSG> {
     final minWords = int.tryParse(options[minWordsKey] ?? '');
 
     if (!options.containsKey(minWordsKey)) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getMinWordsKeyNotFound(name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getMinWordsKeyNotFound('VxWordsMoreThanOrEqualRule', name),
+          1);
       return _evaluate(value, defaultMinWords, options);
     }
 
     if (minWords == null) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getMinWordsKeyInvalid(name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getMinWordsKeyInvalid('VxWordsMoreThanOrEqualRule', name),
+          1);
       return _evaluate(value, defaultMinWords, options);
     }
 
@@ -349,14 +355,16 @@ class VxWordsLessThanOrEqualRule<MSG> extends VxBaseRule<MSG> {
     final maxWords = int.tryParse(options[maxWordsKey] ?? '');
 
     if (!options.containsKey(maxWordsKey)) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getMaxWordsKeyNotFound(name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getMaxWordsKeyNotFound('VxWordsLessThanOrEqualRule', name),
+          1);
       return _evaluate(value, defaultMaxWords, options);
     }
 
     if (maxWords == null) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getMaxWordsKeyInvalid(name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getMaxWordsKeyInvalid('VxWordsLessThanOrEqualRule', name),
+          1);
       return _evaluate(value, defaultMaxWords, options);
     }
 

@@ -13,6 +13,10 @@ String createString(int n) {
   return List.generate(n, (index) => 'X').join();
 }
 
+String createWords(int n) {
+  return List.generate(n, (index) => 'word$index').join(' ');
+}
+
 void main() {
   group('VxStringRules', () {
     final successProducer = SimpleMessageProducer('Success: Condition met.');
@@ -293,6 +297,76 @@ void main() {
             'dimensions': {
               'package': 'validomix',
               'class': 'VxCharsMoreThanRule',
+              'method': 'validate',
+              'name': 'test',
+              'level': 'ERROR',
+              'error': 'format-exception',
+              'unit': 'count',
+              'aggregation': 'count'
+            }
+          },
+          'value': 1.0
+        });
+      });
+    });
+
+    group('VxWordsLessThanRule', () {
+      test('validate with producers', () {
+        final rule = VxStringRules.wordsLessThan<String>(
+            'test', metricStoreHolder, 3,
+            successProducer: successProducer, failureProducer: failureProducer);
+        expect(rule.validate({}, createWords(2)), ['Success: Condition met.']);
+        expect(
+            rule.validate({}, createWords(3)), ['Failure: Condition not met.']);
+      });
+
+      test('validate without producers', () {
+        final ruleWithoutProducers =
+            VxStringRules.wordsLessThan<String>('test', metricStoreHolder, 3);
+        expect(ruleWithoutProducers.validate({}, createWords(2)), []);
+        expect(ruleWithoutProducers.validate({}, createWords(3)), []);
+      });
+
+      test('KeyNotFound metric logging', () {
+        final ruleWithoutProducers =
+            VxStringRules.wordsLessThan<String>('test', metricStoreHolder, 3);
+        ruleWithoutProducers.validate({}, createWords(3));
+
+        final count = ExMetricAggregations.count();
+        final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
+
+        expect(aggregatedMetrics.first.toJson(), {
+          'key': {
+            'name': ['get-max-words'],
+            'dimensions': {
+              'package': 'validomix',
+              'class': 'VxWordsLessThanRule',
+              'method': 'validate',
+              'name': 'test',
+              'level': 'ERROR',
+              'status': 'not-found',
+              'unit': 'count',
+              'aggregation': 'count'
+            }
+          },
+          'value': 1.0
+        });
+      });
+      test('KeyInvalid metric logging', () {
+        final ruleWithoutProducers =
+            VxStringRules.wordsLessThan<String>('test', metricStoreHolder, 3);
+        ruleWithoutProducers
+            .validate({'test-maxWords': 'invalid'}, createWords(3));
+
+        final count = ExMetricAggregations.count();
+        final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
+
+        expect(aggregatedMetrics.first.toJson(), {
+          'key': {
+            'name': ['get-max-words'],
+            'dimensions': {
+              'package': 'validomix',
+              'class': 'VxWordsLessThanRule',
               'method': 'validate',
               'name': 'test',
               'level': 'ERROR',

@@ -46,21 +46,46 @@ void main() {
         final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
 
         expect(aggregatedMetrics.first.toJson(), {
-          //todo for KeyNotFound});
+          'key': {
+            'name': ['get-max-chars'],
+            'dimensions': {
+              'package': 'validomix',
+              'class': 'VxCharsLessThanRule',
+              'method': 'validate',
+              'name': 'test',
+              'level': 'ERROR',
+              'status': 'not-found',
+              'unit': 'count',
+              'aggregation': 'count'
+            }
+          },
+          'value': 1.0
         });
+      });
+      test('KeyInvalid metric logging', () {
+        final ruleWithoutProducers =
+            VxStringRules.charsLessThan<String>('test', metricStoreHolder, 10);
+        ruleWithoutProducers
+            .validate({'test-maxChars': 'invalid'}, 'this is a long string');
 
-        test('KeyInvalid metric logging', () {
-          final ruleWithoutProducers = VxStringRules.charsLessThan<String>(
-              'test', metricStoreHolder, 10);
-          ruleWithoutProducers
-              .validate({'test-maxChars': 'invalid'}, 'this is a long string');
+        final count = ExMetricAggregations.count();
+        final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
 
-          final count = ExMetricAggregations.count();
-          final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
-
-          expect(aggregatedMetrics.first.toJson(), {
-            //todo for KeyInvalid});
-          });
+        expect(aggregatedMetrics.first.toJson(), {
+          'key': {
+            'name': ['get-max-chars'],
+            'dimensions': {
+              'package': 'validomix',
+              'class': 'VxCharsLessThanRule',
+              'method': 'validate',
+              'name': 'test',
+              'level': 'ERROR',
+              'error': 'format-exception',
+              'unit': 'count',
+              'aggregation': 'count'
+            }
+          },
+          'value': 1.0
         });
       });
     });

@@ -450,5 +450,75 @@ void main() {
         });
       });
     });
+    group('VxWordsMoreThanRule', () {
+      test('validate with producers', () {
+        final rule = VxStringRules.wordsMoreThan<String>(
+            'test', metricStoreHolder, 3,
+            successProducer: successProducer, failureProducer: failureProducer);
+        expect(rule.validate({'test-minWords': '3'}, createWords(4)),
+            ['Success: Condition met.']);
+        expect(rule.validate({'test-minWords': '3'}, createWords(2)),
+            ['Failure: Condition not met.']);
+      });
+
+      test('validate without producers', () {
+        final ruleWithoutProducers =
+            VxStringRules.wordsMoreThan<String>('test', metricStoreHolder, 3);
+        expect(ruleWithoutProducers.validate({}, createWords(4)), []);
+        expect(ruleWithoutProducers.validate({}, createWords(2)), []);
+      });
+
+      test('KeyNotFound metric logging', () {
+        final ruleWithoutProducers =
+            VxStringRules.wordsMoreThan<String>('test', metricStoreHolder, 3);
+        ruleWithoutProducers.validate({}, createWords(2));
+
+        final count = ExMetricAggregations.count();
+        final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
+
+        expect(aggregatedMetrics.first.toJson(), {
+          'key': {
+            'name': ['get-min-words'],
+            'dimensions': {
+              'package': 'validomix',
+              'class': 'VxWordsMoreThanOrEqualRule',
+              'method': 'validate',
+              'name': 'test',
+              'level': 'ERROR',
+              'status': 'not-found',
+              'unit': 'count',
+              'aggregation': 'count'
+            }
+          },
+          'value': 1.0
+        });
+      });
+      test('KeyInvalid metric logging', () {
+        final ruleWithoutProducers =
+            VxStringRules.wordsMoreThan<String>('test', metricStoreHolder, 3);
+        ruleWithoutProducers
+            .validate({'test-minWords': 'invalid'}, createWords(2));
+
+        final count = ExMetricAggregations.count();
+        final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
+
+        expect(aggregatedMetrics.first.toJson(), {
+          'key': {
+            'name': ['get-min-words'],
+            'dimensions': {
+              'package': 'validomix',
+              'class': 'VxWordsMoreThanOrEqualRule',
+              'method': 'validate',
+              'name': 'test',
+              'level': 'ERROR',
+              'error': 'format-exception',
+              'unit': 'count',
+              'aggregation': 'count'
+            }
+          },
+          'value': 1.0
+        });
+      });
+    });
   });
 }

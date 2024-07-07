@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:validomix/validomix.dart';
 
 /// A class providing example rules for testing purposes.
@@ -57,4 +59,78 @@ class _MinLengthRule extends VxBaseRule<String> {
     }
     return [];
   }
+}
+
+/// A class providing static methods for generating iterables for testing.
+class IterableFixtures {
+  // Prevents instantiation of the class.
+  IterableFixtures._();
+
+  /// Generates a List of strings with `n` items.
+  static List<String> createStringList(int n) {
+    return List<String>.generate(n, (index) => 'String $index');
+  }
+
+  /// Generates a List of integers with `n` items.
+  static List<int> createIntList(int n) {
+    return List<int>.generate(n, (index) => index);
+  }
+
+  /// Generates a LinkedList of strings with `n` items.
+  static LinkedList<StringNode> createStringLinkedList(int n) {
+    LinkedList<StringNode> linkedList = LinkedList<StringNode>();
+    for (int i = 0; i < n; i++) {
+      linkedList.add(StringNode('String $i'));
+    }
+    return linkedList;
+  }
+
+  /// Generates a LinkedList of integers with `n` items.
+  static LinkedList<IntNode> createIntLinkedList(int n) {
+    LinkedList<IntNode> linkedList = LinkedList<IntNode>();
+    for (int i = 0; i < n; i++) {
+      linkedList.add(IntNode(i));
+    }
+    return linkedList;
+  }
+
+  /// Generates a List of Maps with `n` items.
+  static List<Map<String, String>> createMapList(int n) {
+    return List<Map<String, String>>.generate(
+        n, (index) => {'key': 'value $index'});
+  }
+
+  /// Generates a Set of integers with `n` items.
+  static Set<int> createIntSet(int n) {
+    return Set<int>.from(List<int>.generate(n, (index) => index));
+  }
+
+  /// Generates a Queue of strings with `n` items.
+  static Queue<String> createStringQueue(int n) {
+    return Queue<String>.from(
+        List<String>.generate(n, (index) => 'String $index'));
+  }
+
+  /// Generates a Queue of integers with `n` items.
+  static Queue<int> createIntQueue(int n) {
+    return Queue<int>.from(List<int>.generate(n, (index) => index));
+  }
+}
+
+/// A node for a linked list of strings.
+final class StringNode extends LinkedListEntry<StringNode> {
+  final String value;
+  StringNode(this.value);
+
+  @override
+  String toString() => value;
+}
+
+/// A node for a linked list of integers.
+final class IntNode extends LinkedListEntry<IntNode> {
+  final int value;
+  IntNode(this.value);
+
+  @override
+  String toString() => value.toString();
 }

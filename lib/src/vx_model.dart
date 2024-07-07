@@ -23,3 +23,14 @@ abstract class VxNumberComparator {
   /// Returns `true` if the comparison meets the criteria, otherwise `false`.
   bool compare(num value, num threshold);
 }
+
+// An abstract class defining the interface for comparison of the length of iterables.
+abstract class VxIterableLengthComparator<V> {
+  /// The name of the comparator.
+  String get name;
+
+  /// Compares the given the length of [values] against a [threshold].
+  ///
+  /// Returns `true` if the comparison meets the criteria, otherwise `false`.
+  bool compare(Iterable<V> values, int threshold);
+}

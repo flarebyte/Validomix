@@ -9,3 +9,4 @@ export 'src/vx_string_rule.dart';
 export 'src/vx_number_comparator.dart';
 export 'src/vx_number_rule.dart';
 export 'src/vx_iterable_length_comparator.dart';
+export 'src/vx_integer_cipher.dart';

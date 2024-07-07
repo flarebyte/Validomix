@@ -134,3 +134,55 @@ final class IntNode extends LinkedListEntry<IntNode> {
   @override
   String toString() => value.toString();
 }
+
+class ComponentNameManagerFixtures {
+  // Good examples of component names
+  static const List<String> validComponentNames = [
+    'root',
+    'root/parent',
+    'root/parent/child',
+    'system/configuration/setting',
+    'user/profile/details',
+    'product/category/item'
+  ];
+
+  // Bad examples of component names
+  static const List<String> invalidComponentNames = [
+    '', // Empty name
+    ' root', // Leading space
+    'parent ', // Trailing space
+    'root//child', // Double separator
+    'root/parent/', // Trailing separator
+    'root#parent', // Invalid separator
+    '/root/parent', // Leading separator
+    'root/parent/child ' // Trailing space
+  ];
+
+  // Good examples of option keys
+  static const List<String> validOptionKeys = [
+    'root#option',
+    'root/parent#option',
+    'root/parent/child#option',
+    'system/configuration#setting',
+    'user/profile#details',
+    'product/category#item',
+    'root~optionalOption',
+    'root/parent~optionalSetting',
+  ];
+
+  // Bad examples of option keys
+  static const List<String> invalidOptionKeys = [
+    '', // Empty key
+    'root#', // Missing option
+    '#option', // Missing component
+    'root/parent#', // Missing option
+    'root##option', // Double mandatory separator
+    'root~~optionalOption', // Double optional separator
+    'root/parent/child#option#extra', // Nested option separators
+    ' root#option', // Leading space in component
+    'root #option', // Space before separator
+    'root# option', // Space after separator
+    'root#option ', // Trailing space
+    'root~option#extra', // Mixed separators
+  ];
+}

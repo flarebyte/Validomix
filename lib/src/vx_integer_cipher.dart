@@ -1,3 +1,5 @@
+import 'dart:math';
+
 /// A class that provides a reversible pseudo-random number generation
 /// based on XOR cipher. Given an integer and a seed, it can produce
 /// a pseudo-random number and reverse it back to the original integer.
@@ -6,8 +8,10 @@ class VxIntegerCipher {
 
   /// Creates an instance of [VxIntegerCipher] with the provided seed.
   ///
+  /// If no seed is provided, a random seed will be generated.
+  ///
   /// The [seed] is used for the XOR cipher operations.
-  VxIntegerCipher(this._seed);
+  VxIntegerCipher([int? seed]) : _seed = seed ?? Random().nextInt(1 << 32);
 
   /// Generates a pseudo-random number from the given integer [n].
   ///
@@ -28,4 +32,7 @@ class VxIntegerCipher {
   int decrypt(int prn) {
     return prn ^ _seed;
   }
+
+  /// Returns the current seed used for the XOR cipher operations.
+  int get seed => _seed;
 }

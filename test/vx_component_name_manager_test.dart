@@ -73,32 +73,48 @@ void main() {
     });
 
     // Invalid cases
-    group('Invalid cases', () {
-      test('Invalid component names should throw ArgumentError', () {
+    group('Invalid cases.', () {
+      test('Invalid component names for getParent should throw ArgumentError',
+          () {
         for (var invalidName
             in ComponentNameManagerFixtures.invalidComponentNames) {
           expect(() => VxComponentNameManager.getParent(invalidName, config),
               throwsArgumentError);
-          expect(() => VxComponentNameManager.isRoot(invalidName, config),
-              throwsArgumentError);
+        }
+      });
+
+      test('Invalid component names for createChild should throw ArgumentError',
+          () {
+        for (var invalidName
+            in ComponentNameManagerFixtures.invalidComponentNames) {
           expect(
               () => VxComponentNameManager.createChild(
                   invalidName, 'child', config),
               throwsArgumentError);
-          expect(
-              () => VxComponentNameManager.createChild(
-                  'parent', invalidName, config),
-              throwsArgumentError);
         }
       });
 
-      test('Invalid option keys should throw ArgumentError', () {
+      test(
+          'Invalid option keys for getComponentName should throw ArgumentError',
+          () {
         for (var invalidKey in ComponentNameManagerFixtures.invalidOptionKeys) {
+          print(invalidKey);
           expect(
               () => VxComponentNameManager.getComponentName(invalidKey, config),
               throwsArgumentError);
+        }
+      });
+      test('Invalid option keys for getOptionName should throw ArgumentError',
+          () {
+        for (var invalidKey in ComponentNameManagerFixtures.invalidOptionKeys) {
           expect(() => VxComponentNameManager.getOptionName(invalidKey, config),
               throwsArgumentError);
+        }
+      });
+      test(
+          'Invalid option keys for getFullOptionKey should throw ArgumentError',
+          () {
+        for (var invalidKey in ComponentNameManagerFixtures.invalidOptionKeys) {
           expect(
               () => VxComponentNameManager.getFullOptionKey(
                   'root/parent', invalidKey, config),

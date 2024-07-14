@@ -26,7 +26,7 @@ class VxComponentNameManager {
   static String? getParent(String name,
       [VxComponentManagerConfig config =
           VxComponentManagerConfig.defaultConfig]) {
-    _validateComponentName(name, config.componentSeparator);
+    _validateHierarchicalComponentName(name, config);
     int lastIndex = name.lastIndexOf(config.componentSeparator);
     if (lastIndex == -1) return null;
     return name.substring(0, lastIndex);
@@ -38,8 +38,7 @@ class VxComponentNameManager {
   static String getComponentName(String fullOptionKey,
       [VxComponentManagerConfig config =
           VxComponentManagerConfig.defaultConfig]) {
-    _validateFullOptionKey(fullOptionKey, config.mandatoryOptionSeparator,
-        config.optionalOptionSeparator);
+    _validateFullOptionKey(fullOptionKey, config);
     int separatorIndex = fullOptionKey.indexOf(config.mandatoryOptionSeparator);
     if (separatorIndex == -1) {
       separatorIndex = fullOptionKey.indexOf(config.optionalOptionSeparator);
@@ -54,8 +53,7 @@ class VxComponentNameManager {
   static String? getOptionName(String fullOptionKey,
       [VxComponentManagerConfig config =
           VxComponentManagerConfig.defaultConfig]) {
-    _validateFullOptionKey(fullOptionKey, config.mandatoryOptionSeparator,
-        config.optionalOptionSeparator);
+    _validateFullOptionKey(fullOptionKey, config);
     int separatorIndex = fullOptionKey.indexOf(config.mandatoryOptionSeparator);
     if (separatorIndex == -1) {
       separatorIndex = fullOptionKey.indexOf(config.optionalOptionSeparator);
@@ -65,12 +63,9 @@ class VxComponentNameManager {
   }
 
   /// Determines if a given component name is the root.
-  ///
-  /// Throws an [ArgumentError] if the component name is invalid.
   static bool isRoot(String name,
       [VxComponentManagerConfig config =
           VxComponentManagerConfig.defaultConfig]) {
-    _validateComponentName(name, config.componentSeparator);
     return !name.contains(config.componentSeparator);
   }
 
@@ -80,8 +75,8 @@ class VxComponentNameManager {
   static String getFullOptionKey(String name, String option,
       [VxComponentManagerConfig config =
           VxComponentManagerConfig.defaultConfig]) {
-    _validateComponentName(name, config.componentSeparator);
-    _validateOptionName(option);
+    _validateHierarchicalComponentName(name, config);
+    _validateOptionName(option, config);
     return '$name${config.mandatoryOptionSeparator}$option';
   }
 
@@ -91,8 +86,8 @@ class VxComponentNameManager {
   static String createChild(String parentName, String childName,
       [VxComponentManagerConfig config =
           VxComponentManagerConfig.defaultConfig]) {
-    _validateComponentName(parentName, config.componentSeparator);
-    _validateComponentName(childName, config.componentSeparator);
+    _validateHierarchicalComponentName(parentName, config);
+    _validateComponentName(childName, config);
     return '$parentName${config.componentSeparator}$childName';
   }
 
@@ -102,33 +97,63 @@ class VxComponentNameManager {
   static String joinPaths(String componentPath1, String componentPath2,
       [VxComponentManagerConfig config =
           VxComponentManagerConfig.defaultConfig]) {
-    _validateComponentName(componentPath1, config.componentSeparator);
-    _validateComponentName(componentPath2, config.componentSeparator);
+    _validateHierarchicalComponentName(componentPath1, config);
+    _validateHierarchicalComponentName(componentPath2, config);
     return '$componentPath1${config.componentSeparator}$componentPath2';
   }
 
-  /// Validation for component names
-  static void _validateComponentName(String name, String componentSeparator) {
+  /// Validation for single component names
+  static void _validateComponentName(
+      String name, VxComponentManagerConfig config) {
     if (name.isEmpty ||
-        name.contains(componentSeparator) ||
+        name.contains(config.componentSeparator) ||
+        name.contains(config.mandatoryOptionSeparator) ||
+        name.contains(config.optionalOptionSeparator) ||
         name.trim() != name) {
       throw ArgumentError('Invalid component name: $name');
     }
   }
 
+  /// Validation for hierarchical component names
+  static void _validateHierarchicalComponentName(
+      String name, VxComponentManagerConfig config) {
+    if (name.isEmpty ||
+        name.trim() != name ||
+        name.contains(config.mandatoryOptionSeparator) ||
+        name.contains(config.optionalOptionSeparator) ||
+        name.startsWith(config.componentSeparator) ||
+        name.endsWith(config.componentSeparator) ||
+        name.contains(config.componentSeparator + config.componentSeparator)) {
+      throw ArgumentError('Invalid hierarchical component name: $name');
+    }
+  }
+
   /// Validation for option names
-  static void _validateOptionName(String option) {
-    if (option.isEmpty || option.trim() != option) {
+  static void _validateOptionName(
+      String option, VxComponentManagerConfig config) {
+    if (option.isEmpty ||
+        option.trim() != option ||
+        option.contains(config.componentSeparator) ||
+        option.contains(config.mandatoryOptionSeparator) ||
+        option.contains(config.optionalOptionSeparator)) {
       throw ArgumentError('Invalid option name: $option');
     }
   }
 
   /// Validation for full option keys
-  static void _validateFullOptionKey(String fullOptionKey,
-      String mandatoryOptionSeparator, String optionalOptionSeparator) {
+  static void _validateFullOptionKey(
+      String fullOptionKey, VxComponentManagerConfig config) {
+    final isSpaceSeparator = config.componentSeparator == '';
     if (fullOptionKey.isEmpty ||
-        fullOptionKey.contains(mandatoryOptionSeparator) &&
-            fullOptionKey.contains(optionalOptionSeparator)) {
+        (!isSpaceSeparator && fullOptionKey.contains(' ')) ||
+        config.mandatoryOptionSeparator.allMatches(fullOptionKey).length > 1 ||
+        config.optionalOptionSeparator.allMatches(fullOptionKey).length > 1 ||
+        fullOptionKey.endsWith(config.mandatoryOptionSeparator) ||
+        fullOptionKey.endsWith(config.optionalOptionSeparator) ||
+        fullOptionKey.startsWith(config.mandatoryOptionSeparator) ||
+        fullOptionKey.startsWith(config.optionalOptionSeparator) ||
+        (fullOptionKey.contains(config.mandatoryOptionSeparator) &&
+            fullOptionKey.contains(config.optionalOptionSeparator))) {
       throw ArgumentError('Invalid full option key: $fullOptionKey');
     }
   }

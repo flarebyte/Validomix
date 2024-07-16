@@ -69,6 +69,20 @@ class VxComponentNameManager {
     return !name.contains(config.componentSeparator);
   }
 
+  /// Determines if a given component name has an optional option.
+  static bool hasOptionalOption(String name,
+      [VxComponentManagerConfig config =
+          VxComponentManagerConfig.defaultConfig]) {
+    return name.contains(config.optionalOptionSeparator);
+  }
+
+  /// Determines if a given component name has a mandatory option.
+  static bool hasMandatoryOption(String name,
+      [VxComponentManagerConfig config =
+          VxComponentManagerConfig.defaultConfig]) {
+    return name.contains(config.mandatoryOptionSeparator);
+  }
+
   /// Constructs a full option key from a component name and an option.
   ///
   /// Throws an [ArgumentError] if the component name or option name is invalid.

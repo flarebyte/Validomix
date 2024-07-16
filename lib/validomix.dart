@@ -12,3 +12,4 @@ export 'src/vx_iterable_length_comparator.dart';
 export 'src/vx_integer_cipher.dart';
 export 'src/vx_options_inventory.dart';
 export 'src/vx_component_name_manager.dart';
+export 'src/vx_options_map.dart';

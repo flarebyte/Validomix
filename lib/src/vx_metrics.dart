@@ -60,6 +60,95 @@ class VxMetrics {
     });
   }
 
+  static ExMetricKey getKeyNotFound(String className, String name) {
+    return ExMetricKey(name: [
+      'get-option-value'
+    ], dimensions: {
+      ...lib,
+      'class': className,
+      'method': 'validate',
+      'name': name,
+      ExMetricDimLevel.key: ExMetricDimLevel.error,
+      ExMetricDimStatus.key: ExMetricDimStatus.notFound,
+      ExMetricDimUnit.key: ExMetricDimUnit.count
+    });
+  }
+
+  static ExMetricKey getKeyValueBlank(String className, String name) {
+    return ExMetricKey(name: [
+      'get-option-value'
+    ], dimensions: {
+      ...lib,
+      'class': className,
+      'method': 'validate',
+      'name': name,
+      'expected': 'not-blank',
+      ExMetricDimLevel.key: ExMetricDimLevel.error,
+      ExMetricDimDartErr.key: ExMetricDimDartErr.formatException,
+      ExMetricDimUnit.key: ExMetricDimUnit.count
+    });
+  }
+
+  static ExMetricKey getKeyValueNotInt(String className, String name) {
+    return ExMetricKey(name: [
+      'get-option-value'
+    ], dimensions: {
+      ...lib,
+      'class': className,
+      'method': 'validate',
+      'name': name,
+      'expected': 'integer',
+      ExMetricDimLevel.key: ExMetricDimLevel.error,
+      ExMetricDimDartErr.key: ExMetricDimDartErr.formatException,
+      ExMetricDimUnit.key: ExMetricDimUnit.count
+    });
+  }
+
+  static ExMetricKey getKeyValueNotNum(String className, String name) {
+    return ExMetricKey(name: [
+      'get-option-value'
+    ], dimensions: {
+      ...lib,
+      'class': className,
+      'method': 'validate',
+      'name': name,
+      'expected': 'numeric',
+      ExMetricDimLevel.key: ExMetricDimLevel.error,
+      ExMetricDimDartErr.key: ExMetricDimDartErr.formatException,
+      ExMetricDimUnit.key: ExMetricDimUnit.count
+    });
+  }
+
+  static ExMetricKey getKeyValueNotBool(String className, String name) {
+    return ExMetricKey(name: [
+      'get-option-value'
+    ], dimensions: {
+      ...lib,
+      'class': className,
+      'method': 'validate',
+      'name': name,
+      'expected': 'boolean',
+      ExMetricDimLevel.key: ExMetricDimLevel.error,
+      ExMetricDimDartErr.key: ExMetricDimDartErr.formatException,
+      ExMetricDimUnit.key: ExMetricDimUnit.count
+    });
+  }
+
+  static ExMetricKey getKeyValueNotPositive(String className, String name) {
+    return ExMetricKey(name: [
+      'get-option-value'
+    ], dimensions: {
+      ...lib,
+      'class': className,
+      'method': 'validate',
+      'name': name,
+      'expected': 'positive number',
+      ExMetricDimLevel.key: ExMetricDimLevel.error,
+      ExMetricDimDartErr.key: ExMetricDimDartErr.formatException,
+      ExMetricDimUnit.key: ExMetricDimUnit.count
+    });
+  }
+
   static ExMetricKey getMaxCharsKeyInvalid(String className, String name) {
     return ExMetricKey(name: [
       'get-max-chars'

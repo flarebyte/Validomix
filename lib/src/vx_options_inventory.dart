@@ -51,3 +51,12 @@ class VxOptionsInventory {
     return sortedKeys;
   }
 }
+
+class VxOptionsInventoryDescriptors {
+  static const string = 'string';
+  static const notBlank = 'not-blank';
+  static const integer = 'integer';
+  static const numeric = 'numeric';
+  static const boolean = 'boolean';
+  static const positive = 'positive';
+}

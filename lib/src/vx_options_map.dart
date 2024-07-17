@@ -4,6 +4,25 @@ import 'vx_component_name_manager.dart';
 import 'vx_metrics.dart';
 import 'vx_options_inventory.dart';
 
+enum VxMapValueStatus { ok, ko, fallback }
+
+class VxMapValue<T> {
+  final T value;
+  final VxMapValueStatus status;
+  VxMapValue(this.value, this.status);
+  static VxMapValue<T> ok<T>(T value) {
+    return VxMapValue<T>(value, VxMapValueStatus.ok);
+  }
+
+  static VxMapValue<T> ko<T>(T value) {
+    return VxMapValue<T>(value, VxMapValueStatus.ok);
+  }
+
+  static VxMapValue<T> fallback<T>(T value) {
+    return VxMapValue<T>(value, VxMapValueStatus.fallback);
+  }
+}
+
 class VxOptionsMap {
   final VxComponentManagerConfig componentManagerConfig;
   final ExMetricStoreHolder metricStoreHolder;
@@ -16,19 +35,21 @@ class VxOptionsMap {
       required this.ownerClassName});
 
   /// Returns the value of the option with the given id, or the default
-  String getString(
+  VxMapValue<String> getString(
       {required Map<String, String> options,
       required int id,
       String defaultValue = ''}) {
     final key = optionsInventory.getKey(id);
-    final missingMandatoryKey =
-        VxComponentNameManager.hasMandatoryOption(key.name) &&
-            (!options.containsKey(key.name));
-    if (missingMandatoryKey) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getKeyNotFound(ownerClassName, key.name), 1);
-      return defaultValue;
+    final missingKey = !options.containsKey(key.name);
+    if (missingKey) {
+      if (VxComponentNameManager.hasMandatoryOption(key.name)) {
+        metricStoreHolder.store
+            .addMetric(VxMetrics.getKeyNotFound(ownerClassName, key.name), 1);
+        return VxMapValue.ko(defaultValue);
+      }
+      return VxMapValue.fallback(defaultValue);
     }
+
     final value = options[key.name] ?? defaultValue;
     final shouldNotBeEmpty =
         key.descriptors.contains(VxOptionsInventoryDescriptors.notBlank) &&
@@ -36,9 +57,9 @@ class VxOptionsMap {
     if (shouldNotBeEmpty) {
       metricStoreHolder.store
           .addMetric(VxMetrics.getKeyValueBlank(ownerClassName, key.name), 1);
-      return defaultValue;
+      return VxMapValue.ko(defaultValue);
     }
-    return value;
+    return VxMapValue.ok(value);
   }
 
   /// Returns the integer value of the option with the given id, or the default

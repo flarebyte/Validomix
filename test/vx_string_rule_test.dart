@@ -43,6 +43,8 @@ void main() {
             ['Success: Condition met.']);
         expect(rule.validate({'test#maxChars': "10"}, 'this is a long string'),
             ['Failure: Condition not met.']);
+        expect(optionsInventory.toList().length, 1);
+        expect(optionsInventory.toList().first.name, 'test#maxChars');
       });
 
       test('validate without producers', () {
@@ -53,6 +55,7 @@ void main() {
             defaultMaxChars: 10);
         expect(ruleWithoutProducers.validate({}, 'short'), []);
         expect(ruleWithoutProducers.validate({}, 'this is a long string'), []);
+        expect(optionsInventory.toList().length, 1);
       });
 
       test('KeyNotFound metric logging', () {

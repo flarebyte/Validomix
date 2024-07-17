@@ -1,10 +1,67 @@
 import 'package:eagleyeix/metric.dart';
 import 'package:validomix/src/vx_component_name_manager.dart';
+import 'package:validomix/src/vx_number_comparator.dart';
 import 'package:validomix/src/vx_options_inventory.dart';
 
 import 'vx_metrics.dart';
 import 'vx_model.dart';
 import 'vx_options_map.dart';
+
+/// Validates that the number of characters in a string is less than a specified limit obtained from the options.
+class VxCharsRule<MSG> extends VxBaseRule<MSG> {
+  final VxMessageProducer<MSG, String>? successProducer;
+  final VxMessageProducer<MSG, String>? failureProducer;
+  final VxNumberComparator numberComparator;
+  final String name;
+  final ExMetricStoreHolder metricStoreHolder;
+  final int defaultMaxChars;
+  final VxComponentManagerConfig componentManagerConfig;
+  final VxOptionsInventory optionsInventory;
+  late VxOptionsMap optionsMap;
+  late int thresholdCharsKey;
+
+  VxCharsRule(
+      {required this.numberComparator,
+      required this.name,
+      required this.metricStoreHolder,
+      required this.optionsInventory,
+      required this.defaultMaxChars,
+      this.successProducer,
+      this.failureProducer,
+      this.componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
+    optionsMap = VxOptionsMap(
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        ownerClassName: 'VxCharsRule',
+        classSpecialisation: numberComparator.name.replaceAll(' ', '-'),
+        componentManagerConfig: componentManagerConfig);
+    thresholdCharsKey = optionsInventory.addKey(
+        VxComponentNameManager.getFullOptionKey(name, 'thresholdChars'),
+        VxOptionsInventoryDescriptors.positiveInt);
+  }
+
+  @override
+  List<MSG> validate(Map<String, String> options, String value) {
+    final thresholdChars = optionsMap
+        .getInt(options: options, id: thresholdCharsKey, defaultValue: 100000)
+        .value;
+    return _evaluate(value, thresholdChars, options);
+  }
+
+  List<MSG> _evaluate(
+      String value, int thresholdChars, Map<String, String> options) {
+    if (numberComparator.compare(value.length, thresholdChars)) {
+      if (successProducer != null) {
+        return [successProducer!.produce(options, value)];
+      }
+    } else {
+      if (failureProducer != null) {
+        return [failureProducer!.produce(options, value)];
+      }
+    }
+    return [];
+  }
+}
 
 /// Validates that the number of characters in a string is less than a specified limit obtained from the options.
 class VxCharsLessThanRule<MSG> extends VxBaseRule<MSG> {
@@ -397,7 +454,7 @@ class VxWordsLessThanOrEqualRule<MSG> extends VxBaseRule<MSG> {
 }
 
 class VxStringRules {
-  static VxCharsLessThanRule<MSG> charsLessThan<MSG>(
+  static VxCharsRule<MSG> charsLessThan<MSG>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
@@ -405,8 +462,9 @@ class VxStringRules {
       VxMessageProducer<MSG, String>? successProducer,
       VxMessageProducer<MSG, String>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
-    return VxCharsLessThanRule<MSG>(
+    return VxCharsRule<MSG>(
         name: name,
+        numberComparator: VxNumberComparators.lessThan,
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
         defaultMaxChars: defaultMaxChars,

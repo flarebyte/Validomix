@@ -28,11 +28,13 @@ class VxOptionsMap {
   final ExMetricStoreHolder metricStoreHolder;
   final VxOptionsInventory optionsInventory;
   final String ownerClassName;
+  final String? classSpecialisation;
   VxOptionsMap(
       {required this.metricStoreHolder,
       required this.optionsInventory,
       required this.ownerClassName,
-      this.componentManagerConfig = VxComponentManagerConfig.defaultConfig});
+      this.componentManagerConfig = VxComponentManagerConfig.defaultConfig,
+      this.classSpecialisation});
 
   VxMapValue<String> _getString(
       {required Map<String, String> options,
@@ -43,8 +45,12 @@ class VxOptionsMap {
     if (missingKey) {
       if (VxComponentNameManager.hasMandatoryOption(
           key.name, componentManagerConfig)) {
-        metricStoreHolder.store
-            .addMetric(VxMetrics.getKeyNotFound(ownerClassName, key.name), 1);
+        metricStoreHolder.store.addMetric(
+            VxMetrics.getKeyNotFound(
+                className: ownerClassName,
+                name: key.name,
+                specialisation: classSpecialisation),
+            1);
         return VxMapValue.ko(defaultValue);
       }
       return VxMapValue.fallback(defaultValue);
@@ -70,8 +76,12 @@ class VxOptionsMap {
         key.descriptors.contains(VxOptionsInventoryDescriptors.notBlank) &&
             value.trim() == '';
     if (shouldNotBeEmpty) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getKeyValueBlank(ownerClassName, key.name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getKeyValueBlank(
+              className: ownerClassName,
+              name: key.name,
+              specialisation: classSpecialisation),
+          1);
       return VxMapValue.ko(defaultValue);
     }
     return VxMapValue.ok(value);
@@ -91,8 +101,12 @@ class VxOptionsMap {
     final key = optionsInventory.getKey(id);
     final intValue = int.tryParse(value);
     if (intValue == null) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getKeyValueNotInt(ownerClassName, key.name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getKeyValueNotInt(
+              className: ownerClassName,
+              name: key.name,
+              specialisation: classSpecialisation),
+          1);
       return VxMapValue.ko(defaultValue);
     }
 
@@ -101,7 +115,11 @@ class VxOptionsMap {
             intValue < 0;
     if (shouldbePositive) {
       metricStoreHolder.store.addMetric(
-          VxMetrics.getKeyValueNotPositive(ownerClassName, key.name), 1);
+          VxMetrics.getKeyValueNotPositive(
+              className: ownerClassName,
+              name: key.name,
+              specialisation: classSpecialisation),
+          1);
       return VxMapValue.ko(defaultValue);
     }
     return VxMapValue.ok(intValue);
@@ -117,15 +135,23 @@ class VxOptionsMap {
         VxComponentNameManager.hasMandatoryOption(key.name) &&
             (!options.containsKey(key.name));
     if (missingMandatoryKey) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getKeyNotFound(ownerClassName, key.name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getKeyNotFound(
+              className: ownerClassName,
+              name: key.name,
+              specialisation: classSpecialisation),
+          1);
       return defaultValue;
     }
     final value = options[key.name] ?? "$defaultValue";
     final intValue = num.tryParse(value);
     if (intValue == null) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getKeyValueNotNum(ownerClassName, key.name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getKeyValueNotNum(
+              className: ownerClassName,
+              name: key.name,
+              specialisation: classSpecialisation),
+          1);
       return defaultValue;
     }
 
@@ -134,7 +160,11 @@ class VxOptionsMap {
             intValue < 0;
     if (shouldbePositive) {
       metricStoreHolder.store.addMetric(
-          VxMetrics.getKeyValueNotPositive(ownerClassName, key.name), 1);
+          VxMetrics.getKeyValueNotPositive(
+              className: ownerClassName,
+              name: key.name,
+              specialisation: classSpecialisation),
+          1);
       return defaultValue;
     }
     return intValue;
@@ -150,15 +180,23 @@ class VxOptionsMap {
         VxComponentNameManager.hasMandatoryOption(key.name) &&
             (!options.containsKey(key.name));
     if (missingMandatoryKey) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getKeyNotFound(ownerClassName, key.name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getKeyNotFound(
+              className: ownerClassName,
+              name: key.name,
+              specialisation: classSpecialisation),
+          1);
       return defaultValue;
     }
     final value = options[key.name] ?? "$defaultValue";
     final boolValue = bool.tryParse(value);
     if (boolValue == null) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getKeyValueNotNum(ownerClassName, key.name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getKeyValueNotNum(
+              className: ownerClassName,
+              name: key.name,
+              specialisation: classSpecialisation),
+          1);
       return defaultValue;
     }
 
@@ -178,8 +216,12 @@ class VxOptionsMap {
         VxComponentNameManager.hasMandatoryOption(key.name) &&
             (!options.containsKey(key.name));
     if (missingMandatoryKey) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getKeyNotFound(ownerClassName, key.name), 1);
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getKeyNotFound(
+              className: ownerClassName,
+              name: key.name,
+              specialisation: classSpecialisation),
+          1);
       return defaultValue;
     }
     final value = options[key.name] ?? '';

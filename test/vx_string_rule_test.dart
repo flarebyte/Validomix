@@ -39,12 +39,14 @@ void main() {
             defaultMaxChars: 1,
             successProducer: successProducer,
             failureProducer: failureProducer);
-        expect(rule.validate({'test#maxChars': "10"}, 'short'),
+        expect(rule.validate({'test#thresholdChars': "10"}, 'short'),
             ['Success: Condition met.']);
-        expect(rule.validate({'test#maxChars': "10"}, 'this is a long string'),
+        expect(
+            rule.validate(
+                {'test#thresholdChars': "10"}, 'this is a long string'),
             ['Failure: Condition not met.']);
         expect(optionsInventory.toList().length, 1);
-        expect(optionsInventory.toList().first.name, 'test#maxChars');
+        expect(optionsInventory.toList().first.name, 'test#thresholdChars');
       });
 
       test('validate without producers', () {
@@ -74,9 +76,10 @@ void main() {
             'name': ['get-option-value'],
             'dimensions': {
               'package': 'validomix',
-              'class': 'VxCharsLessThanRule',
+              'class': 'VxCharsRule',
+              'class-specialisation': 'less-than',
               'method': 'validate',
-              'name': 'test#maxChars',
+              'name': 'test#thresholdChars',
               'level': 'ERROR',
               'status': 'not-found',
               'unit': 'count',
@@ -103,12 +106,12 @@ void main() {
             'name': ['get-option-value'],
             'dimensions': {
               'package': 'validomix',
-              'class': 'VxCharsLessThanRule',
+              'class': 'VxCharsRule',
+              'class-specialisation': 'less-than',
               'method': 'validate',
-              'name': 'test#maxChars',
-              'expected': 'integer',
+              'name': 'test#thresholdChars',
               'level': 'ERROR',
-              'error': 'format-exception',
+              'status': 'not-found',
               'unit': 'count',
               'aggregation': 'count'
             }

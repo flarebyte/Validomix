@@ -60,12 +60,18 @@ class VxMetrics {
     });
   }
 
-  static ExMetricKey getKeyNotFound(String className, String name) {
+  static ExMetricKey getKeyNotFound(
+      {required String className,
+      required String name,
+      String? specialisation}) {
+    final maybeSpecialisation =
+        specialisation == null ? {} : {'class-specialisation': specialisation};
     return ExMetricKey(name: [
       'get-option-value'
     ], dimensions: {
       ...lib,
       'class': className,
+      ...maybeSpecialisation,
       'method': 'validate',
       'name': name,
       ExMetricDimLevel.key: ExMetricDimLevel.error,
@@ -74,12 +80,18 @@ class VxMetrics {
     });
   }
 
-  static ExMetricKey getKeyValueBlank(String className, String name) {
+  static ExMetricKey getKeyValueBlank(
+      {required String className,
+      required String name,
+      String? specialisation}) {
+    final maybeSpecialisation =
+        specialisation == null ? {} : {'class-specialisation': specialisation};
     return ExMetricKey(name: [
       'get-option-value'
     ], dimensions: {
       ...lib,
       'class': className,
+      ...maybeSpecialisation,
       'method': 'validate',
       'name': name,
       'expected': 'not-blank',
@@ -89,12 +101,18 @@ class VxMetrics {
     });
   }
 
-  static ExMetricKey getKeyValueNotInt(String className, String name) {
+  static ExMetricKey getKeyValueNotInt(
+      {required String className,
+      required String name,
+      String? specialisation}) {
+    final maybeSpecialisation =
+        specialisation == null ? {} : {'class-specialisation': specialisation};
     return ExMetricKey(name: [
       'get-option-value'
     ], dimensions: {
       ...lib,
       'class': className,
+      ...maybeSpecialisation,
       'method': 'validate',
       'name': name,
       'expected': 'integer',
@@ -104,12 +122,18 @@ class VxMetrics {
     });
   }
 
-  static ExMetricKey getKeyValueNotNum(String className, String name) {
+  static ExMetricKey getKeyValueNotNum(
+      {required String className,
+      required String name,
+      String? specialisation}) {
+    final maybeSpecialisation =
+        specialisation == null ? {} : {'class-specialisation': specialisation};
     return ExMetricKey(name: [
       'get-option-value'
     ], dimensions: {
       ...lib,
       'class': className,
+      ...maybeSpecialisation,
       'method': 'validate',
       'name': name,
       'expected': 'numeric',
@@ -119,12 +143,18 @@ class VxMetrics {
     });
   }
 
-  static ExMetricKey getKeyValueNotBool(String className, String name) {
+  static ExMetricKey getKeyValueNotBool(
+      {required String className,
+      required String name,
+      String? specialisation}) {
+    final maybeSpecialisation =
+        specialisation == null ? {} : {'class-specialisation': specialisation};
     return ExMetricKey(name: [
       'get-option-value'
     ], dimensions: {
       ...lib,
       'class': className,
+      ...maybeSpecialisation,
       'method': 'validate',
       'name': name,
       'expected': 'boolean',
@@ -134,12 +164,18 @@ class VxMetrics {
     });
   }
 
-  static ExMetricKey getKeyValueNotPositive(String className, String name) {
+  static ExMetricKey getKeyValueNotPositive(
+      {required String className,
+      required String name,
+      String? specialisation}) {
+    final maybeSpecialisation =
+        specialisation == null ? {} : {'class-specialisation': specialisation};
     return ExMetricKey(name: [
       'get-option-value'
     ], dimensions: {
       ...lib,
       'class': className,
+      ...maybeSpecialisation,
       'method': 'validate',
       'name': name,
       'expected': 'positive number',

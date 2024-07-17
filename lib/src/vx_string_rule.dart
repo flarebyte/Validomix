@@ -1,7 +1,10 @@
 import 'package:eagleyeix/metric.dart';
+import 'package:validomix/src/vx_component_name_manager.dart';
+import 'package:validomix/src/vx_options_inventory.dart';
 
 import 'vx_metrics.dart';
 import 'vx_model.dart';
+import 'vx_options_map.dart';
 
 /// Validates that the number of characters in a string is less than a specified limit obtained from the options.
 class VxCharsLessThanRule<MSG> extends VxBaseRule<MSG> {
@@ -10,27 +13,34 @@ class VxCharsLessThanRule<MSG> extends VxBaseRule<MSG> {
   final String name;
   final ExMetricStoreHolder metricStoreHolder;
   final int defaultMaxChars;
+  final VxComponentManagerConfig componentManagerConfig;
+  final VxOptionsInventory optionsInventory;
+  late VxOptionsMap optionsMap;
+  late int maxCharsKey;
 
-  VxCharsLessThanRule(this.name, this.metricStoreHolder, this.defaultMaxChars,
-      {this.successProducer, this.failureProducer});
+  VxCharsLessThanRule(
+      {required this.name,
+      required this.metricStoreHolder,
+      required this.optionsInventory,
+      required this.defaultMaxChars,
+      this.successProducer,
+      this.failureProducer,
+      this.componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
+    optionsMap = VxOptionsMap(
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        ownerClassName: 'VxCharsLessThanRule',
+        componentManagerConfig: componentManagerConfig);
+    maxCharsKey = optionsInventory.addKey(
+        VxComponentNameManager.getFullOptionKey(name, 'maxChars'),
+        VxOptionsInventoryDescriptors.positiveInt);
+  }
 
   @override
   List<MSG> validate(Map<String, String> options, String value) {
-    final maxCharsKey = '$name-maxChars';
-    final maxChars = int.tryParse(options[maxCharsKey] ?? '');
-
-    if (!options.containsKey(maxCharsKey)) {
-      metricStoreHolder.store.addMetric(
-          VxMetrics.getMaxCharsKeyNotFound('VxCharsLessThanRule', name), 1);
-      return _evaluate(value, defaultMaxChars, options);
-    }
-
-    if (maxChars == null) {
-      metricStoreHolder.store.addMetric(
-          VxMetrics.getMaxCharsKeyInvalid('VxCharsLessThanRule', name), 1);
-      return _evaluate(value, defaultMaxChars, options);
-    }
-
+    final maxChars = optionsMap
+        .getInt(options: options, id: maxCharsKey, defaultValue: 100000)
+        .value;
     return _evaluate(value, maxChars, options);
   }
 
@@ -388,14 +398,21 @@ class VxWordsLessThanOrEqualRule<MSG> extends VxBaseRule<MSG> {
 
 class VxStringRules {
   static VxCharsLessThanRule<MSG> charsLessThan<MSG>(
-    String name,
-    ExMetricStoreHolder metricStoreHolder,
-    int defaultMaxChars, {
-    VxMessageProducer<MSG, String>? successProducer,
-    VxMessageProducer<MSG, String>? failureProducer,
-  }) {
-    return VxCharsLessThanRule<MSG>(name, metricStoreHolder, defaultMaxChars,
-        successProducer: successProducer, failureProducer: failureProducer);
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      required int defaultMaxChars,
+      VxMessageProducer<MSG, String>? successProducer,
+      VxMessageProducer<MSG, String>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
+    return VxCharsLessThanRule<MSG>(
+        name: name,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        defaultMaxChars: defaultMaxChars,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
   }
 
   static VxCharsMoreThanRule<MSG> charsMoreThan<MSG>(

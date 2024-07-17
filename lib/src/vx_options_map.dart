@@ -29,20 +29,20 @@ class VxOptionsMap {
   final VxOptionsInventory optionsInventory;
   final String ownerClassName;
   VxOptionsMap(
-      {required this.componentManagerConfig,
-      required this.metricStoreHolder,
+      {required this.metricStoreHolder,
       required this.optionsInventory,
-      required this.ownerClassName});
+      required this.ownerClassName,
+      this.componentManagerConfig = VxComponentManagerConfig.defaultConfig});
 
-  /// Returns the value of the option with the given id, or the default
-  VxMapValue<String> getString(
+  VxMapValue<String> _getString(
       {required Map<String, String> options,
       required int id,
       String defaultValue = ''}) {
     final key = optionsInventory.getKey(id);
     final missingKey = !options.containsKey(key.name);
     if (missingKey) {
-      if (VxComponentNameManager.hasMandatoryOption(key.name)) {
+      if (VxComponentNameManager.hasMandatoryOption(
+          key.name, componentManagerConfig)) {
         metricStoreHolder.store
             .addMetric(VxMetrics.getKeyNotFound(ownerClassName, key.name), 1);
         return VxMapValue.ko(defaultValue);
@@ -51,6 +51,21 @@ class VxOptionsMap {
     }
 
     final value = options[key.name] ?? defaultValue;
+    return VxMapValue.ok(value);
+  }
+
+  /// Returns the value of the option with the given id, or the default
+  VxMapValue<String> getString(
+      {required Map<String, String> options,
+      required int id,
+      String defaultValue = ''}) {
+    final resultValue =
+        _getString(options: options, id: id, defaultValue: defaultValue);
+    if (resultValue.status != VxMapValueStatus.ok) {
+      return resultValue;
+    }
+    final value = resultValue.value;
+    final key = optionsInventory.getKey(id);
     final shouldNotBeEmpty =
         key.descriptors.contains(VxOptionsInventoryDescriptors.notBlank) &&
             value.trim() == '';
@@ -63,25 +78,22 @@ class VxOptionsMap {
   }
 
   /// Returns the integer value of the option with the given id, or the default
-  int getInt(
+  VxMapValue<int> getInt(
       {required Map<String, String> options,
       required int id,
       int defaultValue = 0}) {
-    final key = optionsInventory.getKey(id);
-    final missingMandatoryKey =
-        VxComponentNameManager.hasMandatoryOption(key.name) &&
-            (!options.containsKey(key.name));
-    if (missingMandatoryKey) {
-      metricStoreHolder.store
-          .addMetric(VxMetrics.getKeyNotFound(ownerClassName, key.name), 1);
-      return defaultValue;
+    final resultValue =
+        _getString(options: options, id: id, defaultValue: "$defaultValue");
+    if (resultValue.status != VxMapValueStatus.ok) {
+      return VxMapValue(defaultValue, resultValue.status);
     }
-    final value = options[key.name] ?? "$defaultValue";
+    final value = resultValue.value;
+    final key = optionsInventory.getKey(id);
     final intValue = int.tryParse(value);
     if (intValue == null) {
       metricStoreHolder.store
           .addMetric(VxMetrics.getKeyValueNotInt(ownerClassName, key.name), 1);
-      return defaultValue;
+      return VxMapValue.ko(defaultValue);
     }
 
     final shouldbePositive =
@@ -90,9 +102,9 @@ class VxOptionsMap {
     if (shouldbePositive) {
       metricStoreHolder.store.addMetric(
           VxMetrics.getKeyValueNotPositive(ownerClassName, key.name), 1);
-      return defaultValue;
+      return VxMapValue.ko(defaultValue);
     }
-    return intValue;
+    return VxMapValue.ok(intValue);
   }
 
   ///   Returns the number value of the option with the given id, or the default

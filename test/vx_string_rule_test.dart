@@ -23,32 +23,44 @@ void main() {
     final failureProducer =
         SimpleMessageProducer('Failure: Condition not met.');
     late ExMetricStoreHolder metricStoreHolder;
+    late VxOptionsInventory optionsInventory;
 
     setUp(() {
       metricStoreHolder = ExMetricStoreHolder();
+      optionsInventory = VxOptionsInventory();
     });
 
     group('VxCharsLessThanRule', () {
       test('validate with producers', () {
         final rule = VxStringRules.charsLessThan<String>(
-            'test', metricStoreHolder, 1,
-            successProducer: successProducer, failureProducer: failureProducer);
-        expect(rule.validate({'test-maxChars': "10"}, 'short'),
+            name: 'test',
+            metricStoreHolder: metricStoreHolder,
+            optionsInventory: optionsInventory,
+            defaultMaxChars: 1,
+            successProducer: successProducer,
+            failureProducer: failureProducer);
+        expect(rule.validate({'test#maxChars': "10"}, 'short'),
             ['Success: Condition met.']);
-        expect(rule.validate({'test-maxChars': "10"}, 'this is a long string'),
+        expect(rule.validate({'test#maxChars': "10"}, 'this is a long string'),
             ['Failure: Condition not met.']);
       });
 
       test('validate without producers', () {
-        final ruleWithoutProducers =
-            VxStringRules.charsLessThan<String>('test', metricStoreHolder, 10);
+        final ruleWithoutProducers = VxStringRules.charsLessThan<String>(
+            name: 'test',
+            metricStoreHolder: metricStoreHolder,
+            optionsInventory: optionsInventory,
+            defaultMaxChars: 10);
         expect(ruleWithoutProducers.validate({}, 'short'), []);
         expect(ruleWithoutProducers.validate({}, 'this is a long string'), []);
       });
 
       test('KeyNotFound metric logging', () {
-        final ruleWithoutProducers =
-            VxStringRules.charsLessThan<String>('test', metricStoreHolder, 10);
+        final ruleWithoutProducers = VxStringRules.charsLessThan<String>(
+            name: 'test',
+            metricStoreHolder: metricStoreHolder,
+            optionsInventory: optionsInventory,
+            defaultMaxChars: 10);
         ruleWithoutProducers.validate({}, 'this is a long string');
 
         final count = ExMetricAggregations.count();
@@ -56,12 +68,12 @@ void main() {
 
         expect(aggregatedMetrics.first.toJson(), {
           'key': {
-            'name': ['get-max-chars'],
+            'name': ['get-option-value'],
             'dimensions': {
               'package': 'validomix',
               'class': 'VxCharsLessThanRule',
               'method': 'validate',
-              'name': 'test',
+              'name': 'test#maxChars',
               'level': 'ERROR',
               'status': 'not-found',
               'unit': 'count',
@@ -72,22 +84,26 @@ void main() {
         });
       });
       test('KeyInvalid metric logging', () {
-        final ruleWithoutProducers =
-            VxStringRules.charsLessThan<String>('test', metricStoreHolder, 10);
+        final ruleWithoutProducers = VxStringRules.charsLessThan<String>(
+            name: 'test',
+            metricStoreHolder: metricStoreHolder,
+            optionsInventory: optionsInventory,
+            defaultMaxChars: 10);
         ruleWithoutProducers
-            .validate({'test-maxChars': 'invalid'}, 'this is a long string');
+            .validate({'test#maxChars': 'invalid'}, 'this is a long string');
 
         final count = ExMetricAggregations.count();
         final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
 
         expect(aggregatedMetrics.first.toJson(), {
           'key': {
-            'name': ['get-max-chars'],
+            'name': ['get-option-value'],
             'dimensions': {
               'package': 'validomix',
               'class': 'VxCharsLessThanRule',
               'method': 'validate',
-              'name': 'test',
+              'name': 'test#maxChars',
+              'expected': 'integer',
               'level': 'ERROR',
               'error': 'format-exception',
               'unit': 'count',

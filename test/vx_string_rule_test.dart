@@ -66,15 +66,8 @@ void main() {
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
             defaultMaxChars: threshold);
-        expect(
-            ruleWithoutProducers
-                .validate({}, StringFixture.createString(threshold - 1)),
-            []);
-        expect(
-            ruleWithoutProducers
-                .validate({}, StringFixture.createString(threshold + 1)),
-            []);
-        expect(optionsInventory.toList().length, 1);
+        shouldNotProduceMessage(
+            ruleWithoutProducers, threshold, optionsInventory);
       });
 
       test('KeyNotFound metric logging', () {
@@ -631,4 +624,17 @@ void main() {
       });
     });
   });
+}
+
+void shouldNotProduceMessage(VxCharsRule<String> ruleWithoutProducers,
+    int threshold, VxOptionsInventory optionsInventory) {
+  expect(
+      ruleWithoutProducers
+          .validate({}, StringFixture.createString(threshold - 1)),
+      []);
+  expect(
+      ruleWithoutProducers
+          .validate({}, StringFixture.createString(threshold + 1)),
+      []);
+  expect(optionsInventory.toList().length, 1);
 }

@@ -2,6 +2,8 @@ import 'package:eagleyeix/metric.dart';
 import 'package:test/test.dart';
 import 'package:validomix/validomix.dart';
 
+import 'vx_fixtures.dart';
+
 class SimpleMessageProducer implements VxMessageProducer<String, String> {
   final String message;
   SimpleMessageProducer(this.message);
@@ -32,19 +34,27 @@ void main() {
     });
 
     group('VxCharsLessThanRule', () {
+      const threshold = 10;
+      const defaultThreshold = 1;
       test('validate with producers', () {
         final rule = VxStringRules.charsLessThan<String>(
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            defaultMaxChars: 1,
+            defaultMaxChars: defaultThreshold,
             successProducer: successProducer,
             failureProducer: failureProducer);
-        expect(rule.validate({'test#thresholdChars': "10"}, 'short'),
+        expect(
+            rule.validate({'test#thresholdChars': "$threshold"},
+                StringFixture.createString(threshold - 1)),
             [successMessage]);
         expect(
-            rule.validate(
-                {'test#thresholdChars': "10"}, 'this is a long string'),
+            rule.validate({'test#thresholdChars': "$threshold"},
+                StringFixture.createString(threshold)),
+            [failureMessage]);
+        expect(
+            rule.validate({'test#thresholdChars': "$threshold"},
+                StringFixture.createString(threshold + 1)),
             [failureMessage]);
         expect(optionsInventory.toList().length, 1);
         expect(optionsInventory.toList().first.name, 'test#thresholdChars');
@@ -55,9 +65,15 @@ void main() {
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            defaultMaxChars: 10);
-        expect(ruleWithoutProducers.validate({}, 'short'), []);
-        expect(ruleWithoutProducers.validate({}, 'this is a long string'), []);
+            defaultMaxChars: threshold);
+        expect(
+            ruleWithoutProducers
+                .validate({}, StringFixture.createString(threshold - 1)),
+            []);
+        expect(
+            ruleWithoutProducers
+                .validate({}, StringFixture.createString(threshold + 1)),
+            []);
         expect(optionsInventory.toList().length, 1);
       });
 
@@ -66,8 +82,9 @@ void main() {
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            defaultMaxChars: 10);
-        ruleWithoutProducers.validate({}, 'this is a long string');
+            defaultMaxChars: threshold);
+        ruleWithoutProducers
+            .validate({}, StringFixture.createString(threshold));
 
         final count = ExMetricAggregations.count();
         final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
@@ -95,9 +112,9 @@ void main() {
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            defaultMaxChars: 10);
-        ruleWithoutProducers
-            .validate({'test#maxChars': 'invalid'}, 'this is a long string');
+            defaultMaxChars: threshold);
+        ruleWithoutProducers.validate({'test#maxChars': 'invalid'},
+            StringFixture.createString(threshold));
 
         final count = ExMetricAggregations.count();
         final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);

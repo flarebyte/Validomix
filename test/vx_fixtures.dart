@@ -135,6 +135,14 @@ final class IntNode extends LinkedListEntry<IntNode> {
   String toString() => value.toString();
 }
 
+/// a fixture to generate string test data.
+class StringFixture {
+  /// Generates a string with `length` characters.
+  static createString(int length) {
+    return 'A' * length;
+  }
+}
+
 class ComponentNameManagerFixtures {
   // Good examples of component names
   static const List<String> validComponentNames = [

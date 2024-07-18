@@ -349,7 +349,7 @@ void main() {
         expect(
             rule.validate({'test#minChars': "$threshold"},
                 StringFixture.createString(threshold)),
-            [failureMessage]);
+            [successMessage]);
         expect(
             rule.validate({'test#minChars': "$threshold"},
                 StringFixture.createString(threshold - 1)),

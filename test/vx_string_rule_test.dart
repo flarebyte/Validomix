@@ -19,9 +19,10 @@ String createWords(int n) {
 
 void main() {
   group('VxStringRules', () {
-    final successProducer = SimpleMessageProducer('Success: Condition met.');
-    final failureProducer =
-        SimpleMessageProducer('Failure: Condition not met.');
+    var successMessage = 'Success: Condition met.';
+    final successProducer = SimpleMessageProducer(successMessage);
+    var failureMessage = 'Failure: Condition not met.';
+    final failureProducer = SimpleMessageProducer(failureMessage);
     late ExMetricStoreHolder metricStoreHolder;
     late VxOptionsInventory optionsInventory;
 
@@ -40,11 +41,11 @@ void main() {
             successProducer: successProducer,
             failureProducer: failureProducer);
         expect(rule.validate({'test#thresholdChars': "10"}, 'short'),
-            ['Success: Condition met.']);
+            [successMessage]);
         expect(
             rule.validate(
                 {'test#thresholdChars': "10"}, 'this is a long string'),
-            ['Failure: Condition not met.']);
+            [failureMessage]);
         expect(optionsInventory.toList().length, 1);
         expect(optionsInventory.toList().first.name, 'test#thresholdChars');
       });
@@ -126,11 +127,11 @@ void main() {
             'test', metricStoreHolder, 1,
             successProducer: successProducer, failureProducer: failureProducer);
         expect(rule.validate({'test-maxChars': "10"}, createString(10)),
-            ['Success: Condition met.']);
+            [successMessage]);
         expect(
             rule.validate({'test-maxChars': "10"},
                 '${createString(10)}this is a long string'),
-            ['Failure: Condition not met.']);
+            [failureMessage]);
       });
 
       test('validate without producers', () {
@@ -199,9 +200,9 @@ void main() {
             'test', metricStoreHolder, 10,
             successProducer: successProducer, failureProducer: failureProducer);
         expect(rule.validate({'test-minChars': '10'}, 'this is a long string'),
-            ['Success: Condition met.']);
-        expect(rule.validate({'test-minChars': '10'}, 'short'),
-            ['Failure: Condition not met.']);
+            [successMessage]);
+        expect(
+            rule.validate({'test-minChars': '10'}, 'short'), [failureMessage]);
       });
 
       test('validate without producers', () {
@@ -268,9 +269,9 @@ void main() {
             'test', metricStoreHolder, 10,
             successProducer: successProducer, failureProducer: failureProducer);
         expect(rule.validate({'test-minChars': '10'}, createString(10)),
-            ['Success: Condition met.']);
-        expect(rule.validate({'test-minChars': '10'}, 'short'),
-            ['Failure: Condition not met.']);
+            [successMessage]);
+        expect(
+            rule.validate({'test-minChars': '10'}, 'short'), [failureMessage]);
       });
 
       test('validate without producers', () {
@@ -338,9 +339,9 @@ void main() {
             'test', metricStoreHolder, 1,
             successProducer: successProducer, failureProducer: failureProducer);
         expect(rule.validate({'test-maxWords': '3'}, createWords(2)),
-            ['Success: Condition met.']);
+            [successMessage]);
         expect(rule.validate({'test-maxWords': '3'}, createWords(3)),
-            ['Failure: Condition not met.']);
+            [failureMessage]);
       });
 
       test('validate without producers', () {
@@ -408,9 +409,9 @@ void main() {
             'test', metricStoreHolder, 1,
             successProducer: successProducer, failureProducer: failureProducer);
         expect(rule.validate({'test-maxWords': '3'}, createWords(3)),
-            ['Success: Condition met.']);
+            [successMessage]);
         expect(rule.validate({'test-maxWords': '3'}, createWords(4)),
-            ['Failure: Condition not met.']);
+            [failureMessage]);
       });
 
       test('validate without producers', () {
@@ -478,9 +479,9 @@ void main() {
             'test', metricStoreHolder, 3,
             successProducer: successProducer, failureProducer: failureProducer);
         expect(rule.validate({'test-minWords': '3'}, createWords(4)),
-            ['Success: Condition met.']);
+            [successMessage]);
         expect(rule.validate({'test-minWords': '3'}, createWords(2)),
-            ['Failure: Condition not met.']);
+            [failureMessage]);
       });
 
       test('validate without producers', () {
@@ -548,9 +549,9 @@ void main() {
             'test', metricStoreHolder, 10,
             successProducer: successProducer, failureProducer: failureProducer);
         expect(rule.validate({'test-minWords': '3'}, createWords(3)),
-            ['Success: Condition met.']);
+            [successMessage]);
         expect(rule.validate({'test-minWords': '3'}, createWords(2)),
-            ['Failure: Condition not met.']);
+            [failureMessage]);
       });
 
       test('validate without producers', () {

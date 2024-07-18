@@ -83,199 +83,6 @@ class VxCharsRule<MSG> extends VxBaseRule<MSG> {
   }
 }
 
-/// Validates that the number of characters in a string is less than a specified limit obtained from the options.
-class VxCharsLessThanRule<MSG> extends VxBaseRule<MSG> {
-  final VxMessageProducer<MSG, String>? successProducer;
-  final VxMessageProducer<MSG, String>? failureProducer;
-  final String name;
-  final ExMetricStoreHolder metricStoreHolder;
-  final int defaultMaxChars;
-  final VxComponentManagerConfig componentManagerConfig;
-  final VxOptionsInventory optionsInventory;
-  late VxOptionsMap optionsMap;
-  late int maxCharsKey;
-
-  VxCharsLessThanRule(
-      {required this.name,
-      required this.metricStoreHolder,
-      required this.optionsInventory,
-      required this.defaultMaxChars,
-      this.successProducer,
-      this.failureProducer,
-      this.componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
-    optionsMap = VxOptionsMap(
-        metricStoreHolder: metricStoreHolder,
-        optionsInventory: optionsInventory,
-        ownerClassName: 'VxCharsLessThanRule',
-        componentManagerConfig: componentManagerConfig);
-    maxCharsKey = optionsInventory.addKey(
-        VxComponentNameManager.getFullOptionKey(name, 'maxChars'),
-        VxOptionsInventoryDescriptors.positiveInt);
-  }
-
-  @override
-  List<MSG> validate(Map<String, String> options, String value) {
-    final maxChars = optionsMap
-        .getInt(options: options, id: maxCharsKey, defaultValue: 100000)
-        .value;
-    return _evaluate(value, maxChars, options);
-  }
-
-  List<MSG> _evaluate(String value, int maxChars, Map<String, String> options) {
-    if (value.length < maxChars) {
-      if (successProducer != null) {
-        return [successProducer!.produce(options, value)];
-      }
-    } else {
-      if (failureProducer != null) {
-        return [failureProducer!.produce(options, value)];
-      }
-    }
-    return [];
-  }
-}
-
-/// Validates that the number of characters in a string is more than a specified limit obtained from the options.
-class VxCharsMoreThanRule<MSG> extends VxBaseRule<MSG> {
-  final VxMessageProducer<MSG, String>? successProducer;
-  final VxMessageProducer<MSG, String>? failureProducer;
-  final String name;
-  final ExMetricStoreHolder metricStoreHolder;
-  final int defaultMinChars;
-
-  VxCharsMoreThanRule(this.name, this.metricStoreHolder, this.defaultMinChars,
-      {this.successProducer, this.failureProducer});
-
-  @override
-  List<MSG> validate(Map<String, String> options, String value) {
-    final minCharsKey = '$name-minChars';
-    final minChars = int.tryParse(options[minCharsKey] ?? '');
-
-    if (!options.containsKey(minCharsKey)) {
-      metricStoreHolder.store.addMetric(
-          VxMetrics.getMinCharsKeyNotFound('VxCharsMoreThanRule', name), 1);
-      return _evaluate(value, defaultMinChars, options);
-    }
-
-    if (minChars == null) {
-      metricStoreHolder.store.addMetric(
-          VxMetrics.getMinCharsKeyInvalid('VxCharsMoreThanRule', name), 1);
-      return _evaluate(value, defaultMinChars, options);
-    }
-
-    return _evaluate(value, minChars, options);
-  }
-
-  List<MSG> _evaluate(String value, int minChars, Map<String, String> options) {
-    if (value.length > minChars) {
-      if (successProducer != null) {
-        return [successProducer!.produce(options, value)];
-      }
-    } else {
-      if (failureProducer != null) {
-        return [failureProducer!.produce(options, value)];
-      }
-    }
-    return [];
-  }
-}
-
-/// Validates that the number of characters in a string is less than or equal to a specified limit obtained from the options.
-class VxCharsLessThanOrEqualRule<MSG> extends VxBaseRule<MSG> {
-  final VxMessageProducer<MSG, String>? successProducer;
-  final VxMessageProducer<MSG, String>? failureProducer;
-  final String name;
-  final ExMetricStoreHolder metricStoreHolder;
-  final int defaultMaxChars;
-
-  VxCharsLessThanOrEqualRule(
-      this.name, this.metricStoreHolder, this.defaultMaxChars,
-      {this.successProducer, this.failureProducer});
-
-  @override
-  List<MSG> validate(Map<String, String> options, String value) {
-    final maxCharsKey = '$name-maxChars';
-    final maxChars = int.tryParse(options[maxCharsKey] ?? '');
-
-    if (!options.containsKey(maxCharsKey)) {
-      metricStoreHolder.store.addMetric(
-          VxMetrics.getMaxCharsKeyNotFound('VxCharsLessThanOrEqualRule', name),
-          1);
-      return _evaluate(value, defaultMaxChars, options);
-    }
-
-    if (maxChars == null) {
-      metricStoreHolder.store.addMetric(
-          VxMetrics.getMaxCharsKeyInvalid('VxCharsLessThanOrEqualRule', name),
-          1);
-      return _evaluate(value, defaultMaxChars, options);
-    }
-
-    return _evaluate(value, maxChars, options);
-  }
-
-  List<MSG> _evaluate(String value, int maxChars, Map<String, String> options) {
-    if (value.length <= maxChars) {
-      if (successProducer != null) {
-        return [successProducer!.produce(options, value)];
-      }
-    } else {
-      if (failureProducer != null) {
-        return [failureProducer!.produce(options, value)];
-      }
-    }
-    return [];
-  }
-}
-
-/// Validates that the number of characters in a string is more than or equal to a specified limit obtained from the options.
-class VxCharsMoreThanOrEqualRule<MSG> extends VxBaseRule<MSG> {
-  final VxMessageProducer<MSG, String>? successProducer;
-  final VxMessageProducer<MSG, String>? failureProducer;
-  final String name;
-  final ExMetricStoreHolder metricStoreHolder;
-  final int defaultMinChars;
-
-  VxCharsMoreThanOrEqualRule(
-      this.name, this.metricStoreHolder, this.defaultMinChars,
-      {this.successProducer, this.failureProducer});
-
-  @override
-  List<MSG> validate(Map<String, String> options, String value) {
-    final minCharsKey = '$name-minChars';
-    final minChars = int.tryParse(options[minCharsKey] ?? '');
-
-    if (!options.containsKey(minCharsKey)) {
-      metricStoreHolder.store.addMetric(
-          VxMetrics.getMinCharsKeyNotFound('VxCharsMoreThanOrEqualRule', name),
-          1);
-      return _evaluate(value, defaultMinChars, options);
-    }
-
-    if (minChars == null) {
-      metricStoreHolder.store.addMetric(
-          VxMetrics.getMinCharsKeyInvalid('VxCharsMoreThanOrEqualRule', name),
-          1);
-      return _evaluate(value, defaultMinChars, options);
-    }
-
-    return _evaluate(value, minChars, options);
-  }
-
-  List<MSG> _evaluate(String value, int minChars, Map<String, String> options) {
-    if (value.length >= minChars) {
-      if (successProducer != null) {
-        return [successProducer!.produce(options, value)];
-      }
-    } else {
-      if (failureProducer != null) {
-        return [failureProducer!.produce(options, value)];
-      }
-    }
-    return [];
-  }
-}
-
 /// Validates that the number of words in a string is less than a specified limit obtained from the options.
 class VxWordsLessThanRule<MSG> extends VxBaseRule<MSG> {
   final VxMessageProducer<MSG, String>? successProducer;
@@ -493,39 +300,61 @@ class VxStringRules {
         componentManagerConfig: componentManagerConfig);
   }
 
-  static VxCharsMoreThanRule<MSG> charsMoreThan<MSG>(
-    String name,
-    ExMetricStoreHolder metricStoreHolder,
-    int defaultMinChars, {
-    VxMessageProducer<MSG, String>? successProducer,
-    VxMessageProducer<MSG, String>? failureProducer,
-  }) {
-    return VxCharsMoreThanRule<MSG>(name, metricStoreHolder, defaultMinChars,
-        successProducer: successProducer, failureProducer: failureProducer);
+  static VxCharsRule<MSG> charsMoreThan<MSG>(
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      required int defaultMaxChars,
+      VxMessageProducer<MSG, String>? successProducer,
+      VxMessageProducer<MSG, String>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
+    return VxCharsRule<MSG>(
+        name: name,
+        numberComparator: VxNumberComparators.greaterThan,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        defaultMaxChars: defaultMaxChars,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
   }
 
-  static VxCharsLessThanOrEqualRule<MSG> charsLessThanOrEqual<MSG>(
-    String name,
-    ExMetricStoreHolder metricStoreHolder,
-    int defaultMaxChars, {
-    VxMessageProducer<MSG, String>? successProducer,
-    VxMessageProducer<MSG, String>? failureProducer,
-  }) {
-    return VxCharsLessThanOrEqualRule<MSG>(
-        name, metricStoreHolder, defaultMaxChars,
-        successProducer: successProducer, failureProducer: failureProducer);
+  static VxCharsRule<MSG> charsLessThanOrEqual<MSG>(
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      required int defaultMaxChars,
+      VxMessageProducer<MSG, String>? successProducer,
+      VxMessageProducer<MSG, String>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
+    return VxCharsRule<MSG>(
+        name: name,
+        numberComparator: VxNumberComparators.lessThanOrEqual,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        defaultMaxChars: defaultMaxChars,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
   }
 
-  static VxCharsMoreThanOrEqualRule<MSG> charsMoreThanOrEqual<MSG>(
-    String name,
-    ExMetricStoreHolder metricStoreHolder,
-    int defaultMinChars, {
-    VxMessageProducer<MSG, String>? successProducer,
-    VxMessageProducer<MSG, String>? failureProducer,
-  }) {
-    return VxCharsMoreThanOrEqualRule<MSG>(
-        name, metricStoreHolder, defaultMinChars,
-        successProducer: successProducer, failureProducer: failureProducer);
+  static VxCharsRule<MSG> charsMoreThanOrEqual<MSG>(
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      required int defaultMaxChars,
+      VxMessageProducer<MSG, String>? successProducer,
+      VxMessageProducer<MSG, String>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
+    return VxCharsRule<MSG>(
+        name: name,
+        numberComparator: VxNumberComparators.greaterThanOrEqual,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        defaultMaxChars: defaultMaxChars,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
   }
 
   static VxWordsLessThanRule<MSG> wordsLessThan<MSG>(

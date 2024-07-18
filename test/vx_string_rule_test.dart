@@ -45,19 +45,19 @@ void main() {
             successProducer: successProducer,
             failureProducer: failureProducer);
         expect(
-            rule.validate({'test#thresholdChars': "$threshold"},
+            rule.validate({'test#maxChars': "$threshold"},
                 StringFixture.createString(threshold - 1)),
             [successMessage]);
         expect(
-            rule.validate({'test#thresholdChars': "$threshold"},
+            rule.validate({'test#maxChars': "$threshold"},
                 StringFixture.createString(threshold)),
             [failureMessage]);
         expect(
-            rule.validate({'test#thresholdChars': "$threshold"},
+            rule.validate({'test#maxChars': "$threshold"},
                 StringFixture.createString(threshold + 1)),
             [failureMessage]);
         expect(optionsInventory.toList().length, 1);
-        expect(optionsInventory.toList().first.name, 'test#thresholdChars');
+        expect(optionsInventory.toList().first.name, 'test#maxChars');
       });
 
       test('validate without producers', () {
@@ -90,7 +90,7 @@ void main() {
               'class': 'VxCharsRule',
               'class-specialisation': 'less-than',
               'method': 'validate',
-              'name': 'test#thresholdChars',
+              'name': 'test#maxChars',
               'level': 'ERROR',
               'status': 'not-found',
               'unit': 'count',
@@ -120,9 +120,10 @@ void main() {
               'class': 'VxCharsRule',
               'class-specialisation': 'less-than',
               'method': 'validate',
-              'name': 'test#thresholdChars',
+              'name': 'test#maxChars',
+              'expected': 'integer',
               'level': 'ERROR',
-              'status': 'not-found',
+              'error': 'format-exception',
               'unit': 'count',
               'aggregation': 'count'
             }

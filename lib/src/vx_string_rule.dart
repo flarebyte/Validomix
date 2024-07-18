@@ -1,11 +1,27 @@
 import 'package:eagleyeix/metric.dart';
-import 'package:validomix/src/vx_component_name_manager.dart';
-import 'package:validomix/src/vx_number_comparator.dart';
-import 'package:validomix/src/vx_options_inventory.dart';
 
+import 'vx_component_name_manager.dart';
 import 'vx_metrics.dart';
 import 'vx_model.dart';
+import 'vx_number_comparator.dart';
+import 'vx_options_inventory.dart';
 import 'vx_options_map.dart';
+
+/// The default should try to be generous
+final defaultSize = {
+  VxNumberComparators.lessThan.name: 10000,
+  VxNumberComparators.lessThanOrEqual.name: 10000,
+  VxNumberComparators.greaterThan.name: 0,
+  VxNumberComparators.greaterThanOrEqual.name: 0,
+};
+
+/// The default name for each comparator
+final defaultName = {
+  VxNumberComparators.lessThan.name: 'maxChars',
+  VxNumberComparators.lessThanOrEqual.name: 'maxChars',
+  VxNumberComparators.greaterThan.name: 'minChars',
+  VxNumberComparators.greaterThanOrEqual.name: 'minChars',
+};
 
 /// Validates that the number of characters in a string is less than a specified limit obtained from the options.
 class VxCharsRule<MSG> extends VxBaseRule<MSG> {
@@ -36,14 +52,18 @@ class VxCharsRule<MSG> extends VxBaseRule<MSG> {
         classSpecialisation: numberComparator.name.replaceAll(' ', '-'),
         componentManagerConfig: componentManagerConfig);
     thresholdCharsKey = optionsInventory.addKey(
-        VxComponentNameManager.getFullOptionKey(name, 'thresholdChars'),
+        VxComponentNameManager.getFullOptionKey(
+            name, defaultName[numberComparator.name] ?? 'thresholdChars'),
         VxOptionsInventoryDescriptors.positiveInt);
   }
 
   @override
   List<MSG> validate(Map<String, String> options, String value) {
     final thresholdChars = optionsMap
-        .getInt(options: options, id: thresholdCharsKey, defaultValue: 100000)
+        .getInt(
+            options: options,
+            id: thresholdCharsKey,
+            defaultValue: defaultSize[numberComparator.name] ?? 0)
         .value;
     return _evaluate(value, thresholdChars, options);
   }

@@ -405,38 +405,60 @@ class VxStringRules {
         componentManagerConfig: componentManagerConfig);
   }
 
-  static VxWordsMoreThanRule<MSG> wordsMoreThan<MSG>(
-    String name,
-    ExMetricStoreHolder metricStoreHolder,
-    int defaultMinWords, {
-    VxMessageProducer<MSG, String>? successProducer,
-    VxMessageProducer<MSG, String>? failureProducer,
-  }) {
-    return VxWordsMoreThanRule<MSG>(name, metricStoreHolder, defaultMinWords,
-        successProducer: successProducer, failureProducer: failureProducer);
+  static VxWordsRule<MSG> wordsMoreThan<MSG>(
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      required int defaultMaxChars,
+      VxMessageProducer<MSG, String>? successProducer,
+      VxMessageProducer<MSG, String>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
+    return VxWordsRule<MSG>(
+        name: name,
+        numberComparator: VxNumberComparators.greaterThan,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        defaultMaxChars: defaultMaxChars,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
   }
 
-  static VxWordsLessThanOrEqualRule<MSG> wordsLessThanOrEqual<MSG>(
-    String name,
-    ExMetricStoreHolder metricStoreHolder,
-    int defaultMaxWords, {
-    VxMessageProducer<MSG, String>? successProducer,
-    VxMessageProducer<MSG, String>? failureProducer,
-  }) {
-    return VxWordsLessThanOrEqualRule<MSG>(
-        name, metricStoreHolder, defaultMaxWords,
-        successProducer: successProducer, failureProducer: failureProducer);
+  static VxWordsRule<MSG> wordsLessThanOrEqual<MSG>(
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      required int defaultMaxChars,
+      VxMessageProducer<MSG, String>? successProducer,
+      VxMessageProducer<MSG, String>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
+    return VxWordsRule<MSG>(
+        name: name,
+        numberComparator: VxNumberComparators.lessThanOrEqual,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        defaultMaxChars: defaultMaxChars,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
   }
 
-  static VxWordsMoreThanOrEqualRule<MSG> wordsMoreThanOrEqual<MSG>(
-    String name,
-    ExMetricStoreHolder metricStoreHolder,
-    int defaultMinWords, {
-    VxMessageProducer<MSG, String>? successProducer,
-    VxMessageProducer<MSG, String>? failureProducer,
-  }) {
-    return VxWordsMoreThanOrEqualRule<MSG>(
-        name, metricStoreHolder, defaultMinWords,
-        successProducer: successProducer, failureProducer: failureProducer);
+  static VxWordsRule<MSG> wordsMoreThanOrEqual<MSG>(
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      required int defaultMaxChars,
+      VxMessageProducer<MSG, String>? successProducer,
+      VxMessageProducer<MSG, String>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
+    return VxWordsRule<MSG>(
+        name: name,
+        numberComparator: VxNumberComparators.greaterThanOrEqual,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        defaultMaxChars: defaultMaxChars,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
   }
 }

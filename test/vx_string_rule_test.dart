@@ -529,39 +529,62 @@ void main() {
       });
     });
     group('VxWordsLessThanOrEqualRule', () {
+      const threshold = 10;
+      const defaultThreshold = 1;
       test('validate with producers', () {
         final rule = VxStringRules.wordsLessThanOrEqual<String>(
-            'test', metricStoreHolder, 1,
-            successProducer: successProducer, failureProducer: failureProducer);
-        expect(rule.validate({'test-maxWords': '3'}, createWords(3)),
+            name: 'test',
+            metricStoreHolder: metricStoreHolder,
+            optionsInventory: optionsInventory,
+            defaultMaxChars: defaultThreshold,
+            successProducer: successProducer,
+            failureProducer: failureProducer);
+        expect(
+            rule.validate(
+                {'test#maxWords': "$threshold"}, createWords(threshold - 1)),
             [successMessage]);
-        expect(rule.validate({'test-maxWords': '3'}, createWords(4)),
+        expect(
+            rule.validate(
+                {'test#maxWords': "$threshold"}, createWords(threshold)),
+            [successMessage]);
+        expect(
+            rule.validate(
+                {'test#maxWords': "$threshold"}, createWords(threshold + 1)),
             [failureMessage]);
+        expect(optionsInventory.toList().length, 1);
+        expect(optionsInventory.toList().first.name, 'test#maxWords');
       });
 
       test('validate without producers', () {
         final ruleWithoutProducers = VxStringRules.wordsLessThanOrEqual<String>(
-            'test', metricStoreHolder, 3);
-        expect(ruleWithoutProducers.validate({}, createWords(3)), []);
-        expect(ruleWithoutProducers.validate({}, createWords(4)), []);
+            name: 'test',
+            metricStoreHolder: metricStoreHolder,
+            optionsInventory: optionsInventory,
+            defaultMaxChars: threshold);
+        wordsShouldNotProduceMessage(
+            ruleWithoutProducers, threshold, optionsInventory);
       });
 
       test('KeyNotFound metric logging', () {
         final ruleWithoutProducers = VxStringRules.wordsLessThanOrEqual<String>(
-            'test', metricStoreHolder, 3);
-        ruleWithoutProducers.validate({}, createWords(3));
+            name: 'test',
+            metricStoreHolder: metricStoreHolder,
+            optionsInventory: optionsInventory,
+            defaultMaxChars: threshold);
+        ruleWithoutProducers.validate({}, createWords(threshold));
 
         final count = ExMetricAggregations.count();
         final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
 
         expect(aggregatedMetrics.first.toJson(), {
           'key': {
-            'name': ['get-max-words'],
+            'name': ['get-option-value'],
             'dimensions': {
               'package': 'validomix',
-              'class': 'VxWordsLessThanOrEqualRule',
+              'class': 'VxWordsRule',
+              'class-specialisation': 'less-than-or-equal',
               'method': 'validate',
-              'name': 'test',
+              'name': 'test#maxWords',
               'level': 'ERROR',
               'status': 'not-found',
               'unit': 'count',
@@ -573,21 +596,26 @@ void main() {
       });
       test('KeyInvalid metric logging', () {
         final ruleWithoutProducers = VxStringRules.wordsLessThanOrEqual<String>(
-            'test', metricStoreHolder, 3);
+            name: 'test',
+            metricStoreHolder: metricStoreHolder,
+            optionsInventory: optionsInventory,
+            defaultMaxChars: threshold);
         ruleWithoutProducers
-            .validate({'test-maxWords': 'invalid'}, createWords(3));
+            .validate({'test#maxWords': 'invalid'}, createWords(threshold));
 
         final count = ExMetricAggregations.count();
         final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
 
         expect(aggregatedMetrics.first.toJson(), {
           'key': {
-            'name': ['get-max-words'],
+            'name': ['get-option-value'],
             'dimensions': {
               'package': 'validomix',
-              'class': 'VxWordsLessThanOrEqualRule',
+              'class': 'VxWordsRule',
+              'class-specialisation': 'less-than-or-equal',
               'method': 'validate',
-              'name': 'test',
+              'name': 'test#maxWords',
+              'expected': 'integer',
               'level': 'ERROR',
               'error': 'format-exception',
               'unit': 'count',
@@ -599,39 +627,62 @@ void main() {
       });
     });
     group('VxWordsMoreThanRule', () {
+      const threshold = 10;
+      const defaultThreshold = 1;
       test('validate with producers', () {
         final rule = VxStringRules.wordsMoreThan<String>(
-            'test', metricStoreHolder, 3,
-            successProducer: successProducer, failureProducer: failureProducer);
-        expect(rule.validate({'test-minWords': '3'}, createWords(4)),
+            name: 'test',
+            metricStoreHolder: metricStoreHolder,
+            optionsInventory: optionsInventory,
+            defaultMaxChars: defaultThreshold,
+            successProducer: successProducer,
+            failureProducer: failureProducer);
+        expect(
+            rule.validate(
+                {'test#maxWords': "$threshold"}, createWords(threshold + 1)),
             [successMessage]);
-        expect(rule.validate({'test-minWords': '3'}, createWords(2)),
+        expect(
+            rule.validate(
+                {'test#maxWords': "$threshold"}, createWords(threshold)),
             [failureMessage]);
+        expect(
+            rule.validate(
+                {'test#maxWords': "$threshold"}, createWords(threshold - 1)),
+            [failureMessage]);
+        expect(optionsInventory.toList().length, 1);
+        expect(optionsInventory.toList().first.name, 'test#maxWords');
       });
 
       test('validate without producers', () {
-        final ruleWithoutProducers =
-            VxStringRules.wordsMoreThan<String>('test', metricStoreHolder, 3);
-        expect(ruleWithoutProducers.validate({}, createWords(4)), []);
-        expect(ruleWithoutProducers.validate({}, createWords(2)), []);
+        final ruleWithoutProducers = VxStringRules.wordsMoreThan<String>(
+            name: 'test',
+            metricStoreHolder: metricStoreHolder,
+            optionsInventory: optionsInventory,
+            defaultMaxChars: threshold);
+        wordsShouldNotProduceMessage(
+            ruleWithoutProducers, threshold, optionsInventory);
       });
 
       test('KeyNotFound metric logging', () {
-        final ruleWithoutProducers =
-            VxStringRules.wordsMoreThan<String>('test', metricStoreHolder, 3);
-        ruleWithoutProducers.validate({}, createWords(2));
+        final ruleWithoutProducers = VxStringRules.wordsMoreThan<String>(
+            name: 'test',
+            metricStoreHolder: metricStoreHolder,
+            optionsInventory: optionsInventory,
+            defaultMaxChars: threshold);
+        ruleWithoutProducers.validate({}, createWords(threshold));
 
         final count = ExMetricAggregations.count();
         final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
 
         expect(aggregatedMetrics.first.toJson(), {
           'key': {
-            'name': ['get-min-words'],
+            'name': ['get-option-value'],
             'dimensions': {
               'package': 'validomix',
-              'class': 'VxWordsMoreThanRule',
+              'class': 'VxWordsRule',
+              'class-specialisation': 'greater-than',
               'method': 'validate',
-              'name': 'test',
+              'name': 'test#maxWords',
               'level': 'ERROR',
               'status': 'not-found',
               'unit': 'count',
@@ -642,22 +693,27 @@ void main() {
         });
       });
       test('KeyInvalid metric logging', () {
-        final ruleWithoutProducers =
-            VxStringRules.wordsMoreThan<String>('test', metricStoreHolder, 3);
+        final ruleWithoutProducers = VxStringRules.wordsMoreThan<String>(
+            name: 'test',
+            metricStoreHolder: metricStoreHolder,
+            optionsInventory: optionsInventory,
+            defaultMaxChars: threshold);
         ruleWithoutProducers
-            .validate({'test-minWords': 'invalid'}, createWords(2));
+            .validate({'test#maxWords': 'invalid'}, createWords(threshold));
 
         final count = ExMetricAggregations.count();
         final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
 
         expect(aggregatedMetrics.first.toJson(), {
           'key': {
-            'name': ['get-min-words'],
+            'name': ['get-option-value'],
             'dimensions': {
               'package': 'validomix',
-              'class': 'VxWordsMoreThanRule',
+              'class': 'VxWordsRule',
+              'class-specialisation': 'greater-than',
               'method': 'validate',
-              'name': 'test',
+              'name': 'test#maxWords',
+              'expected': 'integer',
               'level': 'ERROR',
               'error': 'format-exception',
               'unit': 'count',
@@ -669,39 +725,62 @@ void main() {
       });
     });
     group('VxWordsMoreThanOrEqualRule', () {
+      const threshold = 10;
+      const defaultThreshold = 1;
       test('validate with producers', () {
         final rule = VxStringRules.wordsMoreThanOrEqual<String>(
-            'test', metricStoreHolder, 10,
-            successProducer: successProducer, failureProducer: failureProducer);
-        expect(rule.validate({'test-minWords': '3'}, createWords(3)),
+            name: 'test',
+            metricStoreHolder: metricStoreHolder,
+            optionsInventory: optionsInventory,
+            defaultMaxChars: defaultThreshold,
+            successProducer: successProducer,
+            failureProducer: failureProducer);
+        expect(
+            rule.validate(
+                {'test#maxWords': "$threshold"}, createWords(threshold + 1)),
             [successMessage]);
-        expect(rule.validate({'test-minWords': '3'}, createWords(2)),
+        expect(
+            rule.validate(
+                {'test#maxWords': "$threshold"}, createWords(threshold)),
             [failureMessage]);
+        expect(
+            rule.validate(
+                {'test#maxWords': "$threshold"}, createWords(threshold - 1)),
+            [failureMessage]);
+        expect(optionsInventory.toList().length, 1);
+        expect(optionsInventory.toList().first.name, 'test#maxWords');
       });
 
       test('validate without producers', () {
         final ruleWithoutProducers = VxStringRules.wordsMoreThanOrEqual<String>(
-            'test', metricStoreHolder, 3);
-        expect(ruleWithoutProducers.validate({}, createWords(4)), []);
-        expect(ruleWithoutProducers.validate({}, createWords(2)), []);
+            name: 'test',
+            metricStoreHolder: metricStoreHolder,
+            optionsInventory: optionsInventory,
+            defaultMaxChars: threshold);
+        wordsShouldNotProduceMessage(
+            ruleWithoutProducers, threshold, optionsInventory);
       });
 
       test('KeyNotFound metric logging', () {
         final ruleWithoutProducers = VxStringRules.wordsMoreThanOrEqual<String>(
-            'test', metricStoreHolder, 3);
-        ruleWithoutProducers.validate({}, createWords(2));
+            name: 'test',
+            metricStoreHolder: metricStoreHolder,
+            optionsInventory: optionsInventory,
+            defaultMaxChars: threshold);
+        ruleWithoutProducers.validate({}, createWords(threshold));
 
         final count = ExMetricAggregations.count();
         final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
 
         expect(aggregatedMetrics.first.toJson(), {
           'key': {
-            'name': ['get-min-words'],
+            'name': ['get-option-value'],
             'dimensions': {
               'package': 'validomix',
-              'class': 'VxWordsMoreThanOrEqualRule',
+              'class': 'VxWordsRule',
+              'class-specialisation': 'greater-than-or-equal',
               'method': 'validate',
-              'name': 'test',
+              'name': 'test#maxWords',
               'level': 'ERROR',
               'status': 'not-found',
               'unit': 'count',
@@ -713,21 +792,26 @@ void main() {
       });
       test('KeyInvalid metric logging', () {
         final ruleWithoutProducers = VxStringRules.wordsMoreThanOrEqual<String>(
-            'test', metricStoreHolder, 3);
+            name: 'test',
+            metricStoreHolder: metricStoreHolder,
+            optionsInventory: optionsInventory,
+            defaultMaxChars: threshold);
         ruleWithoutProducers
-            .validate({'test-minWords': 'invalid'}, createWords(2));
+            .validate({'test#maxWords': 'invalid'}, createWords(threshold));
 
         final count = ExMetricAggregations.count();
         final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
 
         expect(aggregatedMetrics.first.toJson(), {
           'key': {
-            'name': ['get-min-words'],
+            'name': ['get-option-value'],
             'dimensions': {
               'package': 'validomix',
-              'class': 'VxWordsMoreThanOrEqualRule',
+              'class': 'VxWordsRule',
+              'class-specialisation': 'greater-than-or-equal',
               'method': 'validate',
-              'name': 'test',
+              'name': 'test#maxWords',
+              'expected': 'integer',
               'level': 'ERROR',
               'error': 'format-exception',
               'unit': 'count',

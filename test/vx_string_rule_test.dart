@@ -742,7 +742,7 @@ void main() {
         expect(
             rule.validate(
                 {'test#minWords': "$threshold"}, createWords(threshold)),
-            [failureMessage]);
+            [successMessage]);
         expect(
             rule.validate(
                 {'test#minWords': "$threshold"}, createWords(threshold - 1)),

@@ -35,13 +35,11 @@ void main() {
 
     group('VxCharsLessThanRule', () {
       const threshold = 10;
-      const defaultThreshold = 1;
       test('validate with producers', () {
         final rule = VxStringRules.charsLessThan<String>(
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            defaultMaxChars: defaultThreshold,
             successProducer: successProducer,
             failureProducer: failureProducer);
         expect(
@@ -64,18 +62,17 @@ void main() {
         final ruleWithoutProducers = VxStringRules.charsLessThan<String>(
             name: 'test',
             metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+            optionsInventory: optionsInventory);
         shouldNotProduceMessage(
             ruleWithoutProducers, threshold, optionsInventory);
       });
 
       test('KeyNotFound metric logging', () {
         final ruleWithoutProducers = VxStringRules.charsLessThan<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         ruleWithoutProducers
             .validate({}, StringFixture.createString(threshold));
 
@@ -102,10 +99,10 @@ void main() {
       });
       test('KeyInvalid metric logging', () {
         final ruleWithoutProducers = VxStringRules.charsLessThan<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         ruleWithoutProducers.validate({'test#maxChars': 'invalid'},
             StringFixture.createString(threshold));
 
@@ -134,13 +131,11 @@ void main() {
     });
     group('VxCharsLessThanOrEqualRule', () {
       const threshold = 10;
-      const defaultThreshold = 1;
       test('validate with producers', () {
         final rule = VxStringRules.charsLessThanOrEqual<String>(
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            defaultMaxChars: defaultThreshold,
             successProducer: successProducer,
             failureProducer: failureProducer);
         expect(
@@ -161,20 +156,20 @@ void main() {
 
       test('validate without producers', () {
         final ruleWithoutProducers = VxStringRules.charsLessThanOrEqual<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         shouldNotProduceMessage(
             ruleWithoutProducers, threshold, optionsInventory);
       });
 
       test('KeyNotFound metric logging', () {
         final ruleWithoutProducers = VxStringRules.charsLessThanOrEqual<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         ruleWithoutProducers
             .validate({}, StringFixture.createString(threshold));
 
@@ -201,10 +196,10 @@ void main() {
       });
       test('KeyInvalid metric logging', () {
         final ruleWithoutProducers = VxStringRules.charsLessThanOrEqual<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         ruleWithoutProducers.validate({'test#maxChars': 'invalid'},
             StringFixture.createString(threshold));
 
@@ -234,13 +229,11 @@ void main() {
 
     group('VxCharsMoreThanRule', () {
       const threshold = 10;
-      const defaultThreshold = 1;
       test('validate with producers', () {
         final rule = VxStringRules.charsMoreThan<String>(
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            defaultMaxChars: defaultThreshold,
             successProducer: successProducer,
             failureProducer: failureProducer);
         expect(
@@ -261,20 +254,20 @@ void main() {
 
       test('validate without producers', () {
         final ruleWithoutProducers = VxStringRules.charsMoreThan<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         shouldNotProduceMessage(
             ruleWithoutProducers, threshold, optionsInventory);
       });
 
       test('KeyNotFound metric logging', () {
         final ruleWithoutProducers = VxStringRules.charsMoreThan<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         ruleWithoutProducers
             .validate({}, StringFixture.createString(threshold));
 
@@ -301,10 +294,10 @@ void main() {
       });
       test('KeyInvalid metric logging', () {
         final ruleWithoutProducers = VxStringRules.charsMoreThan<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         ruleWithoutProducers.validate({'test#minChars': 'invalid'},
             StringFixture.createString(threshold));
 
@@ -333,13 +326,11 @@ void main() {
     });
     group('VxCharsMoreThanOrEqualRule', () {
       const threshold = 10;
-      const defaultThreshold = 1;
       test('validate with producers', () {
         final rule = VxStringRules.charsMoreThanOrEqual<String>(
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            defaultMaxChars: defaultThreshold,
             successProducer: successProducer,
             failureProducer: failureProducer);
         expect(
@@ -360,20 +351,20 @@ void main() {
 
       test('validate without producers', () {
         final ruleWithoutProducers = VxStringRules.charsMoreThanOrEqual<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         shouldNotProduceMessage(
             ruleWithoutProducers, threshold, optionsInventory);
       });
 
       test('KeyNotFound metric logging', () {
         final ruleWithoutProducers = VxStringRules.charsMoreThanOrEqual<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         ruleWithoutProducers
             .validate({}, StringFixture.createString(threshold));
 
@@ -400,10 +391,10 @@ void main() {
       });
       test('KeyInvalid metric logging', () {
         final ruleWithoutProducers = VxStringRules.charsMoreThanOrEqual<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         ruleWithoutProducers.validate({'test#minChars': 'invalid'},
             StringFixture.createString(threshold));
 
@@ -432,13 +423,11 @@ void main() {
     });
     group('VxWordsLessThanRule', () {
       const threshold = 10;
-      const defaultThreshold = 1;
       test('validate with producers', () {
         final rule = VxStringRules.wordsLessThan<String>(
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            defaultMaxChars: defaultThreshold,
             successProducer: successProducer,
             failureProducer: failureProducer);
         expect(
@@ -459,20 +448,20 @@ void main() {
 
       test('validate without producers', () {
         final ruleWithoutProducers = VxStringRules.wordsLessThan<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         wordsShouldNotProduceMessage(
             ruleWithoutProducers, threshold, optionsInventory);
       });
 
       test('KeyNotFound metric logging', () {
         final ruleWithoutProducers = VxStringRules.wordsLessThan<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         ruleWithoutProducers.validate({}, createWords(threshold));
 
         final count = ExMetricAggregations.count();
@@ -498,10 +487,10 @@ void main() {
       });
       test('KeyInvalid metric logging', () {
         final ruleWithoutProducers = VxStringRules.wordsLessThan<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         ruleWithoutProducers
             .validate({'test#maxWords': 'invalid'}, createWords(threshold));
 
@@ -530,13 +519,11 @@ void main() {
     });
     group('VxWordsLessThanOrEqualRule', () {
       const threshold = 10;
-      const defaultThreshold = 1;
       test('validate with producers', () {
         final rule = VxStringRules.wordsLessThanOrEqual<String>(
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            defaultMaxChars: defaultThreshold,
             successProducer: successProducer,
             failureProducer: failureProducer);
         expect(
@@ -557,20 +544,20 @@ void main() {
 
       test('validate without producers', () {
         final ruleWithoutProducers = VxStringRules.wordsLessThanOrEqual<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         wordsShouldNotProduceMessage(
             ruleWithoutProducers, threshold, optionsInventory);
       });
 
       test('KeyNotFound metric logging', () {
         final ruleWithoutProducers = VxStringRules.wordsLessThanOrEqual<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         ruleWithoutProducers.validate({}, createWords(threshold));
 
         final count = ExMetricAggregations.count();
@@ -596,10 +583,10 @@ void main() {
       });
       test('KeyInvalid metric logging', () {
         final ruleWithoutProducers = VxStringRules.wordsLessThanOrEqual<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         ruleWithoutProducers
             .validate({'test#maxWords': 'invalid'}, createWords(threshold));
 
@@ -628,13 +615,11 @@ void main() {
     });
     group('VxWordsMoreThanRule', () {
       const threshold = 10;
-      const defaultThreshold = 1;
       test('validate with producers', () {
         final rule = VxStringRules.wordsMoreThan<String>(
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            defaultMaxChars: defaultThreshold,
             successProducer: successProducer,
             failureProducer: failureProducer);
         expect(
@@ -655,20 +640,20 @@ void main() {
 
       test('validate without producers', () {
         final ruleWithoutProducers = VxStringRules.wordsMoreThan<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         wordsShouldNotProduceMessage(
             ruleWithoutProducers, threshold, optionsInventory);
       });
 
       test('KeyNotFound metric logging', () {
         final ruleWithoutProducers = VxStringRules.wordsMoreThan<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         ruleWithoutProducers.validate({}, createWords(threshold));
 
         final count = ExMetricAggregations.count();
@@ -694,10 +679,10 @@ void main() {
       });
       test('KeyInvalid metric logging', () {
         final ruleWithoutProducers = VxStringRules.wordsMoreThan<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         ruleWithoutProducers
             .validate({'test#minWords': 'invalid'}, createWords(threshold));
 
@@ -726,13 +711,11 @@ void main() {
     });
     group('VxWordsMoreThanOrEqualRule', () {
       const threshold = 10;
-      const defaultThreshold = 1;
       test('validate with producers', () {
         final rule = VxStringRules.wordsMoreThanOrEqual<String>(
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            defaultMaxChars: defaultThreshold,
             successProducer: successProducer,
             failureProducer: failureProducer);
         expect(
@@ -753,20 +736,20 @@ void main() {
 
       test('validate without producers', () {
         final ruleWithoutProducers = VxStringRules.wordsMoreThanOrEqual<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         wordsShouldNotProduceMessage(
             ruleWithoutProducers, threshold, optionsInventory);
       });
 
       test('KeyNotFound metric logging', () {
         final ruleWithoutProducers = VxStringRules.wordsMoreThanOrEqual<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         ruleWithoutProducers.validate({}, createWords(threshold));
 
         final count = ExMetricAggregations.count();
@@ -792,10 +775,10 @@ void main() {
       });
       test('KeyInvalid metric logging', () {
         final ruleWithoutProducers = VxStringRules.wordsMoreThanOrEqual<String>(
-            name: 'test',
-            metricStoreHolder: metricStoreHolder,
-            optionsInventory: optionsInventory,
-            defaultMaxChars: threshold);
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+        );
         ruleWithoutProducers
             .validate({'test#minWords': 'invalid'}, createWords(threshold));
 

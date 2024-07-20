@@ -45,7 +45,6 @@ class VxCharsRule<MSG> extends VxBaseRule<MSG> {
   final VxNumberComparator numberComparator;
   final String name;
   final ExMetricStoreHolder metricStoreHolder;
-  final int defaultMaxChars;
   final VxComponentManagerConfig componentManagerConfig;
   final VxOptionsInventory optionsInventory;
   late VxOptionsMap optionsMap;
@@ -56,7 +55,6 @@ class VxCharsRule<MSG> extends VxBaseRule<MSG> {
       required this.name,
       required this.metricStoreHolder,
       required this.optionsInventory,
-      required this.defaultMaxChars,
       this.successProducer,
       this.failureProducer,
       this.componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
@@ -105,7 +103,6 @@ class VxWordsRule<MSG> extends VxBaseRule<MSG> {
   final VxNumberComparator numberComparator;
   final String name;
   final ExMetricStoreHolder metricStoreHolder;
-  final int defaultMaxChars;
   final VxComponentManagerConfig componentManagerConfig;
   final VxOptionsInventory optionsInventory;
   late VxOptionsMap optionsMap;
@@ -116,7 +113,6 @@ class VxWordsRule<MSG> extends VxBaseRule<MSG> {
       required this.name,
       required this.metricStoreHolder,
       required this.optionsInventory,
-      required this.defaultMaxChars,
       this.successProducer,
       this.failureProducer,
       this.componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
@@ -162,7 +158,6 @@ class VxStringRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      required int defaultMaxChars,
       VxMessageProducer<MSG, String>? successProducer,
       VxMessageProducer<MSG, String>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
@@ -171,7 +166,6 @@ class VxStringRules {
         numberComparator: VxNumberComparators.lessThan,
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
-        defaultMaxChars: defaultMaxChars,
         successProducer: successProducer,
         failureProducer: failureProducer,
         componentManagerConfig: componentManagerConfig);
@@ -181,7 +175,6 @@ class VxStringRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      required int defaultMaxChars,
       VxMessageProducer<MSG, String>? successProducer,
       VxMessageProducer<MSG, String>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
@@ -190,7 +183,6 @@ class VxStringRules {
         numberComparator: VxNumberComparators.greaterThan,
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
-        defaultMaxChars: defaultMaxChars,
         successProducer: successProducer,
         failureProducer: failureProducer,
         componentManagerConfig: componentManagerConfig);
@@ -200,7 +192,6 @@ class VxStringRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      required int defaultMaxChars,
       VxMessageProducer<MSG, String>? successProducer,
       VxMessageProducer<MSG, String>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
@@ -209,7 +200,6 @@ class VxStringRules {
         numberComparator: VxNumberComparators.lessThanOrEqual,
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
-        defaultMaxChars: defaultMaxChars,
         successProducer: successProducer,
         failureProducer: failureProducer,
         componentManagerConfig: componentManagerConfig);
@@ -219,7 +209,6 @@ class VxStringRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      required int defaultMaxChars,
       VxMessageProducer<MSG, String>? successProducer,
       VxMessageProducer<MSG, String>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
@@ -228,7 +217,6 @@ class VxStringRules {
         numberComparator: VxNumberComparators.greaterThanOrEqual,
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
-        defaultMaxChars: defaultMaxChars,
         successProducer: successProducer,
         failureProducer: failureProducer,
         componentManagerConfig: componentManagerConfig);
@@ -238,7 +226,6 @@ class VxStringRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      required int defaultMaxChars,
       VxMessageProducer<MSG, String>? successProducer,
       VxMessageProducer<MSG, String>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
@@ -247,7 +234,6 @@ class VxStringRules {
         numberComparator: VxNumberComparators.lessThan,
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
-        defaultMaxChars: defaultMaxChars,
         successProducer: successProducer,
         failureProducer: failureProducer,
         componentManagerConfig: componentManagerConfig);
@@ -257,7 +243,6 @@ class VxStringRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      required int defaultMaxChars,
       VxMessageProducer<MSG, String>? successProducer,
       VxMessageProducer<MSG, String>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
@@ -266,7 +251,6 @@ class VxStringRules {
         numberComparator: VxNumberComparators.greaterThan,
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
-        defaultMaxChars: defaultMaxChars,
         successProducer: successProducer,
         failureProducer: failureProducer,
         componentManagerConfig: componentManagerConfig);
@@ -276,7 +260,6 @@ class VxStringRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      required int defaultMaxChars,
       VxMessageProducer<MSG, String>? successProducer,
       VxMessageProducer<MSG, String>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
@@ -285,7 +268,6 @@ class VxStringRules {
         numberComparator: VxNumberComparators.lessThanOrEqual,
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
-        defaultMaxChars: defaultMaxChars,
         successProducer: successProducer,
         failureProducer: failureProducer,
         componentManagerConfig: componentManagerConfig);
@@ -295,7 +277,6 @@ class VxStringRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      required int defaultMaxChars,
       VxMessageProducer<MSG, String>? successProducer,
       VxMessageProducer<MSG, String>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
@@ -304,7 +285,6 @@ class VxStringRules {
         numberComparator: VxNumberComparators.greaterThanOrEqual,
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
-        defaultMaxChars: defaultMaxChars,
         successProducer: successProducer,
         failureProducer: failureProducer,
         componentManagerConfig: componentManagerConfig);

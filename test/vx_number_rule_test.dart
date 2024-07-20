@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:eagleyeix/metric.dart';
 import 'package:test/test.dart';
 import 'package:validomix/validomix.dart';
@@ -94,18 +96,21 @@ void main() {
     test('edge case: value just above threshold', () {
       final options = {'example#minNum': '15'};
       final result = rule.validate(options, 15.01);
+      expect(metricStoreHolder.store.length, 0);
       expect(result, ['Success: 15.01 is valid.']);
     });
 
     test('edge case: value just below threshold', () {
       final options = {'example#minNum': '15'};
       final result = rule.validate(options, 14.99);
+      expect(metricStoreHolder.store.length, 0);
       expect(result, ['Failure: 14.99 is not valid.']);
     });
 
     test('edge case: negative numbers', () {
       final options = {'example#minNum': '-5'};
       final result = rule.validate(options, -3);
+      expect(metricStoreHolder.store.length, 0);
       expect(result, ['Success: -3 is valid.']);
     });
 

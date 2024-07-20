@@ -57,7 +57,7 @@ class VxNumberRule<MSG> extends VxBaseValidator<MSG, num> {
     thresholdKey = optionsInventory.addKey(
         VxComponentNameManager.getFullOptionKey(
             name, numberDefaultName[numberComparator.name] ?? 'thresholdNum'),
-        VxOptionsInventoryDescriptors.positiveInt);
+        [VxOptionsInventoryDescriptors.numeric]);
   }
 
   @override

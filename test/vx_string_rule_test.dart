@@ -639,18 +639,18 @@ void main() {
             failureProducer: failureProducer);
         expect(
             rule.validate(
-                {'test#maxWords': "$threshold"}, createWords(threshold + 1)),
+                {'test#minWords': "$threshold"}, createWords(threshold + 1)),
             [successMessage]);
         expect(
             rule.validate(
-                {'test#maxWords': "$threshold"}, createWords(threshold)),
+                {'test#minWords': "$threshold"}, createWords(threshold)),
             [failureMessage]);
         expect(
             rule.validate(
-                {'test#maxWords': "$threshold"}, createWords(threshold - 1)),
+                {'test#minWords': "$threshold"}, createWords(threshold - 1)),
             [failureMessage]);
         expect(optionsInventory.toList().length, 1);
-        expect(optionsInventory.toList().first.name, 'test#maxWords');
+        expect(optionsInventory.toList().first.name, 'test#minWords');
       });
 
       test('validate without producers', () {
@@ -682,7 +682,7 @@ void main() {
               'class': 'VxWordsRule',
               'class-specialisation': 'greater-than',
               'method': 'validate',
-              'name': 'test#maxWords',
+              'name': 'test#minWords',
               'level': 'ERROR',
               'status': 'not-found',
               'unit': 'count',
@@ -699,7 +699,7 @@ void main() {
             optionsInventory: optionsInventory,
             defaultMaxChars: threshold);
         ruleWithoutProducers
-            .validate({'test#maxWords': 'invalid'}, createWords(threshold));
+            .validate({'test#minWords': 'invalid'}, createWords(threshold));
 
         final count = ExMetricAggregations.count();
         final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
@@ -712,7 +712,7 @@ void main() {
               'class': 'VxWordsRule',
               'class-specialisation': 'greater-than',
               'method': 'validate',
-              'name': 'test#maxWords',
+              'name': 'test#minWords',
               'expected': 'integer',
               'level': 'ERROR',
               'error': 'format-exception',
@@ -737,18 +737,18 @@ void main() {
             failureProducer: failureProducer);
         expect(
             rule.validate(
-                {'test#maxWords': "$threshold"}, createWords(threshold + 1)),
+                {'test#minWords': "$threshold"}, createWords(threshold + 1)),
             [successMessage]);
         expect(
             rule.validate(
-                {'test#maxWords': "$threshold"}, createWords(threshold)),
+                {'test#minWords': "$threshold"}, createWords(threshold)),
             [failureMessage]);
         expect(
             rule.validate(
-                {'test#maxWords': "$threshold"}, createWords(threshold - 1)),
+                {'test#minWords': "$threshold"}, createWords(threshold - 1)),
             [failureMessage]);
         expect(optionsInventory.toList().length, 1);
-        expect(optionsInventory.toList().first.name, 'test#maxWords');
+        expect(optionsInventory.toList().first.name, 'test#minWords');
       });
 
       test('validate without producers', () {
@@ -780,7 +780,7 @@ void main() {
               'class': 'VxWordsRule',
               'class-specialisation': 'greater-than-or-equal',
               'method': 'validate',
-              'name': 'test#maxWords',
+              'name': 'test#minWords',
               'level': 'ERROR',
               'status': 'not-found',
               'unit': 'count',
@@ -797,7 +797,7 @@ void main() {
             optionsInventory: optionsInventory,
             defaultMaxChars: threshold);
         ruleWithoutProducers
-            .validate({'test#maxWords': 'invalid'}, createWords(threshold));
+            .validate({'test#minWords': 'invalid'}, createWords(threshold));
 
         final count = ExMetricAggregations.count();
         final aggregatedMetrics = metricStoreHolder.store.aggregateAll(count);
@@ -810,7 +810,7 @@ void main() {
               'class': 'VxWordsRule',
               'class-specialisation': 'greater-than-or-equal',
               'method': 'validate',
-              'name': 'test#maxWords',
+              'name': 'test#minWords',
               'expected': 'integer',
               'level': 'ERROR',
               'error': 'format-exception',

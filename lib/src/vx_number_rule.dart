@@ -1,8 +1,31 @@
 import 'package:eagleyeix/metric.dart';
+import 'package:validomix/src/vx_component_name_manager.dart';
 
 import 'vx_metrics.dart';
 import 'vx_model.dart';
 import 'vx_number_comparator.dart';
+import 'vx_options_inventory.dart';
+import 'vx_options_map.dart';
+
+/// The default should try to be generous
+final numberDefaultSize = {
+  VxNumberComparators.lessThan.name: 10000,
+  VxNumberComparators.lessThanOrEqual.name: 10000,
+  VxNumberComparators.greaterThan.name: 0,
+  VxNumberComparators.greaterThanOrEqual.name: 0,
+  VxNumberComparators.equalTo.name: 0,
+  VxNumberComparators.notEqualTo.name: 0,
+};
+
+/// The default name for each comparator
+final numberDefaultName = {
+  VxNumberComparators.lessThan.name: 'maxNum',
+  VxNumberComparators.lessThanOrEqual.name: 'maxNum',
+  VxNumberComparators.greaterThan.name: 'minNum',
+  VxNumberComparators.greaterThanOrEqual.name: 'minNum',
+  VxNumberComparators.equalTo.name: 'eqNum',
+  VxNumberComparators.notEqualTo.name: 'neqNum',
+};
 
 /// Validates that a number meets a specified comparison threshold obtained from the options.
 class VxNumberRule<MSG> extends VxBaseValidator<MSG, num> {
@@ -11,37 +34,42 @@ class VxNumberRule<MSG> extends VxBaseValidator<MSG, num> {
   final ExMetricStoreHolder metricStoreHolder;
   final VxMessageProducer<MSG, num>? successProducer;
   final VxMessageProducer<MSG, num>? failureProducer;
-  final num defaultThreshold;
+  final VxComponentManagerConfig componentManagerConfig;
+  final VxOptionsInventory optionsInventory;
+  late VxOptionsMap optionsMap;
+  late int thresholdKey;
 
-  VxNumberRule(
-    this.name,
-    this.metricStoreHolder,
-    this.numberComparator,
-    this.defaultThreshold, {
+  VxNumberRule({
+    required this.name,
+    required this.metricStoreHolder,
+    required this.numberComparator,
+    required this.optionsInventory,
+    this.componentManagerConfig = VxComponentManagerConfig.defaultConfig,
     this.successProducer,
     this.failureProducer,
-  });
+  }) {
+    optionsMap = VxOptionsMap(
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        ownerClassName: 'VxNumberRule',
+        classSpecialisation: numberComparator.name.replaceAll(' ', '-'),
+        componentManagerConfig: componentManagerConfig);
+    thresholdKey = optionsInventory.addKey(
+        VxComponentNameManager.getFullOptionKey(
+            name, numberDefaultName[numberComparator.name] ?? 'thresholdNum'),
+        VxOptionsInventoryDescriptors.positiveInt);
+  }
 
   @override
   List<MSG> validate(Map<String, String> options, num value) {
-    final thresholdKey = '$name-threshold';
-    final threshold = num.tryParse(options[thresholdKey] ?? '');
+    final thresholdNum = optionsMap
+        .getInt(
+            options: options,
+            id: thresholdKey,
+            defaultValue: numberDefaultSize[numberComparator.name] ?? 0)
+        .value;
 
-    if (!options.containsKey(thresholdKey)) {
-      metricStoreHolder.store.addMetric(
-          VxMetrics.getNumberThresholdKeyNotFound(numberComparator.name, name),
-          1);
-      return _evaluate(value, defaultThreshold, options);
-    }
-
-    if (threshold == null) {
-      metricStoreHolder.store.addMetric(
-          VxMetrics.getNumberThresholdKeyInvalid(numberComparator.name, name),
-          1);
-      return _evaluate(value, defaultThreshold, options);
-    }
-
-    return _evaluate(value, threshold, options);
+    return _evaluate(value, thresholdNum, options);
   }
 
   List<MSG> _evaluate(num value, num threshold, Map<String, String> options) {
@@ -113,105 +141,105 @@ class VxNumberMultipleOf<MSG> extends VxBaseValidator<MSG, num> {
 /// A static class providing methods to instantiate various number validation rules.
 class VxNumberRules {
   static VxNumberRule<MSG> greaterThan<MSG>(
-    String name,
-    ExMetricStoreHolder metricStoreHolder,
-    num defaultThreshold, {
-    VxMessageProducer<MSG, num>? successProducer,
-    VxMessageProducer<MSG, num>? failureProducer,
-  }) {
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      VxMessageProducer<MSG, num>? successProducer,
+      VxMessageProducer<MSG, num>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxNumberRule<MSG>(
-      name,
-      metricStoreHolder,
-      VxNumberComparators.greaterThan,
-      defaultThreshold,
-      successProducer: successProducer,
-      failureProducer: failureProducer,
-    );
+        name: name,
+        numberComparator: VxNumberComparators.greaterThan,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
   }
 
   static VxNumberRule<MSG> greaterThanOrEqual<MSG>(
-    String name,
-    ExMetricStoreHolder metricStoreHolder,
-    num defaultThreshold, {
-    VxMessageProducer<MSG, num>? successProducer,
-    VxMessageProducer<MSG, num>? failureProducer,
-  }) {
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      VxMessageProducer<MSG, num>? successProducer,
+      VxMessageProducer<MSG, num>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxNumberRule<MSG>(
-      name,
-      metricStoreHolder,
-      VxNumberComparators.greaterThanOrEqual,
-      defaultThreshold,
-      successProducer: successProducer,
-      failureProducer: failureProducer,
-    );
+        name: name,
+        numberComparator: VxNumberComparators.greaterThanOrEqual,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
   }
 
   static VxNumberRule<MSG> lessThan<MSG>(
-    String name,
-    ExMetricStoreHolder metricStoreHolder,
-    num defaultThreshold, {
-    VxMessageProducer<MSG, num>? successProducer,
-    VxMessageProducer<MSG, num>? failureProducer,
-  }) {
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      VxMessageProducer<MSG, num>? successProducer,
+      VxMessageProducer<MSG, num>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxNumberRule<MSG>(
-      name,
-      metricStoreHolder,
-      VxNumberComparators.lessThan,
-      defaultThreshold,
-      successProducer: successProducer,
-      failureProducer: failureProducer,
-    );
+        name: name,
+        numberComparator: VxNumberComparators.lessThan,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
   }
 
   static VxNumberRule<MSG> lessThanOrEqual<MSG>(
-    String name,
-    ExMetricStoreHolder metricStoreHolder,
-    num defaultThreshold, {
-    VxMessageProducer<MSG, num>? successProducer,
-    VxMessageProducer<MSG, num>? failureProducer,
-  }) {
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      VxMessageProducer<MSG, num>? successProducer,
+      VxMessageProducer<MSG, num>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxNumberRule<MSG>(
-      name,
-      metricStoreHolder,
-      VxNumberComparators.lessThanOrEqual,
-      defaultThreshold,
-      successProducer: successProducer,
-      failureProducer: failureProducer,
-    );
+        name: name,
+        numberComparator: VxNumberComparators.lessThanOrEqual,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
   }
 
   static VxNumberRule<MSG> equalTo<MSG>(
-    String name,
-    ExMetricStoreHolder metricStoreHolder,
-    num defaultThreshold, {
-    VxMessageProducer<MSG, num>? successProducer,
-    VxMessageProducer<MSG, num>? failureProducer,
-  }) {
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      VxMessageProducer<MSG, num>? successProducer,
+      VxMessageProducer<MSG, num>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxNumberRule<MSG>(
-      name,
-      metricStoreHolder,
-      VxNumberComparators.equalTo,
-      defaultThreshold,
-      successProducer: successProducer,
-      failureProducer: failureProducer,
-    );
+        name: name,
+        numberComparator: VxNumberComparators.equalTo,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
   }
 
   static VxNumberRule<MSG> notEqualTo<MSG>(
-    String name,
-    ExMetricStoreHolder metricStoreHolder,
-    num defaultThreshold, {
-    VxMessageProducer<MSG, num>? successProducer,
-    VxMessageProducer<MSG, num>? failureProducer,
-  }) {
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      VxMessageProducer<MSG, num>? successProducer,
+      VxMessageProducer<MSG, num>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxNumberRule<MSG>(
-      name,
-      metricStoreHolder,
-      VxNumberComparators.notEqualTo,
-      defaultThreshold,
-      successProducer: successProducer,
-      failureProducer: failureProducer,
-    );
+        name: name,
+        numberComparator: VxNumberComparators.notEqualTo,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
   }
 
   static VxNumberMultipleOf<MSG> multipleOf<MSG>(

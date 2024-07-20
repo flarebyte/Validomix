@@ -7,33 +7,34 @@ void main() {
     final successProducer = MySuccessProducer();
     final failureProducer = MyFailureProducer();
     late ExMetricStoreHolder metricStoreHolder;
-    late VxNumberRule rule;
+    late VxNumberRule<String> rule;
+    late VxOptionsInventory optionsInventory;
 
     setUp(() {
       metricStoreHolder = ExMetricStoreHolder();
+      optionsInventory = VxOptionsInventory();
       rule = VxNumberRules.greaterThan<String>(
-        'example',
-        metricStoreHolder,
-        10,
-        successProducer: successProducer,
-        failureProducer: failureProducer,
-      );
+          name: 'example',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+          successProducer: successProducer,
+          failureProducer: failureProducer);
     });
 
     test('value is greater than threshold', () {
-      final options = {'example-threshold': '15'};
+      final options = {'example#minNum': '15'};
       final result = rule.validate(options, 20);
       expect(result, ['Success: 20 is valid.']);
     });
 
     test('value is equal to threshold', () {
-      final options = {'example-threshold': '15'};
+      final options = {'example#minNum': '15'};
       final result = rule.validate(options, 15);
       expect(result, ['Failure: 15 is not valid.']);
     });
 
     test('value is less than threshold', () {
-      final options = {'example-threshold': '15'};
+      final options = {'example#minNum': '15'};
       final result = rule.validate(options, 10);
       expect(result, ['Failure: 10 is not valid.']);
     });
@@ -46,13 +47,13 @@ void main() {
 
       expect(aggregatedMetrics.first.toJson(), {
         'key': {
-          'name': ['get-number-threshold'],
+          'name': ['get-option-value'],
           'dimensions': {
             'package': 'validomix',
             'class': 'VxNumberRule',
             'class-specialisation': 'greater-than',
             'method': 'validate',
-            'name': 'example',
+            'name': 'example#minNum',
             'level': 'ERROR',
             'status': 'not-found',
             'unit': 'count',
@@ -64,7 +65,7 @@ void main() {
     });
 
     test('threshold key is invalid in options', () {
-      final options = {'example-threshold': 'invalid'};
+      final options = {'example#minNum': 'invalid'};
       final result = rule.validate(options, 20);
       expect(result, ['Success: 20 is valid.']);
       final count = ExMetricAggregations.count();
@@ -72,13 +73,14 @@ void main() {
 
       expect(aggregatedMetrics.first.toJson(), {
         'key': {
-          'name': ['get-number-threshold'],
+          'name': ['get-option-value'],
           'dimensions': {
             'package': 'validomix',
             'class': 'VxNumberRule',
             'class-specialisation': 'greater-than',
             'method': 'validate',
-            'name': 'example',
+            'name': 'example#minNum',
+            'expected': 'integer',
             'level': 'ERROR',
             'error': 'format-exception',
             'unit': 'count',
@@ -90,100 +92,109 @@ void main() {
     });
 
     test('edge case: value just above threshold', () {
-      final options = {'example-threshold': '15'};
+      final options = {'example#minNum': '15'};
       final result = rule.validate(options, 15.01);
       expect(result, ['Success: 15.01 is valid.']);
     });
 
     test('edge case: value just below threshold', () {
-      final options = {'example-threshold': '15'};
+      final options = {'example#minNum': '15'};
       final result = rule.validate(options, 14.99);
       expect(result, ['Failure: 14.99 is not valid.']);
     });
 
     test('edge case: negative numbers', () {
-      final options = {'example-threshold': '-5'};
+      final options = {'example#minNum': '-5'};
       final result = rule.validate(options, -3);
       expect(result, ['Success: -3 is valid.']);
     });
 
     test('edge case: zero value', () {
-      final options = {'example-threshold': '0'};
+      final options = {'example#minNum': '0'};
       final result = rule.validate(options, 0);
       expect(result, ['Failure: 0 is not valid.']);
     });
 
     test('edge case: large numbers', () {
-      final options = {'example-threshold': '1000000000'};
+      final options = {'example#minNum': '1000000000'};
       final result = rule.validate(options, 1000000001);
       expect(result, ['Success: 1000000001 is valid.']);
     });
 
     test('edge case: decimal values', () {
-      final options = {'example-threshold': '0.1'};
+      final options = {'example#minNum': '0.1'};
       final result = rule.validate(options, 0.2);
       expect(result, ['Success: 0.2 is valid.']);
     });
   });
 
   group('VxNumberRules - other comparators', () {
+    final successProducer = MySuccessProducer();
+    final failureProducer = MyFailureProducer();
     late ExMetricStoreHolder metricStoreHolder;
+    late VxOptionsInventory optionsInventory;
 
     setUp(() {
       metricStoreHolder = ExMetricStoreHolder();
+      optionsInventory = VxOptionsInventory();
     });
     test('greaterThanOrEqual - value is greater than or equal to threshold',
         () {
       final rule = VxNumberRules.greaterThanOrEqual<String>(
-        'example',
-        metricStoreHolder,
-        10,
-      );
-      final options = {'example-threshold': '15'};
+          name: 'example',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+          successProducer: successProducer,
+          failureProducer: failureProducer);
+      final options = {'example#minNum': '15'};
       final result = rule.validate(options, 15);
       expect(result, isEmpty);
     });
 
     test('lessThan - value is less than threshold', () {
       final rule = VxNumberRules.lessThan<String>(
-        'example',
-        metricStoreHolder,
-        10,
-      );
-      final options = {'example-threshold': '15'};
+          name: 'example',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+          successProducer: successProducer,
+          failureProducer: failureProducer);
+      final options = {'example#maxNum': '15'};
       final result = rule.validate(options, 10);
       expect(result, isEmpty);
     });
 
     test('lessThanOrEqual - value is less than or equal to threshold', () {
       final rule = VxNumberRules.lessThanOrEqual<String>(
-        'example',
-        metricStoreHolder,
-        10,
-      );
-      final options = {'example-threshold': '15'};
+          name: 'example',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+          successProducer: successProducer,
+          failureProducer: failureProducer);
+      final options = {'example#maxNum': '15'};
       final result = rule.validate(options, 15);
       expect(result, isEmpty);
     });
 
     test('equalTo - value is equal to threshold', () {
       final rule = VxNumberRules.equalTo<String>(
-        'example',
-        metricStoreHolder,
-        10,
-      );
-      final options = {'example-threshold': '15'};
+          name: 'example',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+          successProducer: successProducer,
+          failureProducer: failureProducer);
+      final options = {'example#eqNum': '15'};
       final result = rule.validate(options, 15);
       expect(result, isEmpty);
     });
 
     test('notEqualTo - value is not equal to threshold', () {
       final rule = VxNumberRules.notEqualTo<String>(
-        'example',
-        metricStoreHolder,
-        10,
-      );
-      final options = {'example-threshold': '15'};
+          name: 'example',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+          successProducer: successProducer,
+          failureProducer: failureProducer);
+      final options = {'example#neqNum': '15'};
       final result = rule.validate(options, 10);
       expect(result, isEmpty);
     });

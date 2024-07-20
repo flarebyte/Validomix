@@ -148,7 +148,7 @@ void main() {
           failureProducer: failureProducer);
       final options = {'example#minNum': '15'};
       final result = rule.validate(options, 15);
-      expect(result, isEmpty);
+      expect(result, ['Success: 15 is valid.']);
     });
 
     test('lessThan - value is less than threshold', () {
@@ -160,7 +160,7 @@ void main() {
           failureProducer: failureProducer);
       final options = {'example#maxNum': '15'};
       final result = rule.validate(options, 10);
-      expect(result, isEmpty);
+      expect(result, ['Success: 10 is valid.']);
     });
 
     test('lessThanOrEqual - value is less than or equal to threshold', () {
@@ -172,7 +172,7 @@ void main() {
           failureProducer: failureProducer);
       final options = {'example#maxNum': '15'};
       final result = rule.validate(options, 15);
-      expect(result, isEmpty);
+      expect(result, ['Success: 15 is valid.']);
     });
 
     test('equalTo - value is equal to threshold', () {
@@ -184,7 +184,7 @@ void main() {
           failureProducer: failureProducer);
       final options = {'example#eqNum': '15'};
       final result = rule.validate(options, 15);
-      expect(result, isEmpty);
+      expect(result, ['Success: 15 is valid.']);
     });
 
     test('notEqualTo - value is not equal to threshold', () {
@@ -196,7 +196,7 @@ void main() {
           failureProducer: failureProducer);
       final options = {'example#neqNum': '15'};
       final result = rule.validate(options, 10);
-      expect(result, isEmpty);
+      expect(result, ['Success: 10 is valid.']);
     });
   });
 

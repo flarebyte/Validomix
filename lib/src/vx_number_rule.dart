@@ -1,7 +1,6 @@
 import 'package:eagleyeix/metric.dart';
 import 'package:validomix/src/vx_component_name_manager.dart';
 
-import 'vx_metrics.dart';
 import 'vx_model.dart';
 import 'vx_number_comparator.dart';
 import 'vx_options_inventory.dart';

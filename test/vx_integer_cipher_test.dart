@@ -62,7 +62,6 @@ void main() {
 
       // Ensure the seed is not default
       int seed = cipher.seed;
-      print('Generated seed: $seed');
       expect(seed, isNotNull);
     });
   });

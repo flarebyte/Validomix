@@ -63,7 +63,7 @@ class VxNumberRule<MSG> extends VxBaseValidator<MSG, num> {
   @override
   List<MSG> validate(Map<String, String> options, num value) {
     final thresholdNum = optionsMap
-        .getInt(
+        .getNumber(
             options: options,
             id: thresholdKey,
             defaultValue: numberDefaultSize[numberComparator.name] ?? 0)
@@ -117,7 +117,7 @@ class VxNumberMultipleOf<MSG> extends VxBaseValidator<MSG, num> {
   @override
   List<MSG> validate(Map<String, String> options, num value) {
     final multipleOf = optionsMap
-        .getInt(options: options, id: nultipleOfKey, defaultValue: 2)
+        .getNumber(options: options, id: nultipleOfKey, defaultValue: 2)
         .value;
 
     return _evaluate(value, multipleOf, options);

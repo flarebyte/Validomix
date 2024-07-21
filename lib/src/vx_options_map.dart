@@ -126,38 +126,32 @@ class VxOptionsMap {
   }
 
   ///   Returns the number value of the option with the given id, or the default
-  num getNumber(
+  VxMapValue<num> getNumber(
       {required Map<String, String> options,
       required int id,
-      int defaultValue = 0}) {
-    final key = optionsInventory.getKey(id);
-    final missingMandatoryKey =
-        VxComponentNameManager.hasMandatoryOption(key.name) &&
-            (!options.containsKey(key.name));
-    if (missingMandatoryKey) {
-      metricStoreHolder.store.addMetric(
-          VxMetrics.getKeyNotFound(
-              className: ownerClassName,
-              name: key.name,
-              specialisation: classSpecialisation),
-          1);
-      return defaultValue;
+      num defaultValue = 0}) {
+    final resultValue =
+        _getString(options: options, id: id, defaultValue: "$defaultValue");
+    if (resultValue.status != VxMapValueStatus.ok) {
+      return VxMapValue(defaultValue, resultValue.status);
     }
-    final value = options[key.name] ?? "$defaultValue";
-    final intValue = num.tryParse(value);
-    if (intValue == null) {
+    final value = resultValue.value;
+    final key = optionsInventory.getKey(id);
+
+    final numValue = num.tryParse(value);
+    if (numValue == null) {
       metricStoreHolder.store.addMetric(
-          VxMetrics.getKeyValueNotNum(
+          VxMetrics.getKeyValueNotInt(
               className: ownerClassName,
               name: key.name,
               specialisation: classSpecialisation),
           1);
-      return defaultValue;
+      return VxMapValue.ko(defaultValue);
     }
 
     final shouldbePositive =
         key.descriptors.contains(VxOptionsInventoryDescriptors.positive) &&
-            intValue < 0;
+            numValue < 0;
     if (shouldbePositive) {
       metricStoreHolder.store.addMetric(
           VxMetrics.getKeyValueNotPositive(
@@ -165,67 +159,51 @@ class VxOptionsMap {
               name: key.name,
               specialisation: classSpecialisation),
           1);
-      return defaultValue;
+      return VxMapValue.ko(defaultValue);
     }
-    return intValue;
+    return VxMapValue.ok(numValue);
   }
 
   ///   Returns the boolean value of the option with the given id, or the default
-  bool getBoolean(
+  VxMapValue<bool> getBoolean(
       {required Map<String, String> options,
       required int id,
       bool defaultValue = false}) {
-    final key = optionsInventory.getKey(id);
-    final missingMandatoryKey =
-        VxComponentNameManager.hasMandatoryOption(key.name) &&
-            (!options.containsKey(key.name));
-    if (missingMandatoryKey) {
-      metricStoreHolder.store.addMetric(
-          VxMetrics.getKeyNotFound(
-              className: ownerClassName,
-              name: key.name,
-              specialisation: classSpecialisation),
-          1);
-      return defaultValue;
+    final resultValue =
+        _getString(options: options, id: id, defaultValue: "$defaultValue");
+    if (resultValue.status != VxMapValueStatus.ok) {
+      return VxMapValue(defaultValue, resultValue.status);
     }
-    final value = options[key.name] ?? "$defaultValue";
+    final value = resultValue.value;
+    final key = optionsInventory.getKey(id);
     final boolValue = bool.tryParse(value);
     if (boolValue == null) {
       metricStoreHolder.store.addMetric(
-          VxMetrics.getKeyValueNotNum(
+          VxMetrics.getKeyValueNotInt(
               className: ownerClassName,
               name: key.name,
               specialisation: classSpecialisation),
           1);
-      return defaultValue;
+      return VxMapValue.ko(defaultValue);
     }
-
-    return boolValue;
+    return VxMapValue.ok(boolValue);
   }
 
   static const List<String> emptyList = [];
 
   /// Returns the value of the option with the given id, or the default
-  List<String> getStringList(
+  VxMapValue<List<String>> getStringList(
       {required Map<String, String> options,
       required int id,
       String separator = ' ',
       List<String> defaultValue = emptyList}) {
-    final key = optionsInventory.getKey(id);
-    final missingMandatoryKey =
-        VxComponentNameManager.hasMandatoryOption(key.name) &&
-            (!options.containsKey(key.name));
-    if (missingMandatoryKey) {
-      metricStoreHolder.store.addMetric(
-          VxMetrics.getKeyNotFound(
-              className: ownerClassName,
-              name: key.name,
-              specialisation: classSpecialisation),
-          1);
-      return defaultValue;
+    final resultValue =
+        _getString(options: options, id: id, defaultValue: "$defaultValue");
+    if (resultValue.status != VxMapValueStatus.ok) {
+      return VxMapValue(defaultValue, resultValue.status);
     }
-    final value = options[key.name] ?? '';
+    final value = resultValue.value;
     final stringsValue = value.split(separator);
-    return stringsValue;
+    return VxMapValue.ok(stringsValue);
   }
 }

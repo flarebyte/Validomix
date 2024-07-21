@@ -98,7 +98,6 @@ void main() {
           'Invalid option keys for getComponentName should throw ArgumentError',
           () {
         for (var invalidKey in ComponentNameManagerFixtures.invalidOptionKeys) {
-          print(invalidKey);
           expect(
               () => VxComponentNameManager.getComponentName(invalidKey, config),
               throwsArgumentError);

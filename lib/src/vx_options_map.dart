@@ -15,7 +15,7 @@ class VxMapValue<T> {
   }
 
   static VxMapValue<T> ko<T>(T value) {
-    return VxMapValue<T>(value, VxMapValueStatus.ok);
+    return VxMapValue<T>(value, VxMapValueStatus.ko);
   }
 
   static VxMapValue<T> fallback<T>(T value) {

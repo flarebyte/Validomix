@@ -92,34 +92,33 @@ class VxNumberMultipleOf<MSG> extends VxBaseValidator<MSG, num> {
   final ExMetricStoreHolder metricStoreHolder;
   final VxMessageProducer<MSG, num>? successProducer;
   final VxMessageProducer<MSG, num>? failureProducer;
-  final num defaultMultipleOf;
-
-  VxNumberMultipleOf(
-    this.name,
-    this.metricStoreHolder,
-    this.defaultMultipleOf, {
+  final VxComponentManagerConfig componentManagerConfig;
+  final VxOptionsInventory optionsInventory;
+  late VxOptionsMap optionsMap;
+  late int nultipleOfKey;
+  VxNumberMultipleOf({
+    required this.name,
+    required this.metricStoreHolder,
+    required this.optionsInventory,
+    this.componentManagerConfig = VxComponentManagerConfig.defaultConfig,
     this.successProducer,
     this.failureProducer,
-  });
+  }) {
+    optionsMap = VxOptionsMap(
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        ownerClassName: 'VxNumberMultipleOf',
+        componentManagerConfig: componentManagerConfig);
+    nultipleOfKey = optionsInventory.addKey(
+        VxComponentNameManager.getFullOptionKey(name, 'multipleOf'),
+        [VxOptionsInventoryDescriptors.numeric]);
+  }
 
   @override
   List<MSG> validate(Map<String, String> options, num value) {
-    final multipleOfKey = '$name-multipleOf';
-    final multipleOf = num.tryParse(options[multipleOfKey] ?? '');
-
-    if (!options.containsKey(multipleOfKey)) {
-      metricStoreHolder.store.addMetric(
-          VxMetrics.getNumberMultipleOfKeyNotFound('VxNumberMultipleOf', name),
-          1);
-      return _evaluate(value, defaultMultipleOf, options);
-    }
-
-    if (multipleOf == null) {
-      metricStoreHolder.store.addMetric(
-          VxMetrics.getNumberMultipleOfKeyInvalid('VxNumberMultipleOf', name),
-          1);
-      return _evaluate(value, defaultMultipleOf, options);
-    }
+    final multipleOf = optionsMap
+        .getInt(options: options, id: nultipleOfKey, defaultValue: 2)
+        .value;
 
     return _evaluate(value, multipleOf, options);
   }
@@ -243,18 +242,18 @@ class VxNumberRules {
   }
 
   static VxNumberMultipleOf<MSG> multipleOf<MSG>(
-    String name,
-    ExMetricStoreHolder metricStoreHolder,
-    num defaultMultipleOf, {
-    VxMessageProducer<MSG, num>? successProducer,
-    VxMessageProducer<MSG, num>? failureProducer,
-  }) {
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      VxMessageProducer<MSG, num>? successProducer,
+      VxMessageProducer<MSG, num>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxNumberMultipleOf<MSG>(
-      name,
-      metricStoreHolder,
-      defaultMultipleOf,
-      successProducer: successProducer,
-      failureProducer: failureProducer,
-    );
+        name: name,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
   }
 }

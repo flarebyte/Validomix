@@ -210,27 +210,28 @@ void main() {
     final failureProducer = MyFailureProducer();
 
     late ExMetricStoreHolder metricStoreHolder;
+    late VxOptionsInventory optionsInventory;
     late VxNumberMultipleOf rule;
 
     setUp(() {
       metricStoreHolder = ExMetricStoreHolder();
+      optionsInventory = VxOptionsInventory();
       rule = VxNumberRules.multipleOf<String>(
-        'example',
-        metricStoreHolder,
-        5,
-        successProducer: successProducer,
-        failureProducer: failureProducer,
-      );
+          name: 'example',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+          successProducer: successProducer,
+          failureProducer: failureProducer);
     });
 
     test('value is multiple of specified number', () {
-      final options = {'example-multipleOf': '3'};
+      final options = {'example#multipleOf': '3'};
       final result = rule.validate(options, 9);
       expect(result, ['Success: 9 is valid.']);
     });
 
     test('value is not a multiple of specified number', () {
-      final options = {'example-multipleOf': '4'};
+      final options = {'example#multipleOf': '4'};
       final result = rule.validate(options, 9);
       expect(result, ['Failure: 9 is not valid.']);
     });
@@ -243,12 +244,12 @@ void main() {
 
       expect(aggregatedMetrics.first.toJson(), {
         'key': {
-          'name': ['get-number-multiple-of'],
+          'name': ['get-option-value'],
           'dimensions': {
             'package': 'validomix',
             'class': 'VxNumberMultipleOf',
             'method': 'validate',
-            'name': 'example',
+            'name': 'example#multipleOf',
             'level': 'ERROR',
             'status': 'not-found',
             'unit': 'count',
@@ -260,7 +261,7 @@ void main() {
     });
 
     test('multipleOf key is invalid in options', () {
-      final options = {'example-multipleOf': 'invalid'};
+      final options = {'example#multipleOf': 'invalid'};
       final result = rule.validate(options, 10);
       expect(result, ['Success: 10 is valid.']);
       final count = ExMetricAggregations.count();
@@ -268,12 +269,13 @@ void main() {
 
       expect(aggregatedMetrics.first.toJson(), {
         'key': {
-          'name': ['get-number-multiple-of'],
+          'name': ['get-option-value'],
           'dimensions': {
             'package': 'validomix',
             'class': 'VxNumberMultipleOf',
             'method': 'validate',
-            'name': 'example',
+            'name': 'example#multipleOf',
+            'expected': 'integer',
             'level': 'ERROR',
             'error': 'format-exception',
             'unit': 'count',
@@ -285,31 +287,31 @@ void main() {
     });
 
     test('edge case: value is zero', () {
-      final options = {'example-multipleOf': '3'};
+      final options = {'example#multipleOf': '3'};
       final result = rule.validate(options, 0);
       expect(result, ['Success: 0 is valid.']);
     });
 
     test('edge case: negative numbers', () {
-      final options = {'example-multipleOf': '3'};
+      final options = {'example#multipleOf': '3'};
       final result = rule.validate(options, -9);
       expect(result, ['Success: -9 is valid.']);
     });
 
     test('edge case: large numbers', () {
-      final options = {'example-multipleOf': '1000000'};
+      final options = {'example#multipleOf': '1000000'};
       final result = rule.validate(options, 10000000);
       expect(result, ['Success: 10000000 is valid.']);
     });
 
     test('edge case: decimal values (not a multiple)', () {
-      final options = {'example-multipleOf': '0.1'};
+      final options = {'example#multipleOf': '0.1'};
       final result = rule.validate(options, 0.15);
       expect(result, ['Failure: 0.15 is not valid.']);
     });
 
     test('edge case: decimal values (is a multiple)', () {
-      final options = {'example-multipleOf': '0.1'};
+      final options = {'example#multipleOf': '0.1'};
       final result = rule.validate(options, 0.2);
       expect(result, ['Success: 0.2 is valid.']);
     });

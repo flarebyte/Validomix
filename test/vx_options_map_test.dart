@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:eagleyeix/metric.dart';
 import 'package:test/test.dart';
 import 'package:validomix/validomix.dart';
@@ -44,7 +46,7 @@ void main() {
       final result = vxOptionsMap.getString(options: options, id: key1);
       expect(result.value, 'value1');
       expect(result.status, VxMapValueStatus.ok);
-      expect(metricStoreHolder.store.length, 0);
+      expect(metricStoreHolder.store.isEmpty, true);
     });
 
     test('getString returns default value when key is missing', () {
@@ -53,7 +55,9 @@ void main() {
           options: options, id: key2, defaultValue: 'default');
       expect(result.value, 'default');
       expect(result.status, VxMapValueStatus.ko);
-      expect(metricStoreHolder.store.length, 1);
+      expectMetricError(
+          metricStoreHolder: metricStoreHolder,
+          expectations: [ExMetricDimStatus.notFound]);
     });
 
     test('getString returns default value when optional key is missing', () {
@@ -62,7 +66,7 @@ void main() {
           options: options, id: key10, defaultValue: 'default');
       expect(result.value, 'default');
       expect(result.status, VxMapValueStatus.fallback);
-      expect(metricStoreHolder.store.length, 0);
+      expect(metricStoreHolder.store.isEmpty, true);
     });
 
     test('getInt returns value from options', () {
@@ -70,7 +74,7 @@ void main() {
       final result = vxOptionsMap.getInt(options: options, id: key1);
       expect(result.value, 42);
       expect(result.status, VxMapValueStatus.ok);
-      expect(metricStoreHolder.store.length, 0);
+      expect(metricStoreHolder.store.isEmpty, true);
     });
 
     test('getInt positive returns value from options', () {
@@ -89,13 +93,22 @@ void main() {
           expectations: ['positive number']);
     });
 
+    test('getNumber positive should return default if value is not positive',
+        () {
+      final options = {'ex#key3': '-42'};
+      final result = vxOptionsMap.getNumber(options: options, id: key3);
+      expect(result.status, VxMapValueStatus.ko);
+      expectMetricError(
+          metricStoreHolder: metricStoreHolder,
+          expectations: ['positive number']);
+    });
+
     test('getInt returns default value when key is missing', () {
       final options = {'ex#key1': '42'};
       final result =
           vxOptionsMap.getInt(options: options, id: key2, defaultValue: 99);
       expect(result.value, 99);
       expect(result.status, VxMapValueStatus.ko);
-      expect(metricStoreHolder.store.length, 1);
       expectMetricError(
           metricStoreHolder: metricStoreHolder,
           expectations: [ExMetricDimStatus.notFound]);
@@ -115,7 +128,7 @@ void main() {
       final result = vxOptionsMap.getNumber(options: options, id: key5);
       expect(result.value, 3.14);
       expect(result.status, VxMapValueStatus.ok);
-      expect(metricStoreHolder.store.length, 0);
+      expect(metricStoreHolder.store.isEmpty, true);
     });
 
     test('getNumber returns default value when key is missing', () {
@@ -124,7 +137,9 @@ void main() {
           options: options, id: key2, defaultValue: 99.99);
       expect(result.value, 99.99);
       expect(result.status, VxMapValueStatus.ko);
-      expect(metricStoreHolder.store.length, 1);
+      expectMetricError(
+          metricStoreHolder: metricStoreHolder,
+          expectations: [ExMetricDimStatus.notFound]);
     });
 
     test('getBool returns value from options', () {
@@ -132,7 +147,7 @@ void main() {
       final result = vxOptionsMap.getBoolean(options: options, id: key4);
       expect(result.value, true);
       expect(result.status, VxMapValueStatus.ok);
-      expect(metricStoreHolder.store.length, 0);
+      expect(metricStoreHolder.store.isEmpty, true);
     });
 
     test('getBool returns default value when key is missing', () {
@@ -141,7 +156,9 @@ void main() {
           options: options, id: key4, defaultValue: false);
       expect(result.value, false);
       expect(result.status, VxMapValueStatus.ko);
-      expect(metricStoreHolder.store.length, 1);
+      expectMetricError(
+          metricStoreHolder: metricStoreHolder,
+          expectations: [ExMetricDimStatus.notFound]);
     });
 
     test('getStringList returns value from options', () {
@@ -149,7 +166,7 @@ void main() {
       final result = vxOptionsMap.getStringList(
           options: options, id: key11, separator: ',');
       expect(result.status, VxMapValueStatus.ok);
-      expect(metricStoreHolder.store.length, 0);
+      expect(metricStoreHolder.store.isEmpty, true);
       expect(result.value, ['value1', 'value2']);
     });
 
@@ -158,7 +175,9 @@ void main() {
       final result = vxOptionsMap.getStringList(
           options: options, id: key11, defaultValue: ['default']);
       expect(result.status, VxMapValueStatus.ko);
-      expect(metricStoreHolder.store.length, 1);
+      expectMetricError(
+          metricStoreHolder: metricStoreHolder,
+          expectations: [ExMetricDimStatus.notFound]);
       expect(result.value, ['default']);
     });
   });

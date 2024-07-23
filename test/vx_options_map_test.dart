@@ -60,6 +60,17 @@ void main() {
           expectations: [ExMetricDimStatus.notFound]);
     });
 
+    test('getString returns default value when value is blank', () {
+      final options = {'ex#key1': ''};
+      final result = vxOptionsMap.getString(
+          options: options, id: key1, defaultValue: 'default');
+      expect(result.value, 'default');
+      expect(result.status, VxMapValueStatus.ko);
+      expectMetricError(
+          metricStoreHolder: metricStoreHolder,
+          expectations: ['not-blank', ExMetricDimDartErr.formatException]);
+    });
+
     test('getString returns default value when optional key is missing', () {
       final options = {'other': 'value1'};
       final result = vxOptionsMap.getString(
@@ -117,10 +128,12 @@ void main() {
     test('getInt postive returns default value when key is negative', () {
       final options = {'ex#key3': '-42'};
       final result =
-          vxOptionsMap.getInt(options: options, id: key2, defaultValue: 99);
+          vxOptionsMap.getInt(options: options, id: key3, defaultValue: 99);
       expect(result.value, 99);
       expect(result.status, VxMapValueStatus.ko);
-      expect(metricStoreHolder.store.length, 1);
+      expectMetricError(
+          metricStoreHolder: metricStoreHolder,
+          expectations: [ExMetricDimDartErr.formatException]);
     });
 
     test('getNumber returns value from options', () {
@@ -159,6 +172,17 @@ void main() {
       expectMetricError(
           metricStoreHolder: metricStoreHolder,
           expectations: [ExMetricDimStatus.notFound]);
+    });
+
+    test('getBool returns default value when key is missing', () {
+      final options = {'ex#key4': 'not-quite-true'};
+      final result = vxOptionsMap.getBoolean(
+          options: options, id: key4, defaultValue: false);
+      expect(result.value, false);
+      expect(result.status, VxMapValueStatus.ko);
+      expectMetricError(
+          metricStoreHolder: metricStoreHolder,
+          expectations: [ExMetricDimDartErr.formatException]);
     });
 
     test('getStringList returns value from options', () {

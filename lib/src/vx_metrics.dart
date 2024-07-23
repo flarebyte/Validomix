@@ -170,36 +170,4 @@ class VxMetrics {
       ExMetricDimUnit.key: ExMetricDimUnit.count
     });
   }
-
-  static ExMetricKey getNumberThresholdKeyNotFound(
-      String comparatorName, String name) {
-    return ExMetricKey(name: [
-      'get-number-threshold'
-    ], dimensions: {
-      ...lib,
-      'class': 'VxNumberRule',
-      'class-specialisation': comparatorName.replaceAll(' ', '-'),
-      'method': 'validate',
-      'name': name,
-      ExMetricDimLevel.key: ExMetricDimLevel.error,
-      ExMetricDimStatus.key: ExMetricDimStatus.notFound,
-      ExMetricDimUnit.key: ExMetricDimUnit.count
-    });
-  }
-
-  static ExMetricKey getNumberThresholdKeyInvalid(
-      String comparatorName, String name) {
-    return ExMetricKey(name: [
-      'get-number-threshold'
-    ], dimensions: {
-      ...lib,
-      'class': 'VxNumberRule',
-      'class-specialisation': comparatorName.replaceAll(' ', '-'),
-      'method': 'validate',
-      'name': name,
-      ExMetricDimLevel.key: ExMetricDimLevel.error,
-      ExMetricDimDartErr.key: ExMetricDimDartErr.formatException,
-      ExMetricDimUnit.key: ExMetricDimUnit.count
-    });
-  }
 }

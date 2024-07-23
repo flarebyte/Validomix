@@ -2,6 +2,8 @@ import 'package:eagleyeix/metric.dart';
 import 'package:test/test.dart';
 import 'package:validomix/validomix.dart';
 
+import 'vx_test_utils.dart';
+
 void main() {
   late ExMetricStoreHolder metricStoreHolder;
   late VxOptionsInventory optionsInventory;
@@ -75,8 +77,16 @@ void main() {
       final options = {'ex#key3': '42'};
       final result = vxOptionsMap.getInt(options: options, id: key3);
       expect(result.status, VxMapValueStatus.ok);
-      expect(metricStoreHolder.store.length, 0);
-      expect(result.status, VxMapValueStatus.ok);
+      expect(metricStoreHolder.store.isEmpty, true);
+    });
+
+    test('getInt positive should return default if value is not positive', () {
+      final options = {'ex#key3': '-42'};
+      final result = vxOptionsMap.getInt(options: options, id: key3);
+      expect(result.status, VxMapValueStatus.ko);
+      expectMetricError(
+          metricStoreHolder: metricStoreHolder,
+          expectations: ['positive number']);
     });
 
     test('getInt returns default value when key is missing', () {
@@ -86,6 +96,9 @@ void main() {
       expect(result.value, 99);
       expect(result.status, VxMapValueStatus.ko);
       expect(metricStoreHolder.store.length, 1);
+      expectMetricError(
+          metricStoreHolder: metricStoreHolder,
+          expectations: [ExMetricDimStatus.notFound]);
     });
 
     test('getInt postive returns default value when key is negative', () {

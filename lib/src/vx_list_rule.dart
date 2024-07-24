@@ -32,6 +32,7 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
   final VxStringParser<List<W>> stringParser;
   final String name;
   final ExMetricStoreHolder metricStoreHolder;
+  final VxBaseValidator<MSG, W> itemValidator;
   final VxMessageProducer<MSG, String>? successProducer;
   final VxMessageProducer<MSG, String>? failureProducer;
   final VxComponentManagerConfig componentManagerConfig;
@@ -45,6 +46,7 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
     required this.lengthComparator,
     required this.optionsInventory,
     required this.stringParser,
+    required this.itemValidator,
     this.componentManagerConfig = VxComponentManagerConfig.defaultConfig,
     this.successProducer,
     this.failureProducer,
@@ -81,7 +83,14 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
       Map<String, String> options, String value) {
     if (lengthComparator.compare(values.length, threshold)) {
       if (successProducer != null) {
-        return [successProducer!.produce(options, value)];
+        List<MSG> itemMessages = [];
+        for (var itemValue in values) {
+          itemMessages += itemValidator.validate(options, itemValue);
+        }
+        //TODO: Empty does not mean success as we are returnning MSG for success too !
+        return itemMessages.isEmpty
+            ? [successProducer!.produce(options, value)]
+            : [failureProducer!.produce(options, value)];
       }
     } else {
       if (failureProducer != null) {
@@ -99,6 +108,7 @@ class VxListRules {
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
       required VxStringParser<List<W>> stringParser,
+      required VxBaseValidator<MSG, W> itemValidator,
       VxMessageProducer<MSG, String>? successProducer,
       VxMessageProducer<MSG, String>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
@@ -108,6 +118,7 @@ class VxListRules {
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
         stringParser: stringParser,
+        itemValidator: itemValidator,
         successProducer: successProducer,
         failureProducer: failureProducer,
         componentManagerConfig: componentManagerConfig);

@@ -33,6 +33,7 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
   final String name;
   final ExMetricStoreHolder metricStoreHolder;
   final VxBaseValidator<MSG, W> itemValidator;
+  final VxMatchingMessages areSuccessfulMessages;
   final VxMessageProducer<MSG, String>? successProducer;
   final VxMessageProducer<MSG, String>? failureProducer;
   final VxComponentManagerConfig componentManagerConfig;
@@ -47,6 +48,7 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
     required this.optionsInventory,
     required this.stringParser,
     required this.itemValidator,
+    required this.areSuccessfulMessages,
     this.componentManagerConfig = VxComponentManagerConfig.defaultConfig,
     this.successProducer,
     this.failureProducer,
@@ -87,10 +89,9 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
         for (var itemValue in values) {
           itemMessages += itemValidator.validate(options, itemValue);
         }
-        //TODO: Empty does not mean success as we are returnning MSG for success too !
-        return itemMessages.isEmpty
+        return areSuccessfulMessages.isMatching(itemMessages)
             ? [successProducer!.produce(options, value)]
-            : [failureProducer!.produce(options, value)];
+            : itemMessages;
       }
     } else {
       if (failureProducer != null) {
@@ -109,6 +110,7 @@ class VxListRules {
       required VxOptionsInventory optionsInventory,
       required VxStringParser<List<W>> stringParser,
       required VxBaseValidator<MSG, W> itemValidator,
+      required VxMatchingMessages areSuccessfulMessages,
       VxMessageProducer<MSG, String>? successProducer,
       VxMessageProducer<MSG, String>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
@@ -119,6 +121,7 @@ class VxListRules {
         optionsInventory: optionsInventory,
         stringParser: stringParser,
         itemValidator: itemValidator,
+        areSuccessfulMessages: areSuccessfulMessages,
         successProducer: successProducer,
         failureProducer: failureProducer,
         componentManagerConfig: componentManagerConfig);

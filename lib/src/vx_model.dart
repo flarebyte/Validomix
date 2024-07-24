@@ -13,6 +13,10 @@ abstract class VxMessageProducer<MSG, V> {
   MSG produce(Map<String, String> options, V value);
 }
 
+abstract class VxMatchingMessages<MSG> {
+  bool isMatching(List<MSG> messages);
+}
+
 /// An abstract class defining the interface for number comparison.
 abstract class VxNumberComparator {
   /// The name of the comparator.

@@ -1,7 +1,6 @@
 import 'package:eagleyeix/metric.dart';
 
 import 'vx_component_name_manager.dart';
-import 'vx_metrics.dart';
 import 'vx_model.dart';
 import 'vx_number_comparator.dart';
 import 'vx_options_inventory.dart';
@@ -19,17 +18,17 @@ final numberDefaultSize = {
 
 /// The default name for each comparator
 final numberDefaultName = {
-  VxNumberComparators.lessThan.name: 'maxNum',
-  VxNumberComparators.lessThanOrEqual.name: 'maxNum',
-  VxNumberComparators.greaterThan.name: 'minNum',
-  VxNumberComparators.greaterThanOrEqual.name: 'minNum',
-  VxNumberComparators.equalTo.name: 'eqNum',
-  VxNumberComparators.notEqualTo.name: 'neqNum',
+  VxNumberComparators.lessThan.name: 'maxSize',
+  VxNumberComparators.lessThanOrEqual.name: 'maxSize',
+  VxNumberComparators.greaterThan.name: 'minSize',
+  VxNumberComparators.greaterThanOrEqual.name: 'minSize',
+  VxNumberComparators.equalTo.name: 'eqSize',
+  VxNumberComparators.notEqualTo.name: 'neqSize',
 };
 
 /// Validates that a number meets a specified comparison threshold obtained from the options.
-class VxListRule<MSG, W> extends VxBaseRule<MSG> {
-  final VxIterableLengthComparator numberComparator;
+class VxListRule<MSG> extends VxBaseRule<MSG> {
+  final VxNumberComparator lengthComparator;
   final VxStringParser<List<String>> stringParser;
   final String name;
   final ExMetricStoreHolder metricStoreHolder;
@@ -43,7 +42,7 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
   VxListRule({
     required this.name,
     required this.metricStoreHolder,
-    required this.numberComparator,
+    required this.lengthComparator,
     required this.optionsInventory,
     required this.stringParser,
     this.componentManagerConfig = VxComponentManagerConfig.defaultConfig,
@@ -54,11 +53,11 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
         ownerClassName: 'VxListRule',
-        classSpecialisation: numberComparator.name.replaceAll(' ', '-'),
+        classSpecialisation: lengthComparator.name.replaceAll(' ', '-'),
         componentManagerConfig: componentManagerConfig);
     thresholdKey = optionsInventory.addKey(
         VxComponentNameManager.getFullOptionKey(
-            name, numberDefaultName[numberComparator.name] ?? 'listThreshold'),
+            name, numberDefaultName[lengthComparator.name] ?? 'listThreshold'),
         [VxOptionsInventoryDescriptors.numeric]);
   }
 
@@ -72,15 +71,15 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
         .getInt(
             options: options,
             id: thresholdKey,
-            defaultValue: numberDefaultSize[numberComparator.name] ?? 0)
+            defaultValue: numberDefaultSize[lengthComparator.name] ?? 0)
         .value;
 
-    return _evaluate(parsedValue, thresholdNum, options);
+    return _evaluate(parsedValue, thresholdNum, options, value);
   }
 
   List<MSG> _evaluate(List<String> values, int threshold,
       Map<String, String> options, String value) {
-    if (numberComparator.compare(values, threshold)) {
+    if (lengthComparator.compare(values.length, threshold)) {
       if (successProducer != null) {
         return [successProducer!.produce(options, value)];
       }
@@ -90,5 +89,27 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
       }
     }
     return [];
+  }
+}
+
+/// A static class providing methods to instantiate various string list validation rules.
+class VxListRules {
+  static VxListRule<MSG> greaterThan<MSG>(
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      required VxStringParser<List<String>> stringParser,
+      VxMessageProducer<MSG, String>? successProducer,
+      VxMessageProducer<MSG, String>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
+    return VxListRule<MSG>(
+        name: name,
+        lengthComparator: VxNumberComparators.greaterThan,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        stringParser: stringParser,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
   }
 }

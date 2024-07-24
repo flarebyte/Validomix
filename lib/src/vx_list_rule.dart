@@ -27,9 +27,9 @@ final numberDefaultName = {
 };
 
 /// Validates that a number meets a specified comparison threshold obtained from the options.
-class VxListRule<MSG> extends VxBaseRule<MSG> {
+class VxListRule<MSG, W> extends VxBaseRule<MSG> {
   final VxNumberComparator lengthComparator;
-  final VxStringParser<List<String>> stringParser;
+  final VxStringParser<List<W>> stringParser;
   final String name;
   final ExMetricStoreHolder metricStoreHolder;
   final VxMessageProducer<MSG, String>? successProducer;
@@ -63,7 +63,7 @@ class VxListRule<MSG> extends VxBaseRule<MSG> {
 
   @override
   List<MSG> validate(Map<String, String> options, String value) {
-    final List<String>? parsedValue = stringParser.parseString(value);
+    final List<W>? parsedValue = stringParser.parseString(value);
     if (parsedValue == null) {
       return [failureProducer!.produce(options, value)];
     }
@@ -77,7 +77,7 @@ class VxListRule<MSG> extends VxBaseRule<MSG> {
     return _evaluate(parsedValue, thresholdNum, options, value);
   }
 
-  List<MSG> _evaluate(List<String> values, int threshold,
+  List<MSG> _evaluate(List<W> values, int threshold,
       Map<String, String> options, String value) {
     if (lengthComparator.compare(values.length, threshold)) {
       if (successProducer != null) {
@@ -94,15 +94,15 @@ class VxListRule<MSG> extends VxBaseRule<MSG> {
 
 /// A static class providing methods to instantiate various string list validation rules.
 class VxListRules {
-  static VxListRule<MSG> greaterThan<MSG>(
+  static VxListRule<MSG, W> greaterThan<MSG, W>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      required VxStringParser<List<String>> stringParser,
+      required VxStringParser<List<W>> stringParser,
       VxMessageProducer<MSG, String>? successProducer,
       VxMessageProducer<MSG, String>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
-    return VxListRule<MSG>(
+    return VxListRule<MSG, W>(
         name: name,
         lengthComparator: VxNumberComparators.greaterThan,
         metricStoreHolder: metricStoreHolder,

@@ -7,7 +7,7 @@ import 'vx_options_inventory.dart';
 import 'vx_options_map.dart';
 
 /// The default should try to be generous
-final numberDefaultSize = {
+final _numberDefaultListSize = {
   VxNumberComparators.lessThan.name: 10000,
   VxNumberComparators.lessThanOrEqual.name: 10000,
   VxNumberComparators.greaterThan.name: 0,
@@ -17,7 +17,7 @@ final numberDefaultSize = {
 };
 
 /// The default name for each comparator
-final numberDefaultName = {
+final _numberDefaultListName = {
   VxNumberComparators.lessThan.name: 'maxSize',
   VxNumberComparators.lessThanOrEqual.name: 'maxSize',
   VxNumberComparators.greaterThan.name: 'minSize',
@@ -60,8 +60,8 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
         classSpecialisation: lengthComparator.name.replaceAll(' ', '-'),
         componentManagerConfig: componentManagerConfig);
     thresholdKey = optionsInventory.addKey(
-        VxComponentNameManager.getFullOptionKey(
-            name, numberDefaultName[lengthComparator.name] ?? 'listThreshold'),
+        VxComponentNameManager.getFullOptionKey(name,
+            _numberDefaultListName[lengthComparator.name] ?? 'listThreshold'),
         [VxOptionsInventoryDescriptors.numeric]);
   }
 
@@ -75,7 +75,7 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
         .getInt(
             options: options,
             id: thresholdKey,
-            defaultValue: numberDefaultSize[lengthComparator.name] ?? 0)
+            defaultValue: _numberDefaultListSize[lengthComparator.name] ?? 0)
         .value;
 
     return _evaluate(parsedValue, thresholdNum, options, value);
@@ -117,6 +117,98 @@ class VxListRules {
     return VxListRule<MSG, W>(
         name: name,
         lengthComparator: VxNumberComparators.greaterThan,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        stringParser: stringParser,
+        itemValidator: itemValidator,
+        areSuccessfulMessages: areSuccessfulMessages,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
+  }
+
+  static VxListRule<MSG, W> greaterThanOrEqual<MSG, W>(
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      required VxStringParser<List<W>> stringParser,
+      required VxBaseValidator<MSG, W> itemValidator,
+      required VxMatchingMessages areSuccessfulMessages,
+      VxMessageProducer<MSG, String>? successProducer,
+      VxMessageProducer<MSG, String>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
+    return VxListRule<MSG, W>(
+        name: name,
+        lengthComparator: VxNumberComparators.greaterThanOrEqual,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        stringParser: stringParser,
+        itemValidator: itemValidator,
+        areSuccessfulMessages: areSuccessfulMessages,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
+  }
+
+  static VxListRule<MSG, W> lessThan<MSG, W>(
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      required VxStringParser<List<W>> stringParser,
+      required VxBaseValidator<MSG, W> itemValidator,
+      required VxMatchingMessages areSuccessfulMessages,
+      VxMessageProducer<MSG, String>? successProducer,
+      VxMessageProducer<MSG, String>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
+    return VxListRule<MSG, W>(
+        name: name,
+        lengthComparator: VxNumberComparators.lessThan,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        stringParser: stringParser,
+        itemValidator: itemValidator,
+        areSuccessfulMessages: areSuccessfulMessages,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
+  }
+
+  static VxListRule<MSG, W> lessThanOrEqual<MSG, W>(
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      required VxStringParser<List<W>> stringParser,
+      required VxBaseValidator<MSG, W> itemValidator,
+      required VxMatchingMessages areSuccessfulMessages,
+      VxMessageProducer<MSG, String>? successProducer,
+      VxMessageProducer<MSG, String>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
+    return VxListRule<MSG, W>(
+        name: name,
+        lengthComparator: VxNumberComparators.lessThanOrEqual,
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        stringParser: stringParser,
+        itemValidator: itemValidator,
+        areSuccessfulMessages: areSuccessfulMessages,
+        successProducer: successProducer,
+        failureProducer: failureProducer,
+        componentManagerConfig: componentManagerConfig);
+  }
+
+  static VxListRule<MSG, W> equalTo<MSG, W>(
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      required VxStringParser<List<W>> stringParser,
+      required VxBaseValidator<MSG, W> itemValidator,
+      required VxMatchingMessages areSuccessfulMessages,
+      VxMessageProducer<MSG, String>? successProducer,
+      VxMessageProducer<MSG, String>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
+    return VxListRule<MSG, W>(
+        name: name,
+        lengthComparator: VxNumberComparators.equalTo,
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
         stringParser: stringParser,

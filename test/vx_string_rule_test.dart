@@ -805,7 +805,47 @@ void main() {
         });
       });
     });
+    group('VxStringFormatterRule', () {
+      const threshold = 10;
+      test('validate with producers', () {
+        final rule = VxStringRules.followFormat<String>(
+            name: 'test',
+            metricStoreHolder: metricStoreHolder,
+            optionsInventory: optionsInventory,
+            formatter: CollapseFormatter(),
+            successProducer: successProducer,
+            failureProducer: failureProducer);
+        expect(rule.validate({'test~formatting': "/"}, 'no-slash'),
+            [successMessage]);
+        expect(rule.validate({'test~formatting': "/"}, 'some/slash/'),
+            [failureMessage]);
+        expect(optionsInventory.toList().length, 1);
+        expect(optionsInventory.toList().first.name, 'test~formatting');
+      });
+
+      test('validate without producers', () {
+        final ruleWithoutProducers = VxStringRules.followFormat<String>(
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+          formatter: CollapseFormatter(),
+        );
+        expect(ruleWithoutProducers.validate({}, "no-space"), []);
+        expect(ruleWithoutProducers.validate({}, "some space"), []);
+        expect(optionsInventory.toList().length, 1);
+      });
+    });
   });
+}
+
+class CollapseFormatter extends VxBaseFormatter {
+  @override
+  String format(Map<String, String> options, String value, String? formatting) {
+    return value.replaceAll(formatting ?? ' ', '');
+  }
+
+  @override
+  String get name => 'CollapseFormatter';
 }
 
 void shouldNotProduceMessage(VxCharsRule<String> ruleWithoutProducers,

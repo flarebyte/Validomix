@@ -153,6 +153,55 @@ class VxWordsRule<MSG> extends VxBaseRule<MSG> {
   }
 }
 
+/// Validates that the number of characters in a string is less than a specified limit obtained from the options.
+class VxStringFormatterRule<MSG> extends VxBaseRule<MSG> {
+  final VxMessageProducer<MSG, String>? successProducer;
+  final VxMessageProducer<MSG, String>? failureProducer;
+  final String name;
+  final ExMetricStoreHolder metricStoreHolder;
+  final VxComponentManagerConfig componentManagerConfig;
+  final VxOptionsInventory optionsInventory;
+  final VxBaseFormatter formatter;
+  late VxOptionsMap optionsMap;
+  late int formattingKey;
+  VxStringFormatterRule(
+      {required this.name,
+      required this.metricStoreHolder,
+      required this.optionsInventory,
+      required this.formatter,
+      this.successProducer,
+      this.failureProducer,
+      this.componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
+    optionsMap = VxOptionsMap(
+        metricStoreHolder: metricStoreHolder,
+        optionsInventory: optionsInventory,
+        ownerClassName: 'VxStringFormatterRule',
+        classSpecialisation: formatter.name.replaceAll(' ', '-'),
+        componentManagerConfig: componentManagerConfig);
+    formattingKey = optionsInventory.addKey(
+        VxComponentNameManager.getFullOptionKey(
+            name, 'formatting', componentManagerConfig, true),
+        [VxOptionsInventoryDescriptors.string]);
+  }
+
+  @override
+  List<MSG> validate(Map<String, String> options, String value) {
+    final formatting =
+        optionsMap.getString(options: options, id: formattingKey).value;
+    final formatted = formatter.format(options, value, formatting);
+    if (formatted == value) {
+      if (successProducer != null) {
+        return [successProducer!.produce(options, value)];
+      }
+    } else {
+      if (failureProducer != null) {
+        return [failureProducer!.produce(options, value)];
+      }
+    }
+    return [];
+  }
+}
+
 class VxStringRules {
   static VxCharsRule<MSG> charsLessThan<MSG>(
       {required String name,
@@ -288,5 +337,24 @@ class VxStringRules {
         successProducer: successProducer,
         failureProducer: failureProducer,
         componentManagerConfig: componentManagerConfig);
+  }
+
+  static VxStringFormatterRule<MSG> followFormat<MSG>(
+      {required String name,
+      required ExMetricStoreHolder metricStoreHolder,
+      required VxOptionsInventory optionsInventory,
+      required VxBaseFormatter formatter,
+      VxMessageProducer<MSG, String>? successProducer,
+      VxMessageProducer<MSG, String>? failureProducer,
+      componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
+    return VxStringFormatterRule<MSG>(
+      name: name,
+      metricStoreHolder: metricStoreHolder,
+      optionsInventory: optionsInventory,
+      formatter: formatter,
+      successProducer: successProducer,
+      failureProducer: failureProducer,
+      componentManagerConfig: componentManagerConfig,
+    );
   }
 }

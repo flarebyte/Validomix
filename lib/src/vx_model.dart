@@ -38,3 +38,11 @@ abstract class VxIterableLengthComparator<V> {
   /// Returns `true` if the comparison meets the criteria, otherwise `false`.
   bool compare(Iterable<V> values, int threshold);
 }
+
+/// An abstract class defining the interface for formatting a value
+abstract class VxBaseFormatter {
+  /// The name of the comparator.
+  String get name;
+
+  String format(Map<String, String> options, String value, String? formatting);
+}

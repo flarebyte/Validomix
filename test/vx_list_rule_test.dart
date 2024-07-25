@@ -127,6 +127,22 @@ void main() {
       expect(result, [successMessage]);
     });
 
+    test('greaterThanOrEqual - has a failing item', () {
+      final rule = VxListRules.greaterThanOrEqual<Message, String>(
+          name: 'example',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+          stringParser: DotStringParser(),
+          itemValidator: AlwaysFailValidator(),
+          areSuccessfulMessages: AreStringAllSuccess(),
+          successProducer: successProducer,
+          failureProducer: failureProducer);
+      final options = {'example#minSize': '3'};
+      final result = rule.validate(options, createSentences(3));
+      expect(result,
+          ['Validation failed', 'Validation failed', 'Validation failed']);
+    });
+
     test('lessThan - value is less than threshold', () {
       final rule = VxListRules.lessThan<Message, String>(
           name: 'example',

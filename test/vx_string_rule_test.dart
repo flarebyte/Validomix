@@ -840,7 +840,8 @@ void main() {
 
 class CollapseFormatter extends VxBaseFormatter {
   @override
-  String format(Map<String, String> options, String value, String? formatting) {
+  String format(Map<String, String> options, String value,
+      [String? formatting]) {
     return value.replaceAll(formatting ?? ' ', '');
   }
 

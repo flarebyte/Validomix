@@ -44,5 +44,6 @@ abstract class VxBaseFormatter {
   /// The name of the comparator.
   String get name;
 
-  String format(Map<String, String> options, String value, String? formatting);
+  String format(Map<String, String> options, String value,
+      [String? formatting]);
 }

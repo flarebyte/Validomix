@@ -179,8 +179,8 @@ class VxStringFormatterRule<MSG> extends VxBaseRule<MSG> {
         classSpecialisation: formatter.name.replaceAll(' ', '-'),
         componentManagerConfig: componentManagerConfig);
     formattingKey = optionsInventory.addKey(
-        VxComponentNameManager.getFullOptionKey(
-            name, 'formatting', componentManagerConfig, true),
+        VxComponentNameManager.getFullOptionKey(name, 'formatting',
+            optional: true),
         [VxOptionsInventoryDescriptors.string]);
   }
 

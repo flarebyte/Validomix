@@ -87,8 +87,8 @@ class VxComponentNameManager {
   ///
   /// Throws an [ArgumentError] if the component name or option name is invalid.
   static String getFullOptionKey(String name, String option,
-      [VxComponentManagerConfig config = VxComponentManagerConfig.defaultConfig,
-      bool optional = false]) {
+      {VxComponentManagerConfig config = VxComponentManagerConfig.defaultConfig,
+      bool optional = false}) {
     _validateHierarchicalComponentName(name, config);
     _validateOptionName(option, config);
     return optional

@@ -59,5 +59,6 @@ class VxOptionsInventoryDescriptors {
   static const numeric = 'numeric';
   static const boolean = 'boolean';
   static const positive = 'positive';
+  static const stringList = ['string list'];
   static const positiveInt = [integer, positive];
 }

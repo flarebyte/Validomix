@@ -14,3 +14,4 @@ export 'src/vx_component_name_manager.dart';
 export 'src/vx_options_map.dart';
 export 'src/vx_list_rule.dart';
 export 'src/vx_formatter.dart';
+export 'src/vx_url_rule.dart';

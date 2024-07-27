@@ -6,7 +6,6 @@ import '../validomix.dart';
 class VxUrlRule<MSG> extends VxBaseRule<MSG> {
   final VxMessageProducer<MSG, String>? successProducer;
   final VxMessageProducer<MSG, String>? failureProducer;
-  final VxNumberComparator numberComparator;
   final String name;
   final ExMetricStoreHolder metricStoreHolder;
   final VxComponentManagerConfig componentManagerConfig;
@@ -17,8 +16,7 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
   late int allowDomainsKey;
 
   VxUrlRule(
-      {required this.numberComparator,
-      required this.name,
+      {required this.name,
       required this.metricStoreHolder,
       required this.optionsInventory,
       this.successProducer,
@@ -28,7 +26,6 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
         ownerClassName: 'VxUrlRule',
-        classSpecialisation: numberComparator.name.replaceAll(' ', '-'),
         componentManagerConfig: componentManagerConfig);
     allowQueryKey = optionsInventory.addKey(
         VxComponentNameManager.getFullOptionKey(name, 'allowFragment',

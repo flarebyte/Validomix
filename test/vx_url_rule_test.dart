@@ -15,6 +15,8 @@ void main() {
     final successProducer = SimpleMessageProducer(successMessage);
     var failureMessage = 'Failure: Condition not met.';
     final failureProducer = SimpleMessageProducer(failureMessage);
+    var secureFailureMessage = 'Failure: Secure Condition not met.';
+    final secureFailureProducer = SimpleMessageProducer(secureFailureMessage);
     late ExMetricStoreHolder metricStoreHolder;
     late VxOptionsInventory optionsInventory;
 
@@ -115,13 +117,13 @@ void main() {
           metricStoreHolder: metricStoreHolder,
           optionsInventory: optionsInventory,
           successProducer: successProducer,
-          failureProducer: failureProducer);
+          secureFailureProducer: secureFailureProducer);
 
       var options = {'test~secure': 'true'};
       expect(rule.validate(options, 'https://example.com/data.csv'),
           [successMessage]);
       expect(rule.validate(options, 'http://example.com/data.csv'),
-          [failureMessage]);
+          [secureFailureMessage]);
     });
 
     test('validate without producers', () {

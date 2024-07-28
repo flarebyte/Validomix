@@ -6,6 +6,7 @@ import '../validomix.dart';
 class VxUrlRule<MSG> extends VxBaseRule<MSG> {
   final VxMessageProducer<MSG, String>? successProducer;
   final VxMessageProducer<MSG, String>? failureProducer;
+  final VxMessageProducer<MSG, String>? secureFailureProducer;
   final String name;
   final ExMetricStoreHolder metricStoreHolder;
   final VxComponentManagerConfig componentManagerConfig;
@@ -22,6 +23,7 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
       required this.optionsInventory,
       this.successProducer,
       this.failureProducer,
+      this.secureFailureProducer,
       this.componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     optionsMap = VxOptionsMap(
         metricStoreHolder: metricStoreHolder,
@@ -57,6 +59,12 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
         : [failureProducer!.produce(options, value)];
   }
 
+  List<MSG> _produceSecureFailure(Map<String, String> options, String value) {
+    return secureFailureProducer == null
+        ? _produceFailure(options, value)
+        : [secureFailureProducer!.produce(options, value)];
+  }
+
   bool _endsWithAnyDomain(String host, List<String> allowedEndings) {
     return allowedEndings.any((ending) => host.endsWith(ending));
   }
@@ -73,7 +81,7 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
     }
     final secure = optionsMap.getBoolean(options: options, id: secureKey).value;
     if (secure && !uri.isScheme('https')) {
-      return _produceFailure(options, value);
+      return _produceSecureFailure(options, value);
     }
     if (uri.hasPort) {
       return _produceFailure(options, value);

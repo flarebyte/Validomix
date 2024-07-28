@@ -41,37 +41,49 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
         VxOptionsInventoryDescriptors.stringList);
   }
 
+  List<MSG> _produceSuccess(Map<String, String> options, String value) {
+    return successProducer == null
+        ? []
+        : [successProducer!.produce(options, value)];
+  }
+
+  List<MSG> _produceFailure(Map<String, String> options, String value) {
+    return failureProducer == null
+        ? []
+        : [failureProducer!.produce(options, value)];
+  }
+
   @override
   List<MSG> validate(Map<String, String> options, String value) {
     final uri = Uri.tryParse(value);
 
     if (uri == null) {
-      return [failureProducer!.produce(options, value)];
+      return _produceFailure(options, value);
     }
     if (!(uri.isScheme('http') || uri.isScheme('https'))) {
-      return [failureProducer!.produce(options, value)];
+      return _produceFailure(options, value);
     }
     if (uri.hasPort) {
-      return [failureProducer!.produce(options, value)];
+      return _produceFailure(options, value);
     }
     if (uri.userInfo.isNotEmpty) {
-      return [failureProducer!.produce(options, value)];
+      return _produceFailure(options, value);
     }
     final allowFragment = optionsMap
         .getBoolean(options: options, id: allowFragmentKey, defaultValue: false)
         .value;
     if (!allowFragment && uri.hasFragment) {
-      return [failureProducer!.produce(options, value)];
+      return _produceFailure(options, value);
     }
     final allowQuery = optionsMap
         .getBoolean(options: options, id: allowQueryKey, defaultValue: false)
         .value;
     if (!allowQuery && uri.hasQuery) {
-      return [failureProducer!.produce(options, value)];
+      return _produceFailure(options, value);
     }
     final allowDomains =
         optionsMap.getStringList(options: options, id: allowDomainsKey).value;
 
-    return [successProducer!.produce(options, value)];
+    return _produceSuccess(options, value);
   }
 }

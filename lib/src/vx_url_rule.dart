@@ -53,6 +53,10 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
         : [failureProducer!.produce(options, value)];
   }
 
+  bool _endsWithAnyDomain(String host, List<String> allowedEndings) {
+    return allowedEndings.any((ending) => host.endsWith(ending));
+  }
+
   @override
   List<MSG> validate(Map<String, String> options, String value) {
     final uri = Uri.tryParse(value);
@@ -83,6 +87,10 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
     }
     final allowDomains =
         optionsMap.getStringList(options: options, id: allowDomainsKey).value;
+    if (allowDomains.isNotEmpty &&
+        !_endsWithAnyDomain(uri.host, allowDomains)) {
+      return _produceFailure(options, value);
+    }
 
     return _produceSuccess(options, value);
   }

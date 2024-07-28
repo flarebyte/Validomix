@@ -39,6 +39,7 @@ void main() {
       expect(rule.validate({}, 'http://website.com'), [successMessage]);
       for (var notSupported in [
         'random string',
+        'a/bc/c',
         'ftp://website.com',
         'http://website.com#there',
         'http://website.com/service?param1=value1',
@@ -49,6 +50,31 @@ void main() {
       }
       expect(optionsInventory.toList().map((i) => i.name),
           ['test~allowDomains', 'test~allowFragment', 'test~allowQuery']);
+    });
+
+    test('validate domains', () {
+      final rule = VxUrlRule<String>(
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+          successProducer: successProducer,
+          failureProducer: failureProducer);
+      const allowDomains = {'test~allowDomains': 'en.wikipedia.org dart.dev'};
+
+      expect(
+          rule.validate(allowDomains,
+              'https://api.dart.dev/stable/3.4.4/dart-core/Uri-class.html'),
+          [successMessage]);
+      expect(
+          rule.validate(
+              allowDomains, 'https://en.wikipedia.org/wiki/Henry_VIII'),
+          [successMessage]);
+      expect(
+          rule.validate(
+              allowDomains, 'https://en.wikipedia.com/wiki/Henry_VIII'),
+          [failureMessage]);
+      expect(rule.validate(allowDomains, 'https:/abc.com/wiki/Henry_VIII'),
+          [failureMessage]);
     });
 
     test('validate without producers', () {

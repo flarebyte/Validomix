@@ -41,7 +41,7 @@ void main() {
         'random string',
         'a/bc/c',
         'ftp://website.com',
-        'http://website.com#there',
+        'http://example.com/data.csv#row=4',
         'http://website.com/service?param1=value1',
         'http://website.com:8080/service',
         'http://username:password@example.com/'
@@ -75,6 +75,20 @@ void main() {
           [failureMessage]);
       expect(rule.validate(allowDomains, 'https:/abc.com/wiki/Henry_VIII'),
           [failureMessage]);
+    });
+
+    test('allow fragment', () {
+      final rule = VxUrlRule<String>(
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+          successProducer: successProducer,
+          failureProducer: failureProducer);
+
+      expect(
+          rule.validate({'test~allowFragment': 'true'},
+              'http://example.com/data.csv#row=4'),
+          [successMessage]);
     });
 
     test('validate without producers', () {

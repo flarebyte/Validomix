@@ -27,11 +27,11 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
         optionsInventory: optionsInventory,
         ownerClassName: 'VxUrlRule',
         componentManagerConfig: componentManagerConfig);
-    allowQueryKey = optionsInventory.addKey(
+    allowFragmentKey = optionsInventory.addKey(
         VxComponentNameManager.getFullOptionKey(name, 'allowFragment',
             optional: true),
         [VxOptionsInventoryDescriptors.boolean]);
-    allowFragmentKey = optionsInventory.addKey(
+    allowQueryKey = optionsInventory.addKey(
         VxComponentNameManager.getFullOptionKey(name, 'allowQuery',
             optional: true),
         [VxOptionsInventoryDescriptors.boolean]);
@@ -73,15 +73,13 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
     if (uri.userInfo.isNotEmpty) {
       return _produceFailure(options, value);
     }
-    final allowFragment = optionsMap
-        .getBoolean(options: options, id: allowFragmentKey, defaultValue: false)
-        .value;
+    final allowFragment =
+        optionsMap.getBoolean(options: options, id: allowFragmentKey).value;
     if (!allowFragment && uri.hasFragment) {
       return _produceFailure(options, value);
     }
-    final allowQuery = optionsMap
-        .getBoolean(options: options, id: allowQueryKey, defaultValue: false)
-        .value;
+    final allowQuery =
+        optionsMap.getBoolean(options: options, id: allowQueryKey).value;
     if (!allowQuery && uri.hasQuery) {
       return _produceFailure(options, value);
     }

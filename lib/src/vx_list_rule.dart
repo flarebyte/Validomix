@@ -81,6 +81,18 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
     return _evaluate(parsedValue, thresholdNum, options, value);
   }
 
+  List<MSG> _produceSuccess(Map<String, String> options, String value) {
+    return successProducer == null
+        ? []
+        : [successProducer!.produce(options, value)];
+  }
+
+  List<MSG> _produceFailure(Map<String, String> options, String value) {
+    return failureProducer == null
+        ? []
+        : [failureProducer!.produce(options, value)];
+  }
+
   List<MSG> _evaluate(List<W> values, int threshold,
       Map<String, String> options, String value) {
     if (lengthComparator.compare(values.length, threshold)) {
@@ -90,12 +102,12 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
           itemMessages += itemValidator.validate(options, itemValue);
         }
         return areSuccessfulMessages.isMatching(itemMessages)
-            ? [successProducer!.produce(options, value)]
+            ? _produceSuccess(options, value)
             : itemMessages;
       }
     } else {
       if (failureProducer != null) {
-        return [failureProducer!.produce(options, value)];
+        return _produceFailure(options, value);
       }
     }
     return [];

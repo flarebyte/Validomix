@@ -71,14 +71,26 @@ class VxNumberRule<MSG> extends VxBaseValidator<MSG, num> {
     return _evaluate(value, thresholdNum, options);
   }
 
+  List<MSG> _produceSuccess(Map<String, String> options, num value) {
+    return successProducer == null
+        ? []
+        : [successProducer!.produce(options, value)];
+  }
+
+  List<MSG> _produceFailure(Map<String, String> options, num value) {
+    return failureProducer == null
+        ? []
+        : [failureProducer!.produce(options, value)];
+  }
+
   List<MSG> _evaluate(num value, num threshold, Map<String, String> options) {
     if (numberComparator.compare(value, threshold)) {
       if (successProducer != null) {
-        return [successProducer!.produce(options, value)];
+        return _produceSuccess(options, value);
       }
     } else {
       if (failureProducer != null) {
-        return [failureProducer!.produce(options, value)];
+        return _produceFailure(options, value);
       }
     }
     return [];
@@ -122,14 +134,26 @@ class VxNumberMultipleOf<MSG> extends VxBaseValidator<MSG, num> {
     return _evaluate(value, multipleOf, options);
   }
 
+  List<MSG> _produceSuccess(Map<String, String> options, num value) {
+    return successProducer == null
+        ? []
+        : [successProducer!.produce(options, value)];
+  }
+
+  List<MSG> _produceFailure(Map<String, String> options, num value) {
+    return failureProducer == null
+        ? []
+        : [failureProducer!.produce(options, value)];
+  }
+
   List<MSG> _evaluate(num value, num multipleOf, Map<String, String> options) {
     if (value % multipleOf == 0) {
       if (successProducer != null) {
-        return [successProducer!.produce(options, value)];
+        return _produceSuccess(options, value);
       }
     } else {
       if (failureProducer != null) {
-        return [failureProducer!.produce(options, value)];
+        return _produceFailure(options, value);
       }
     }
     return [];

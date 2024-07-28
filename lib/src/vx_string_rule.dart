@@ -81,15 +81,27 @@ class VxCharsRule<MSG> extends VxBaseRule<MSG> {
     return _evaluate(value, thresholdChars, options);
   }
 
+  List<MSG> _produceSuccess(Map<String, String> options, String value) {
+    return successProducer == null
+        ? []
+        : [successProducer!.produce(options, value)];
+  }
+
+  List<MSG> _produceFailure(Map<String, String> options, String value) {
+    return failureProducer == null
+        ? []
+        : [failureProducer!.produce(options, value)];
+  }
+
   List<MSG> _evaluate(
       String value, int thresholdChars, Map<String, String> options) {
     if (numberComparator.compare(value.length, thresholdChars)) {
       if (successProducer != null) {
-        return [successProducer!.produce(options, value)];
+        return _produceSuccess(options, value);
       }
     } else {
       if (failureProducer != null) {
-        return [failureProducer!.produce(options, value)];
+        return _produceFailure(options, value);
       }
     }
     return [];
@@ -138,15 +150,27 @@ class VxWordsRule<MSG> extends VxBaseRule<MSG> {
     return _evaluate(value, thresholdWords, options);
   }
 
+  List<MSG> _produceSuccess(Map<String, String> options, String value) {
+    return successProducer == null
+        ? []
+        : [successProducer!.produce(options, value)];
+  }
+
+  List<MSG> _produceFailure(Map<String, String> options, String value) {
+    return failureProducer == null
+        ? []
+        : [failureProducer!.produce(options, value)];
+  }
+
   List<MSG> _evaluate(String value, int maxWords, Map<String, String> options) {
     final wordCount = value.split(' ').length;
     if (numberComparator.compare(wordCount, maxWords)) {
       if (successProducer != null) {
-        return [successProducer!.produce(options, value)];
+        return _produceSuccess(options, value);
       }
     } else {
       if (failureProducer != null) {
-        return [failureProducer!.produce(options, value)];
+        return _produceFailure(options, value);
       }
     }
     return [];
@@ -184,6 +208,18 @@ class VxStringFormatterRule<MSG> extends VxBaseRule<MSG> {
         [VxOptionsInventoryDescriptors.string]);
   }
 
+  List<MSG> _produceSuccess(Map<String, String> options, String value) {
+    return successProducer == null
+        ? []
+        : [successProducer!.produce(options, value)];
+  }
+
+  List<MSG> _produceFailure(Map<String, String> options, String value) {
+    return failureProducer == null
+        ? []
+        : [failureProducer!.produce(options, value)];
+  }
+
   @override
   List<MSG> validate(Map<String, String> options, String value) {
     final formatting =
@@ -191,11 +227,11 @@ class VxStringFormatterRule<MSG> extends VxBaseRule<MSG> {
     final formatted = formatter.format(options, value, formatting);
     if (formatted == value) {
       if (successProducer != null) {
-        return [successProducer!.produce(options, value)];
+        return _produceSuccess(options, value);
       }
     } else {
       if (failureProducer != null) {
-        return [failureProducer!.produce(options, value)];
+        return _produceFailure(options, value);
       }
     }
     return [];

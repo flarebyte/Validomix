@@ -91,6 +91,20 @@ void main() {
           [successMessage]);
     });
 
+    test('allow query', () {
+      final rule = VxUrlRule<String>(
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+          successProducer: successProducer,
+          failureProducer: failureProducer);
+
+      expect(
+          rule.validate(
+              {'test~allowQuery': 'true'}, 'http://example.com/data.csv?row=4'),
+          [successMessage]);
+    });
+
     test('validate without producers', () {
       final ruleWithoutProducers = VxUrlRule<String>(
           name: 'test',

@@ -7,6 +7,7 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
   final VxMessageProducer<MSG, String>? successProducer;
   final VxMessageProducer<MSG, String>? failureProducer;
   final VxMessageProducer<MSG, String>? secureFailureProducer;
+  final VxMessageProducer<MSG, String>? domainFailureProducer;
   final String name;
   final ExMetricStoreHolder metricStoreHolder;
   final VxComponentManagerConfig componentManagerConfig;
@@ -24,6 +25,7 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
       this.successProducer,
       this.failureProducer,
       this.secureFailureProducer,
+      this.domainFailureProducer,
       this.componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     optionsMap = VxOptionsMap(
         metricStoreHolder: metricStoreHolder,
@@ -65,6 +67,12 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
         : [secureFailureProducer!.produce(options, value)];
   }
 
+  List<MSG> _produceDomainFailure(Map<String, String> options, String value) {
+    return domainFailureProducer == null
+        ? _produceFailure(options, value)
+        : [domainFailureProducer!.produce(options, value)];
+  }
+
   bool _endsWithAnyDomain(String host, List<String> allowedEndings) {
     return allowedEndings.any((ending) => host.endsWith(ending));
   }
@@ -103,7 +111,7 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
         optionsMap.getStringList(options: options, id: allowDomainsKey).value;
     if (allowDomains.isNotEmpty &&
         !_endsWithAnyDomain(uri.host, allowDomains)) {
-      return _produceFailure(options, value);
+      return _produceDomainFailure(options, value);
     }
 
     return _produceSuccess(options, value);

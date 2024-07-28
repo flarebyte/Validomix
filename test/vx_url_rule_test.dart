@@ -17,6 +17,8 @@ void main() {
     final failureProducer = SimpleMessageProducer(failureMessage);
     var secureFailureMessage = 'Failure: Secure Condition not met.';
     final secureFailureProducer = SimpleMessageProducer(secureFailureMessage);
+    var domainFailureMessage = 'Failure: Domain Condition not met.';
+    final domainFailureProducer = SimpleMessageProducer(domainFailureMessage);
     late ExMetricStoreHolder metricStoreHolder;
     late VxOptionsInventory optionsInventory;
 
@@ -64,7 +66,8 @@ void main() {
           metricStoreHolder: metricStoreHolder,
           optionsInventory: optionsInventory,
           successProducer: successProducer,
-          failureProducer: failureProducer);
+          failureProducer: failureProducer,
+          domainFailureProducer: domainFailureProducer);
       const allowDomains = {'test~allowDomains': 'en.wikipedia.org dart.dev'};
 
       expect(
@@ -78,9 +81,9 @@ void main() {
       expect(
           rule.validate(
               allowDomains, 'https://en.wikipedia.com/wiki/Henry_VIII'),
-          [failureMessage]);
+          [domainFailureMessage]);
       expect(rule.validate(allowDomains, 'https:/abc.com/wiki/Henry_VIII'),
-          [failureMessage]);
+          [domainFailureMessage]);
     });
 
     test('allow fragment', () {

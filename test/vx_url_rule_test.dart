@@ -48,8 +48,12 @@ void main() {
       ]) {
         expect(rule.validate({}, notSupported), [failureMessage]);
       }
-      expect(optionsInventory.toList().map((i) => i.name),
-          ['test~allowDomains', 'test~allowFragment', 'test~allowQuery']);
+      expect(optionsInventory.toList().map((i) => i.name), [
+        'test~allowDomains',
+        'test~allowFragment',
+        'test~allowQuery',
+        'test~secure'
+      ]);
     });
 
     test('validate domains', () {
@@ -103,6 +107,21 @@ void main() {
           rule.validate(
               {'test~allowQuery': 'true'}, 'http://example.com/data.csv?row=4'),
           [successMessage]);
+    });
+
+    test('secure should ensure https', () {
+      final rule = VxUrlRule<String>(
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+          successProducer: successProducer,
+          failureProducer: failureProducer);
+
+      var options = {'test~secure': 'true'};
+      expect(rule.validate(options, 'https://example.com/data.csv'),
+          [successMessage]);
+      expect(rule.validate(options, 'http://example.com/data.csv'),
+          [failureMessage]);
     });
 
     test('validate without producers', () {

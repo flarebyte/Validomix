@@ -14,6 +14,7 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
   late int allowFragmentKey;
   late int allowQueryKey;
   late int allowDomainsKey;
+  late int secureKey;
 
   VxUrlRule(
       {required this.name,
@@ -34,6 +35,9 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
     allowQueryKey = optionsInventory.addKey(
         VxComponentNameManager.getFullOptionKey(name, 'allowQuery',
             optional: true),
+        [VxOptionsInventoryDescriptors.boolean]);
+    secureKey = optionsInventory.addKey(
+        VxComponentNameManager.getFullOptionKey(name, 'secure', optional: true),
         [VxOptionsInventoryDescriptors.boolean]);
     allowDomainsKey = optionsInventory.addKey(
         VxComponentNameManager.getFullOptionKey(name, 'allowDomains',
@@ -65,6 +69,10 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
       return _produceFailure(options, value);
     }
     if (!(uri.isScheme('http') || uri.isScheme('https'))) {
+      return _produceFailure(options, value);
+    }
+    final secure = optionsMap.getBoolean(options: options, id: secureKey).value;
+    if (secure && !uri.isScheme('https')) {
       return _produceFailure(options, value);
     }
     if (uri.hasPort) {

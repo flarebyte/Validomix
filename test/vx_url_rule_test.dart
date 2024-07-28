@@ -29,9 +29,26 @@ void main() {
           optionsInventory: optionsInventory,
           successProducer: successProducer,
           failureProducer: failureProducer);
+      for (var supported in [
+        'http://website.com',
+        'http://website.com/service',
+        'https://website.com/service'
+      ]) {
+        expect(rule.validate({}, supported), [successMessage]);
+      }
       expect(rule.validate({}, 'http://website.com'), [successMessage]);
-      expect(rule.validate({}, 'ftp://website.com'), [failureMessage]);
-      expect(optionsInventory.toList().length, 3);
+      for (var notSupported in [
+        'random string',
+        'ftp://website.com',
+        'http://website.com#there',
+        'http://website.com/service?param1=value1',
+        'http://website.com:8080/service',
+        'http://username:password@example.com/'
+      ]) {
+        expect(rule.validate({}, notSupported), [failureMessage]);
+      }
+      expect(optionsInventory.toList().map((i) => i.name),
+          ['test~allowDomains', 'test~allowFragment', 'test~allowQuery']);
     });
 
     test('validate without producers', () {

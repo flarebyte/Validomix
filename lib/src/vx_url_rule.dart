@@ -2,7 +2,7 @@ import 'package:eagleyeix/metric.dart';
 
 import '../validomix.dart';
 
-/// Validates that the number of characters in a string is less than a specified limit obtained from the options.
+/// Validates a URL.
 class VxUrlRule<MSG> extends VxBaseRule<MSG> {
   final VxMessageProducer<MSG, String>? successProducer;
   final VxMessageProducer<MSG, String>? failureProducer;
@@ -51,7 +51,7 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
     allowDomainsKey = optionsInventory.addKey(
         VxComponentNameManager.getFullOptionKey(name, 'allowDomains',
             optional: true),
-        VxOptionsInventoryDescriptors.stringList);
+        [VxOptionsInventoryDescriptors.stringList]);
   }
 
   List<MSG> _produceSuccess(Map<String, String> options, String value) {

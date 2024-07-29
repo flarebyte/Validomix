@@ -229,6 +229,16 @@ class VxOptionsMap {
     if (resultValue.status != VxMapValueStatus.ok) {
       return VxMapValue(defaultValue, resultValue.status);
     }
+    final key = optionsInventory.getKey(id);
+    if (!key.descriptors.contains(VxOptionsInventoryDescriptors.stringList)) {
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getKeyValueNotInDeclaration(
+              className: ownerClassName,
+              name: key.name,
+              expected: VxOptionsInventoryDescriptors.stringList,
+              specialisation: classSpecialisation),
+          1);
+    }
     final value = resultValue.value;
     final stringsValue = value.split(separator);
     return VxMapValue.ok(stringsValue);

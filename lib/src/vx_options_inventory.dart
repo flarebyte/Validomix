@@ -52,6 +52,7 @@ class VxOptionsInventory {
   }
 }
 
+/// A key in the options inventory.
 class VxOptionsInventoryDescriptors {
   static const string = 'string';
   static const notBlank = 'not-blank';
@@ -59,6 +60,6 @@ class VxOptionsInventoryDescriptors {
   static const numeric = 'numeric';
   static const boolean = 'boolean';
   static const positive = 'positive';
-  static const stringList = ['string list'];
+  static const stringList = 'string list';
   static const positiveInt = [integer, positive];
 }

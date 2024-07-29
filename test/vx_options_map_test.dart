@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:eagleyeix/metric.dart';
 import 'package:test/test.dart';
 import 'package:validomix/validomix.dart';
@@ -32,7 +30,8 @@ void main() {
         .addKey("ex#key5", [VxOptionsInventoryDescriptors.numeric]);
     key10 = optionsInventory
         .addKey("ex~key10", [VxOptionsInventoryDescriptors.notBlank]);
-    key11 = optionsInventory.addKey("ex#key11", []);
+    key11 = optionsInventory
+        .addKey("ex#key11", [VxOptionsInventoryDescriptors.stringList]);
     vxOptionsMap = VxOptionsMap(
         ownerClassName: 'OwnerClassName',
         metricStoreHolder: metricStoreHolder,

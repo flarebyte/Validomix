@@ -109,7 +109,15 @@ class VxOptionsMap {
           1);
       return VxMapValue.ko(defaultValue);
     }
-
+    if (!key.descriptors.contains(VxOptionsInventoryDescriptors.integer)) {
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getKeyValueNotInDeclaration(
+              className: ownerClassName,
+              name: key.name,
+              expected: VxOptionsInventoryDescriptors.integer,
+              specialisation: classSpecialisation),
+          1);
+    }
     final shouldbePositive =
         key.descriptors.contains(VxOptionsInventoryDescriptors.positive) &&
             intValue < 0;

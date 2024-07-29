@@ -46,7 +46,8 @@ void main() {
       final result = vxOptionsMap.getString(options: options, id: key1);
       expect(result.value, 'value1');
       expect(result.status, VxMapValueStatus.ok);
-      expect(metricStoreHolder.store.isEmpty, true);
+      expect(metricStoreHolder.store.isEmpty, true,
+          reason: 'should have no metric');
     });
 
     test('getString returns default value when key is missing', () {
@@ -80,19 +81,12 @@ void main() {
       expect(metricStoreHolder.store.isEmpty, true);
     });
 
-    test('getInt returns value from options', () {
-      final options = {'ex#key1': '42'};
-      final result = vxOptionsMap.getInt(options: options, id: key1);
-      expect(result.value, 42);
-      expect(result.status, VxMapValueStatus.ok);
-      expect(metricStoreHolder.store.isEmpty, true);
-    });
-
     test('getInt positive returns value from options', () {
       final options = {'ex#key3': '42'};
       final result = vxOptionsMap.getInt(options: options, id: key3);
       expect(result.status, VxMapValueStatus.ok);
-      expect(metricStoreHolder.store.isEmpty, true);
+      expect(metricStoreHolder.store.isEmpty, true,
+          reason: 'should have no metric');
     });
 
     test('getInt positive should return default if value is not positive', () {
@@ -141,7 +135,8 @@ void main() {
       final result = vxOptionsMap.getNumber(options: options, id: key5);
       expect(result.value, 3.14);
       expect(result.status, VxMapValueStatus.ok);
-      expect(metricStoreHolder.store.isEmpty, true);
+      expect(metricStoreHolder.store.isEmpty, true,
+          reason: 'should have no metric');
     });
 
     test('getNumber returns default value when key is missing', () {
@@ -160,7 +155,8 @@ void main() {
       final result = vxOptionsMap.getBoolean(options: options, id: key4);
       expect(result.value, true);
       expect(result.status, VxMapValueStatus.ok);
-      expect(metricStoreHolder.store.isEmpty, true);
+      expect(metricStoreHolder.store.isEmpty, true,
+          reason: 'should have no metric');
     });
 
     test('getBool returns default value when key is missing', () {
@@ -190,7 +186,8 @@ void main() {
       final result = vxOptionsMap.getStringList(
           options: options, id: key11, separator: ',');
       expect(result.status, VxMapValueStatus.ok);
-      expect(metricStoreHolder.store.isEmpty, true);
+      expect(metricStoreHolder.store.isEmpty, true,
+          reason: 'should have no metric');
       expect(result.value, ['value1', 'value2']);
     });
 

@@ -108,6 +108,29 @@ class VxMetrics {
     });
   }
 
+  static ExMetricKey getKeyValueNotInDeclaration(
+      {required String className,
+      required String name,
+      required String expected,
+      String? specialisation}) {
+    final maybeSpecialisation =
+        specialisation == null ? {} : {'class-specialisation': specialisation};
+    return ExMetricKey(name: [
+      'get-option-value'
+    ], dimensions: {
+      ...lib,
+      'class': className,
+      ...maybeSpecialisation,
+      'method': 'validate',
+      'name': name,
+      'expected': expected,
+      "problem": 'not-in-declaration',
+      ExMetricDimLevel.key: ExMetricDimLevel.warn,
+      ExMetricDimDartErr.key: ExMetricDimDartErr.formatException,
+      ExMetricDimUnit.key: ExMetricDimUnit.count
+    });
+  }
+
   static ExMetricKey getKeyValueNotNum(
       {required String className,
       required String name,

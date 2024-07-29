@@ -17,6 +17,7 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
   late int allowQueryKey;
   late int allowDomainsKey;
   late int secureKey;
+  late int allowIPKey;
 
   VxUrlRule(
       {required this.name,
@@ -38,6 +39,10 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
         [VxOptionsInventoryDescriptors.boolean]);
     allowQueryKey = optionsInventory.addKey(
         VxComponentNameManager.getFullOptionKey(name, 'allowQuery',
+            optional: true),
+        [VxOptionsInventoryDescriptors.boolean]);
+    allowIPKey = optionsInventory.addKey(
+        VxComponentNameManager.getFullOptionKey(name, 'allowIP',
             optional: true),
         [VxOptionsInventoryDescriptors.boolean]);
     secureKey = optionsInventory.addKey(
@@ -77,6 +82,15 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
     return allowedEndings.any((ending) => host.endsWith(ending));
   }
 
+  bool _isIPv4(String host) {
+    final ipv4Regex = RegExp(r'^(\d{1,3}\.){3}\d{1,3}$');
+    return ipv4Regex.hasMatch(host);
+  }
+
+  bool _isIPv6(String host) {
+    return host.contains(':') && !host.contains('.');
+  }
+
   @override
   List<MSG> validate(Map<String, String> options, String value) {
     final uri = Uri.tryParse(value);
@@ -112,6 +126,11 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
     if (allowDomains.isNotEmpty &&
         !_endsWithAnyDomain(uri.host, allowDomains)) {
       return _produceDomainFailure(options, value);
+    }
+    final allowIP =
+        optionsMap.getBoolean(options: options, id: allowIPKey).value;
+    if ((_isIPv4(uri.host) || _isIPv6(uri.host)) && !allowIP) {
+      return _produceFailure(options, value);
     }
 
     return _produceSuccess(options, value);

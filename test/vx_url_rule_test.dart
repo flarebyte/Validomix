@@ -48,13 +48,16 @@ void main() {
         'http://example.com/data.csv#row=4',
         'http://website.com/service?param1=value1',
         'http://website.com:8080/service',
-        'http://username:password@example.com/'
+        'http://username:password@example.com/',
+        'https://172.16.31.10',
+        'http://[2001:db8:85a3:8d3:1319:8a2e:370:7348]/'
       ]) {
         expect(rule.validate({}, notSupported), [failureMessage]);
       }
       expect(optionsInventory.toList().map((i) => i.name), [
         'test~allowDomains',
         'test~allowFragment',
+        'test~allowIP',
         'test~allowQuery',
         'test~secure'
       ]);
@@ -136,6 +139,25 @@ void main() {
           optionsInventory: optionsInventory);
       expect(ruleWithoutProducers.validate({}, 'http://website.com'), []);
       expect(ruleWithoutProducers.validate({}, 'ftp://website.com'), []);
+    });
+
+    test('allow IP', () {
+      final rule = VxUrlRule<String>(
+          name: 'test',
+          metricStoreHolder: metricStoreHolder,
+          optionsInventory: optionsInventory,
+          successProducer: successProducer,
+          failureProducer: failureProducer);
+
+      var options = {'test~allowIP': 'true'};
+      for (var supported in [
+        'http://example.com/ip.csv',
+        'http://192.0.0.1',
+        'https://172.16.31.10',
+        'http://[2001:db8:85a3:8d3:1319:8a2e:370:7348]/'
+      ]) {
+        expect(rule.validate(options, supported), [successMessage]);
+      }
     });
   });
 }

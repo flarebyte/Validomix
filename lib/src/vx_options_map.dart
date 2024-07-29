@@ -203,6 +203,16 @@ class VxOptionsMap {
           1);
       return VxMapValue.ko(defaultValue);
     }
+
+    if (!key.descriptors.contains(VxOptionsInventoryDescriptors.boolean)) {
+      metricStoreHolder.store.addMetric(
+          VxMetrics.getKeyValueNotInDeclaration(
+              className: ownerClassName,
+              name: key.name,
+              expected: VxOptionsInventoryDescriptors.boolean,
+              specialisation: classSpecialisation),
+          1);
+    }
     return VxMapValue.ok(boolValue);
   }
 

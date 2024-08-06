@@ -1,6 +1,6 @@
 name: validomix
 description: From Strings to Objects Validomix validates all
-version: 1.0.0
+version: 0.3.0
 repository: https://github.com/flarebyte/validomix
 
 environment:

@@ -1,14 +1,21 @@
 model:
   project:
     title: From Strings to Objects Validomix validates all
-    description: Validate
+    description: The Validomix library is designed to enforce validation rules on strings, triggered by various events, and to produce custom messages. It applies a series of validation rules, such as size and format checks, to input strings through a rule enforcement system.
     version: 0.3.0
     keywords:
-      - string
       - validation
+      - string validation
+      - number validation
+      - list validation
   readme:
     highlights:
-      - Return info, warning, err
+      - Validation of strings, numbers, or lists.
+      - Produce custom messages for errors and successes.
+      - Rules can be serialized as JSON.
+      - Invalid configurations are captured in metrics.
+      - Inventory of the rules is available.
+      - Fully extendable.
     links:
       - "[Dart dependencies](DEPENDENCIES.md)"
       - "[Usage](USAGE.md)"

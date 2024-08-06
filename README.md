@@ -4,20 +4,36 @@
 
 > From Strings to Objects Validomix validates all
 
-Validate
+The Validomix library is designed to enforce validation rules on strings,
+triggered by various events, and to produce custom messages. It applies a
+series of validation rules, such as size and format checks, to input strings
+through a rule enforcement system.
 
 ![Hero image for validomix](doc/validomix.jpeg)
 
 Highlights:
 
--   Return info, warning, err
+-   Validation of strings, numbers, or lists.
+-   Produce custom messages for errors and successes.
+-   Rules can be serialized as JSON.
+-   Invalid configurations are captured in metrics.
+-   Inventory of the rules is available.
+-   Fully extendable.
 
 A few examples:
 
-todo:
+Create an inventory used to keep track of rules:
 
 ```dart
-todo
+final optionsInventory = VxOptionsInventory()
+```
+
+Create a string rule:
+
+```dart
+final rule = VxStringRules.charsLessThan<String>(name: 'test',
+metricStoreHolder: metricStoreHolder, optionsInventory: optionsInventory,
+failureProducer: SimpleMessageProducer('Too many characters'));
 ```
 
 ## Documentation and links

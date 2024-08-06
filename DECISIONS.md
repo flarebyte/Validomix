@@ -42,7 +42,8 @@ and format.
 The message generator produces messages based on the validation results,
 ensuring that these messages are generic and defined outside the library.
 
-A rule locator should make it easy to find and use specific validation rules based on an event name and an rule ID.
+A rule locator should make it easy to find and use specific validation rules
+based on an event name and an rule ID.
 
 Communication flows from the event manager triggering validations, the rule
 enforcement system applying rules, and the message generator producing the

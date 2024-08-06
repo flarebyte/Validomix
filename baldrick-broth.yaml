@@ -26,8 +26,10 @@ model:
       - image-hero
     cheatsheetFormat: dart
     cheatsheet:
-      - title: todo
-        example: todo
+      - title: Create an inventory used to keep track of rules
+        example: final optionsInventory = VxOptionsInventory()
+      - title: Create a string rule
+        example: "final rule = VxStringRules.charsLessThan<String>(name: 'test', metricStoreHolder: metricStoreHolder, optionsInventory: optionsInventory, failureProducer: SimpleMessageProducer('Too many characters'));"
   github:
     account: flarebyte
     name: validomix

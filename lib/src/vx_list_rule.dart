@@ -26,7 +26,7 @@ final _numberDefaultListName = {
   VxNumberComparators.notEqualTo.name: 'neqSize',
 };
 
-/// Validates that a number meets a specified comparison threshold obtained from the options.
+/// Validates that a list size meets a specified comparison threshold obtained from the options.
 class VxListRule<MSG, W> extends VxBaseRule<MSG> {
   final VxNumberComparator lengthComparator;
   final VxStringParser<List<W>> stringParser;
@@ -116,6 +116,7 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
 
 /// A static class providing methods to instantiate various string list validation rules.
 class VxListRules {
+  /// Instantiates a [VxListRule] that validates that the number of elements in a list is greater than a threshold.
   static VxListRule<MSG, W> greaterThan<MSG, W>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -139,6 +140,7 @@ class VxListRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// Instantiates a [VxListRule] that validates that the number of elements in a list is greater than or equal a threshold.
   static VxListRule<MSG, W> greaterThanOrEqual<MSG, W>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -162,6 +164,7 @@ class VxListRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// Instantiates a [VxListRule] that validates that the number of elements in a list is less than a threshold.
   static VxListRule<MSG, W> lessThan<MSG, W>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -185,6 +188,7 @@ class VxListRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// Instantiates a [VxListRule] that validates that the number of elements in a list is less than or equal to a threshold.
   static VxListRule<MSG, W> lessThanOrEqual<MSG, W>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -208,6 +212,7 @@ class VxListRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// Instantiates a [VxListRule] that validates that the number of elements in a list is equal to a threshold.
   static VxListRule<MSG, W> equalTo<MSG, W>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,

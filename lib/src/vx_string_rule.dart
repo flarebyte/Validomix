@@ -7,7 +7,7 @@ import 'vx_options_inventory.dart';
 import 'vx_options_map.dart';
 
 /// The default should try to be generous
-final charsDefaultSize = {
+final _charsDefaultSize = {
   VxNumberComparators.lessThan.name: 10000,
   VxNumberComparators.lessThanOrEqual.name: 10000,
   VxNumberComparators.greaterThan.name: 0,
@@ -15,7 +15,7 @@ final charsDefaultSize = {
 };
 
 /// The default name for each comparator
-final charsDefaultName = {
+final _charsDefaultName = {
   VxNumberComparators.lessThan.name: 'maxChars',
   VxNumberComparators.lessThanOrEqual.name: 'maxChars',
   VxNumberComparators.greaterThan.name: 'minChars',
@@ -23,7 +23,7 @@ final charsDefaultName = {
 };
 
 /// The default should try to be generous
-final wordsDefaultSize = {
+final _wordsDefaultSize = {
   VxNumberComparators.lessThan.name: 1000,
   VxNumberComparators.lessThanOrEqual.name: 1000,
   VxNumberComparators.greaterThan.name: 0,
@@ -31,7 +31,7 @@ final wordsDefaultSize = {
 };
 
 /// The default name for each comparator
-final wordsDefaultName = {
+final _wordsDefaultName = {
   VxNumberComparators.lessThan.name: 'maxWords',
   VxNumberComparators.lessThanOrEqual.name: 'maxWords',
   VxNumberComparators.greaterThan.name: 'minWords',
@@ -66,7 +66,7 @@ class VxCharsRule<MSG> extends VxBaseRule<MSG> {
         componentManagerConfig: componentManagerConfig);
     thresholdCharsKey = optionsInventory.addKey(
         VxComponentNameManager.getFullOptionKey(
-            name, charsDefaultName[numberComparator.name] ?? 'thresholdChars'),
+            name, _charsDefaultName[numberComparator.name] ?? 'thresholdChars'),
         VxOptionsInventoryDescriptors.positiveInt);
   }
 
@@ -76,7 +76,7 @@ class VxCharsRule<MSG> extends VxBaseRule<MSG> {
         .getInt(
             options: options,
             id: thresholdCharsKey,
-            defaultValue: charsDefaultSize[numberComparator.name] ?? 0)
+            defaultValue: _charsDefaultSize[numberComparator.name] ?? 0)
         .value;
     return _evaluate(value, thresholdChars, options);
   }
@@ -136,7 +136,7 @@ class VxWordsRule<MSG> extends VxBaseRule<MSG> {
         componentManagerConfig: componentManagerConfig);
     thresholdWordsKey = optionsInventory.addKey(
         VxComponentNameManager.getFullOptionKey(
-            name, wordsDefaultName[numberComparator.name] ?? 'thresholdWords'),
+            name, _wordsDefaultName[numberComparator.name] ?? 'thresholdWords'),
         VxOptionsInventoryDescriptors.positiveInt);
   }
   @override
@@ -145,7 +145,7 @@ class VxWordsRule<MSG> extends VxBaseRule<MSG> {
         .getInt(
             options: options,
             id: thresholdWordsKey,
-            defaultValue: wordsDefaultSize[numberComparator.name] ?? 0)
+            defaultValue: _wordsDefaultSize[numberComparator.name] ?? 0)
         .value;
     return _evaluate(value, thresholdWords, options);
   }
@@ -238,7 +238,9 @@ class VxStringFormatterRule<MSG> extends VxBaseRule<MSG> {
   }
 }
 
+/// Static class for chars and words rules
 class VxStringRules {
+  /// Rule for validating that a string has less characters than the threshold.
   static VxCharsRule<MSG> charsLessThan<MSG>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -256,6 +258,7 @@ class VxStringRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// Rule for validating that a string has more characters than the threshold.
   static VxCharsRule<MSG> charsMoreThan<MSG>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -273,6 +276,7 @@ class VxStringRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// Rule for validating that a string has less characters than the threshold.
   static VxCharsRule<MSG> charsLessThanOrEqual<MSG>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -290,6 +294,7 @@ class VxStringRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// Rule for validating that a string has more characters than the threshold.
   static VxCharsRule<MSG> charsMoreThanOrEqual<MSG>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -307,6 +312,7 @@ class VxStringRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// Rule for validating that a string has less words than the threshold.
   static VxWordsRule<MSG> wordsLessThan<MSG>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -324,6 +330,7 @@ class VxStringRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// Rule for validating that a string has more words than the threshold.
   static VxWordsRule<MSG> wordsMoreThan<MSG>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -341,6 +348,7 @@ class VxStringRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// Rule for validating that a string has less words than the threshold.
   static VxWordsRule<MSG> wordsLessThanOrEqual<MSG>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -358,6 +366,7 @@ class VxStringRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// Rule for validating that a string has more words than the threshold.
   static VxWordsRule<MSG> wordsMoreThanOrEqual<MSG>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -375,6 +384,7 @@ class VxStringRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// Rule for validating that a string follows a specific format
   static VxStringFormatterRule<MSG> followFormat<MSG>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,

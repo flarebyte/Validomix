@@ -1,9 +1,12 @@
+/// A base class for validators.
 abstract class VxBaseValidator<MSG, V> {
   List<MSG> validate(Map<String, String> options, V value);
 }
 
+/// A base class for rules.
 abstract class VxBaseRule<MSG> extends VxBaseValidator<MSG, String> {}
 
+/// A base class for parsers.
 abstract class VxStringParser<V> {
   V? parseString(String value);
 }
@@ -13,6 +16,7 @@ abstract class VxMessageProducer<MSG, V> {
   MSG produce(Map<String, String> options, V value);
 }
 
+/// A base class for matching messages.
 abstract class VxMatchingMessages<MSG> {
   bool isMatching(List<MSG> messages);
 }

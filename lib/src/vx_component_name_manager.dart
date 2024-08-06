@@ -1,3 +1,5 @@
+/// The `VxComponentManagerConfig` class defines configuration settings for managing components within a system.
+/// It specifies some string properties which determine the characters used to separate components, mandatory options, and optional options, respectively.
 class VxComponentManagerConfig {
   final String componentSeparator;
   final String mandatoryOptionSeparator;
@@ -9,16 +11,23 @@ class VxComponentManagerConfig {
     this.optionalOptionSeparator = '~',
   });
 
+  /// Get the component separator that is used to separate parents from children.
   String getComponentSeparator([String? separator]) =>
       separator ?? componentSeparator;
+
+  /// Gets the separator used to indentify mandatory options.
   String getMandatoryOptionSeparator([String? separator]) =>
       separator ?? mandatoryOptionSeparator;
+
+  /// Gets the separator used to indentify optional options.
   String getOptionalOptionSeparator([String? separator]) =>
       separator ?? optionalOptionSeparator;
 
   static const defaultConfig = VxComponentManagerConfig();
 }
 
+/// The `VxComponentNameManager` class facilitates navigation within a component hierarchy, enabling traversal from parent to child components and vice versa.
+/// This functionality allows for the efficient organisation and management of complex component structures, ensuring seamless movement through different levels of the hierarchy.
 class VxComponentNameManager {
   /// Retrieves the parent component from a given component name.
   ///

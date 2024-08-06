@@ -7,7 +7,7 @@ import 'vx_options_inventory.dart';
 import 'vx_options_map.dart';
 
 /// The default should try to be generous
-final numberDefaultSize = {
+final _numberDefaultSize = {
   VxNumberComparators.lessThan.name: 10000,
   VxNumberComparators.lessThanOrEqual.name: 10000,
   VxNumberComparators.greaterThan.name: 0,
@@ -17,7 +17,7 @@ final numberDefaultSize = {
 };
 
 /// The default name for each comparator
-final numberDefaultName = {
+final _numberDefaultName = {
   VxNumberComparators.lessThan.name: 'maxNum',
   VxNumberComparators.lessThanOrEqual.name: 'maxNum',
   VxNumberComparators.greaterThan.name: 'minNum',
@@ -55,7 +55,7 @@ class VxNumberRule<MSG> extends VxBaseValidator<MSG, num> {
         componentManagerConfig: componentManagerConfig);
     thresholdKey = optionsInventory.addKey(
         VxComponentNameManager.getFullOptionKey(
-            name, numberDefaultName[numberComparator.name] ?? 'thresholdNum'),
+            name, _numberDefaultName[numberComparator.name] ?? 'thresholdNum'),
         [VxOptionsInventoryDescriptors.numeric]);
   }
 
@@ -65,7 +65,7 @@ class VxNumberRule<MSG> extends VxBaseValidator<MSG, num> {
         .getNumber(
             options: options,
             id: thresholdKey,
-            defaultValue: numberDefaultSize[numberComparator.name] ?? 0)
+            defaultValue: _numberDefaultSize[numberComparator.name] ?? 0)
         .value;
 
     return _evaluate(value, thresholdNum, options);
@@ -162,6 +162,7 @@ class VxNumberMultipleOf<MSG> extends VxBaseValidator<MSG, num> {
 
 /// A static class providing methods to instantiate various number validation rules.
 class VxNumberRules {
+  /// A number validation rule that checks whether a number is greater than another.
   static VxNumberRule<MSG> greaterThan<MSG>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -179,6 +180,7 @@ class VxNumberRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// A number validation rule that checks whether a number is greater than or equal to another.
   static VxNumberRule<MSG> greaterThanOrEqual<MSG>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -196,6 +198,7 @@ class VxNumberRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// A number validation rule that checks whether a number is less than another.
   static VxNumberRule<MSG> lessThan<MSG>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -213,6 +216,7 @@ class VxNumberRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// A number validation rule that checks whether a number is less or equal to another.
   static VxNumberRule<MSG> lessThanOrEqual<MSG>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -230,6 +234,7 @@ class VxNumberRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// A number validation rule that checks whether a number is equal to another.
   static VxNumberRule<MSG> equalTo<MSG>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -247,6 +252,7 @@ class VxNumberRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// A number validation rule that checks whether a number is not equal to another.
   static VxNumberRule<MSG> notEqualTo<MSG>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
@@ -264,6 +270,7 @@ class VxNumberRules {
         componentManagerConfig: componentManagerConfig);
   }
 
+  /// A number validation rule that checks whether a number is a multiple of another.
   static VxNumberMultipleOf<MSG> multipleOf<MSG>(
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,

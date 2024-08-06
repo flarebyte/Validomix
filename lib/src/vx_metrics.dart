@@ -1,6 +1,6 @@
 import 'package:eagleyeix/metric.dart';
 
-/// A simple example of metrics.
+/// A static factory for metrics for the Validomix package.
 class VxMetrics {
   static final lib = {'package': 'validomix'};
 

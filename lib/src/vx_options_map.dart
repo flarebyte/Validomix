@@ -4,25 +4,32 @@ import 'vx_component_name_manager.dart';
 import 'vx_metrics.dart';
 import 'vx_options_inventory.dart';
 
+/// The status of a map value.
 enum VxMapValueStatus { ok, ko, fallback }
 
+/// A map value.
 class VxMapValue<T> {
   final T value;
   final VxMapValueStatus status;
   VxMapValue(this.value, this.status);
+
+  /// Creates a new valid [VxMapValue] with the given [value].
   static VxMapValue<T> ok<T>(T value) {
     return VxMapValue<T>(value, VxMapValueStatus.ok);
   }
 
+  /// Creates a new invalid [VxMapValue] with the given [value].
   static VxMapValue<T> ko<T>(T value) {
     return VxMapValue<T>(value, VxMapValueStatus.ko);
   }
 
+  /// Creates a new fallback [VxMapValue] with the given [value].
   static VxMapValue<T> fallback<T>(T value) {
     return VxMapValue<T>(value, VxMapValueStatus.fallback);
   }
 }
 
+/// A map of options used for configuration of the validating rules.
 class VxOptionsMap {
   final VxComponentManagerConfig componentManagerConfig;
   final ExMetricStoreHolder metricStoreHolder;

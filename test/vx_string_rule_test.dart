@@ -813,8 +813,8 @@ void main() {
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
             formatter: CollapseFormatter(),
-            successProducer: successProducer,
-            failureProducer: failureProducer);
+            successProducer: [successProducer],
+            failureProducer: [failureProducer]);
         expect(rule.validate({'test~formatting': "/"}, 'no-slash'),
             [successMessage]);
         expect(rule.validate({'test~formatting': "/"}, 'some/slash/'),

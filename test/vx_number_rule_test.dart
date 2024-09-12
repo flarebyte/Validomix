@@ -17,8 +17,8 @@ void main() {
           name: 'example',
           metricStoreHolder: metricStoreHolder,
           optionsInventory: optionsInventory,
-          successProducer: successProducer,
-          failureProducer: failureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer]);
     });
 
     test('value is greater than threshold', () {
@@ -147,8 +147,8 @@ void main() {
           name: 'example',
           metricStoreHolder: metricStoreHolder,
           optionsInventory: optionsInventory,
-          successProducer: successProducer,
-          failureProducer: failureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer]);
       final options = {'example#minNum': '15'};
       final result = rule.validate(options, 15);
       expect(result, ['Success: 15 is valid.']);
@@ -159,8 +159,8 @@ void main() {
           name: 'example',
           metricStoreHolder: metricStoreHolder,
           optionsInventory: optionsInventory,
-          successProducer: successProducer,
-          failureProducer: failureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer]);
       final options = {'example#maxNum': '15'};
       final result = rule.validate(options, 10);
       expect(result, ['Success: 10 is valid.']);
@@ -171,8 +171,8 @@ void main() {
           name: 'example',
           metricStoreHolder: metricStoreHolder,
           optionsInventory: optionsInventory,
-          successProducer: successProducer,
-          failureProducer: failureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer]);
       final options = {'example#maxNum': '15'};
       final result = rule.validate(options, 15);
       expect(result, ['Success: 15 is valid.']);
@@ -183,8 +183,8 @@ void main() {
           name: 'example',
           metricStoreHolder: metricStoreHolder,
           optionsInventory: optionsInventory,
-          successProducer: successProducer,
-          failureProducer: failureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer]);
       final options = {'example#eqNum': '15'};
       final result = rule.validate(options, 15);
       expect(result, ['Success: 15 is valid.']);
@@ -195,8 +195,8 @@ void main() {
           name: 'example',
           metricStoreHolder: metricStoreHolder,
           optionsInventory: optionsInventory,
-          successProducer: successProducer,
-          failureProducer: failureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer]);
       final options = {'example#neqNum': '15'};
       final result = rule.validate(options, 10);
       expect(result, ['Success: 10 is valid.']);

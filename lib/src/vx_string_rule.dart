@@ -110,8 +110,8 @@ class VxCharsRule<MSG> extends VxBaseRule<MSG> {
 
 /// Validates that the number of words in a string is less than a specified limit obtained from the options.
 class VxWordsRule<MSG> extends VxBaseRule<MSG> {
-  final VxMessageProducer<MSG, String>? successProducer;
-  final VxMessageProducer<MSG, String>? failureProducer;
+  final List<VxMessageProducer<MSG, String>>? successProducer;
+  final List<VxMessageProducer<MSG, String>>? failureProducer;
   final VxNumberComparator numberComparator;
   final String name;
   final ExMetricStoreHolder metricStoreHolder;
@@ -153,13 +153,13 @@ class VxWordsRule<MSG> extends VxBaseRule<MSG> {
   List<MSG> _produceSuccess(Map<String, String> options, String value) {
     return successProducer == null
         ? []
-        : [successProducer!.produce(options, value)];
+        : successProducer!.map((prod) => prod.produce(options, value)).toList();
   }
 
   List<MSG> _produceFailure(Map<String, String> options, String value) {
     return failureProducer == null
         ? []
-        : [failureProducer!.produce(options, value)];
+        : failureProducer!.map((prod) => prod.produce(options, value)).toList();
   }
 
   List<MSG> _evaluate(String value, int maxWords, Map<String, String> options) {
@@ -317,8 +317,8 @@ class VxStringRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      VxMessageProducer<MSG, String>? successProducer,
-      VxMessageProducer<MSG, String>? failureProducer,
+      List<VxMessageProducer<MSG, String>>? successProducer,
+      List<VxMessageProducer<MSG, String>>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxWordsRule<MSG>(
         name: name,
@@ -335,8 +335,8 @@ class VxStringRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      VxMessageProducer<MSG, String>? successProducer,
-      VxMessageProducer<MSG, String>? failureProducer,
+      List<VxMessageProducer<MSG, String>>? successProducer,
+      List<VxMessageProducer<MSG, String>>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxWordsRule<MSG>(
         name: name,
@@ -353,8 +353,8 @@ class VxStringRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      VxMessageProducer<MSG, String>? successProducer,
-      VxMessageProducer<MSG, String>? failureProducer,
+      List<VxMessageProducer<MSG, String>>? successProducer,
+      List<VxMessageProducer<MSG, String>>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxWordsRule<MSG>(
         name: name,
@@ -371,8 +371,8 @@ class VxStringRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      VxMessageProducer<MSG, String>? successProducer,
-      VxMessageProducer<MSG, String>? failureProducer,
+      List<VxMessageProducer<MSG, String>>? successProducer,
+      List<VxMessageProducer<MSG, String>>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxWordsRule<MSG>(
         name: name,

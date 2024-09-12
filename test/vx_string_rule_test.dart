@@ -428,8 +428,8 @@ void main() {
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            successProducer: successProducer,
-            failureProducer: failureProducer);
+            successProducer: [successProducer],
+            failureProducer: [failureProducer]);
         expect(
             rule.validate(
                 {'test#maxWords': "$threshold"}, createWords(threshold - 1)),
@@ -524,8 +524,8 @@ void main() {
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            successProducer: successProducer,
-            failureProducer: failureProducer);
+            successProducer: [successProducer],
+            failureProducer: [failureProducer]);
         expect(
             rule.validate(
                 {'test#maxWords': "$threshold"}, createWords(threshold - 1)),
@@ -620,8 +620,8 @@ void main() {
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            successProducer: successProducer,
-            failureProducer: failureProducer);
+            successProducer: [successProducer],
+            failureProducer: [failureProducer]);
         expect(
             rule.validate(
                 {'test#minWords': "$threshold"}, createWords(threshold + 1)),
@@ -716,8 +716,8 @@ void main() {
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            successProducer: successProducer,
-            failureProducer: failureProducer);
+            successProducer: [successProducer],
+            failureProducer: [failureProducer]);
         expect(
             rule.validate(
                 {'test#minWords': "$threshold"}, createWords(threshold + 1)),

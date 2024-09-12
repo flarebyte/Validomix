@@ -40,8 +40,8 @@ void main() {
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            successProducer: successProducer,
-            failureProducer: failureProducer);
+            successProducer: [successProducer],
+            failureProducer: [failureProducer]);
         expect(
             rule.validate({'test#maxChars': "$threshold"},
                 StringFixture.createString(threshold - 1)),
@@ -136,8 +136,8 @@ void main() {
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            successProducer: successProducer,
-            failureProducer: failureProducer);
+            successProducer: [successProducer],
+            failureProducer: [failureProducer]);
         expect(
             rule.validate({'test#maxChars': "$threshold"},
                 StringFixture.createString(threshold - 1)),
@@ -234,8 +234,8 @@ void main() {
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            successProducer: successProducer,
-            failureProducer: failureProducer);
+            successProducer: [successProducer],
+            failureProducer: [failureProducer]);
         expect(
             rule.validate({'test#minChars': "$threshold"},
                 StringFixture.createString(threshold + 1)),
@@ -331,8 +331,8 @@ void main() {
             name: 'test',
             metricStoreHolder: metricStoreHolder,
             optionsInventory: optionsInventory,
-            successProducer: successProducer,
-            failureProducer: failureProducer);
+            successProducer: [successProducer],
+            failureProducer: [failureProducer]);
         expect(
             rule.validate({'test#minChars': "$threshold"},
                 StringFixture.createString(threshold + 1)),

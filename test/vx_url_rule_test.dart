@@ -31,8 +31,8 @@ void main() {
           name: 'test',
           metricStoreHolder: metricStoreHolder,
           optionsInventory: optionsInventory,
-          successProducer: successProducer,
-          failureProducer: failureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer]);
       for (var supported in [
         'http://website.com',
         'http://website.com/service',
@@ -68,9 +68,9 @@ void main() {
           name: 'test',
           metricStoreHolder: metricStoreHolder,
           optionsInventory: optionsInventory,
-          successProducer: successProducer,
-          failureProducer: failureProducer,
-          domainFailureProducer: domainFailureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer],
+          domainFailureProducer: [domainFailureProducer]);
       const allowDomains = {'test~allowDomains': 'en.wikipedia.org dart.dev'};
 
       expect(
@@ -94,8 +94,8 @@ void main() {
           name: 'test',
           metricStoreHolder: metricStoreHolder,
           optionsInventory: optionsInventory,
-          successProducer: successProducer,
-          failureProducer: failureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer]);
 
       expect(
           rule.validate({'test~allowFragment': 'true'},
@@ -108,8 +108,8 @@ void main() {
           name: 'test',
           metricStoreHolder: metricStoreHolder,
           optionsInventory: optionsInventory,
-          successProducer: successProducer,
-          failureProducer: failureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer]);
 
       expect(
           rule.validate(
@@ -122,8 +122,8 @@ void main() {
           name: 'test',
           metricStoreHolder: metricStoreHolder,
           optionsInventory: optionsInventory,
-          successProducer: successProducer,
-          secureFailureProducer: secureFailureProducer);
+          successProducer: [successProducer],
+          secureFailureProducer: [secureFailureProducer]);
 
       var options = {'test~secure': 'true'};
       expect(rule.validate(options, 'https://example.com/data.csv'),
@@ -146,8 +146,8 @@ void main() {
           name: 'test',
           metricStoreHolder: metricStoreHolder,
           optionsInventory: optionsInventory,
-          successProducer: successProducer,
-          failureProducer: failureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer]);
 
       var options = {'test~allowIP': 'true'};
       for (var supported in [

@@ -4,10 +4,10 @@ import '../validomix.dart';
 
 /// Validates a URL.
 class VxUrlRule<MSG> extends VxBaseRule<MSG> {
-  final VxMessageProducer<MSG, String>? successProducer;
-  final VxMessageProducer<MSG, String>? failureProducer;
-  final VxMessageProducer<MSG, String>? secureFailureProducer;
-  final VxMessageProducer<MSG, String>? domainFailureProducer;
+  final List<VxMessageProducer<MSG, String>>? successProducer;
+  final List<VxMessageProducer<MSG, String>>? failureProducer;
+  final List<VxMessageProducer<MSG, String>>? secureFailureProducer;
+  final List<VxMessageProducer<MSG, String>>? domainFailureProducer;
   final String name;
   final ExMetricStoreHolder metricStoreHolder;
   final VxComponentManagerConfig componentManagerConfig;
@@ -57,25 +57,29 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
   List<MSG> _produceSuccess(Map<String, String> options, String value) {
     return successProducer == null
         ? []
-        : [successProducer!.produce(options, value)];
+        : successProducer!.map((prod) => prod.produce(options, value)).toList();
   }
 
   List<MSG> _produceFailure(Map<String, String> options, String value) {
     return failureProducer == null
         ? []
-        : [failureProducer!.produce(options, value)];
+        : failureProducer!.map((prod) => prod.produce(options, value)).toList();
   }
 
   List<MSG> _produceSecureFailure(Map<String, String> options, String value) {
     return secureFailureProducer == null
         ? _produceFailure(options, value)
-        : [secureFailureProducer!.produce(options, value)];
+        : secureFailureProducer!
+            .map((prod) => prod.produce(options, value))
+            .toList();
   }
 
   List<MSG> _produceDomainFailure(Map<String, String> options, String value) {
     return domainFailureProducer == null
         ? _produceFailure(options, value)
-        : [domainFailureProducer!.produce(options, value)];
+        : domainFailureProducer!
+            .map((prod) => prod.produce(options, value))
+            .toList();
   }
 
   bool _endsWithAnyDomain(String host, List<String> allowedEndings) {

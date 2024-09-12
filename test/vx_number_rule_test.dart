@@ -218,8 +218,8 @@ void main() {
           name: 'example',
           metricStoreHolder: metricStoreHolder,
           optionsInventory: optionsInventory,
-          successProducer: successProducer,
-          failureProducer: failureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer]);
     });
 
     test('value is multiple of specified number', () {

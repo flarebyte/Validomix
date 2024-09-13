@@ -34,8 +34,8 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
   final ExMetricStoreHolder metricStoreHolder;
   final VxBaseValidator<MSG, W> itemValidator;
   final VxMatchingMessages areSuccessfulMessages;
-  final VxMessageProducer<MSG, String>? successProducer;
-  final VxMessageProducer<MSG, String>? failureProducer;
+  final List<VxMessageProducer<MSG, String>>? successProducer;
+  final List<VxMessageProducer<MSG, String>>? failureProducer;
   final VxComponentManagerConfig componentManagerConfig;
   final VxOptionsInventory optionsInventory;
   late VxOptionsMap optionsMap;
@@ -69,7 +69,9 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
   List<MSG> validate(Map<String, String> options, String value) {
     final List<W>? parsedValue = stringParser.parseString(value);
     if (parsedValue == null) {
-      return [failureProducer!.produce(options, value)];
+      return failureProducer!
+          .map((prod) => prod.produce(options, value))
+          .toList();
     }
     final thresholdNum = optionsMap
         .getInt(
@@ -84,13 +86,13 @@ class VxListRule<MSG, W> extends VxBaseRule<MSG> {
   List<MSG> _produceSuccess(Map<String, String> options, String value) {
     return successProducer == null
         ? []
-        : [successProducer!.produce(options, value)];
+        : successProducer!.map((prod) => prod.produce(options, value)).toList();
   }
 
   List<MSG> _produceFailure(Map<String, String> options, String value) {
     return failureProducer == null
         ? []
-        : [failureProducer!.produce(options, value)];
+        : failureProducer!.map((prod) => prod.produce(options, value)).toList();
   }
 
   List<MSG> _evaluate(List<W> values, int threshold,
@@ -124,8 +126,8 @@ class VxListRules {
       required VxStringParser<List<W>> stringParser,
       required VxBaseValidator<MSG, W> itemValidator,
       required VxMatchingMessages areSuccessfulMessages,
-      VxMessageProducer<MSG, String>? successProducer,
-      VxMessageProducer<MSG, String>? failureProducer,
+      List<VxMessageProducer<MSG, String>>? successProducer,
+      List<VxMessageProducer<MSG, String>>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxListRule<MSG, W>(
         name: name,
@@ -148,8 +150,8 @@ class VxListRules {
       required VxStringParser<List<W>> stringParser,
       required VxBaseValidator<MSG, W> itemValidator,
       required VxMatchingMessages areSuccessfulMessages,
-      VxMessageProducer<MSG, String>? successProducer,
-      VxMessageProducer<MSG, String>? failureProducer,
+      List<VxMessageProducer<MSG, String>>? successProducer,
+      List<VxMessageProducer<MSG, String>>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxListRule<MSG, W>(
         name: name,
@@ -172,8 +174,8 @@ class VxListRules {
       required VxStringParser<List<W>> stringParser,
       required VxBaseValidator<MSG, W> itemValidator,
       required VxMatchingMessages areSuccessfulMessages,
-      VxMessageProducer<MSG, String>? successProducer,
-      VxMessageProducer<MSG, String>? failureProducer,
+      List<VxMessageProducer<MSG, String>>? successProducer,
+      List<VxMessageProducer<MSG, String>>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxListRule<MSG, W>(
         name: name,
@@ -196,8 +198,8 @@ class VxListRules {
       required VxStringParser<List<W>> stringParser,
       required VxBaseValidator<MSG, W> itemValidator,
       required VxMatchingMessages areSuccessfulMessages,
-      VxMessageProducer<MSG, String>? successProducer,
-      VxMessageProducer<MSG, String>? failureProducer,
+      List<VxMessageProducer<MSG, String>>? successProducer,
+      List<VxMessageProducer<MSG, String>>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxListRule<MSG, W>(
         name: name,
@@ -220,8 +222,8 @@ class VxListRules {
       required VxStringParser<List<W>> stringParser,
       required VxBaseValidator<MSG, W> itemValidator,
       required VxMatchingMessages areSuccessfulMessages,
-      VxMessageProducer<MSG, String>? successProducer,
-      VxMessageProducer<MSG, String>? failureProducer,
+      List<VxMessageProducer<MSG, String>>? successProducer,
+      List<VxMessageProducer<MSG, String>>? failureProducer,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxListRule<MSG, W>(
         name: name,

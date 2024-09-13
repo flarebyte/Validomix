@@ -24,8 +24,8 @@ void main() {
           stringParser: DotStringParser(),
           itemValidator: AlwaysPassValidator(),
           areSuccessfulMessages: AreStringAllSuccess(),
-          successProducer: successProducer,
-          failureProducer: failureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer]);
     });
 
     test('value is greater than threshold', () {
@@ -120,8 +120,8 @@ void main() {
           stringParser: DotStringParser(),
           itemValidator: AlwaysPassValidator(),
           areSuccessfulMessages: AreStringAllSuccess(),
-          successProducer: successProducer,
-          failureProducer: failureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer]);
       final options = {'example#minSize': '15'};
       final result = rule.validate(options, createSentences(15));
       expect(result, [successMessage]);
@@ -135,8 +135,8 @@ void main() {
           stringParser: DotStringParser(),
           itemValidator: AlwaysFailValidator(),
           areSuccessfulMessages: AreStringAllSuccess(),
-          successProducer: successProducer,
-          failureProducer: failureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer]);
       final options = {'example#minSize': '3'};
       final result = rule.validate(options, createSentences(3));
       expect(result,
@@ -151,8 +151,8 @@ void main() {
           stringParser: DotStringParser(),
           itemValidator: AlwaysPassValidator(),
           areSuccessfulMessages: AreStringAllSuccess(),
-          successProducer: successProducer,
-          failureProducer: failureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer]);
       final options = {'example#maxSize': '15'};
       final result = rule.validate(options, createSentences(10));
       expect(result, [successMessage]);
@@ -166,8 +166,8 @@ void main() {
           stringParser: DotStringParser(),
           itemValidator: AlwaysPassValidator(),
           areSuccessfulMessages: AreStringAllSuccess(),
-          successProducer: successProducer,
-          failureProducer: failureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer]);
       final options = {'example#maxSize': '15'};
       final result = rule.validate(options, createSentences(15));
       expect(result, [successMessage]);
@@ -181,8 +181,8 @@ void main() {
           stringParser: DotStringParser(),
           itemValidator: AlwaysPassValidator(),
           areSuccessfulMessages: AreStringAllSuccess(),
-          successProducer: successProducer,
-          failureProducer: failureProducer);
+          successProducer: [successProducer],
+          failureProducer: [failureProducer]);
       final options = {'example#eqSize': '15'};
       final result = rule.validate(options, createSentences(15));
       expect(result, [successMessage]);

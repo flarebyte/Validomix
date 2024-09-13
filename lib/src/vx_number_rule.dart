@@ -31,8 +31,8 @@ class VxNumberRule<MSG> extends VxBaseValidator<MSG, num> {
   final VxNumberComparator numberComparator;
   final String name;
   final ExMetricStoreHolder metricStoreHolder;
-  final List<VxMessageProducer<MSG, num>>? successProducer;
-  final List<VxMessageProducer<MSG, num>>? failureProducer;
+  final List<VxMessageProducer<MSG, num>>? successProducers;
+  final List<VxMessageProducer<MSG, num>>? failureProducers;
   final VxComponentManagerConfig componentManagerConfig;
   final VxOptionsInventory optionsInventory;
   late VxOptionsMap optionsMap;
@@ -44,8 +44,8 @@ class VxNumberRule<MSG> extends VxBaseValidator<MSG, num> {
     required this.numberComparator,
     required this.optionsInventory,
     this.componentManagerConfig = VxComponentManagerConfig.defaultConfig,
-    this.successProducer,
-    this.failureProducer,
+    this.successProducers,
+    this.failureProducers,
   }) {
     optionsMap = VxOptionsMap(
         metricStoreHolder: metricStoreHolder,
@@ -72,24 +72,28 @@ class VxNumberRule<MSG> extends VxBaseValidator<MSG, num> {
   }
 
   List<MSG> _produceSuccess(Map<String, String> options, num value) {
-    return successProducer == null
+    return successProducers == null
         ? []
-        : successProducer!.map((prod) => prod.produce(options, value)).toList();
+        : successProducers!
+            .map((prod) => prod.produce(options, value))
+            .toList();
   }
 
   List<MSG> _produceFailure(Map<String, String> options, num value) {
-    return failureProducer == null
+    return failureProducers == null
         ? []
-        : failureProducer!.map((prod) => prod.produce(options, value)).toList();
+        : failureProducers!
+            .map((prod) => prod.produce(options, value))
+            .toList();
   }
 
   List<MSG> _evaluate(num value, num threshold, Map<String, String> options) {
     if (numberComparator.compare(value, threshold)) {
-      if (successProducer != null) {
+      if (successProducers != null) {
         return _produceSuccess(options, value);
       }
     } else {
-      if (failureProducer != null) {
+      if (failureProducers != null) {
         return _produceFailure(options, value);
       }
     }
@@ -101,8 +105,8 @@ class VxNumberRule<MSG> extends VxBaseValidator<MSG, num> {
 class VxNumberMultipleOf<MSG> extends VxBaseValidator<MSG, num> {
   final String name;
   final ExMetricStoreHolder metricStoreHolder;
-  final List<VxMessageProducer<MSG, num>>? successProducer;
-  final List<VxMessageProducer<MSG, num>>? failureProducer;
+  final List<VxMessageProducer<MSG, num>>? successProducers;
+  final List<VxMessageProducer<MSG, num>>? failureProducers;
   final VxComponentManagerConfig componentManagerConfig;
   final VxOptionsInventory optionsInventory;
   late VxOptionsMap optionsMap;
@@ -112,8 +116,8 @@ class VxNumberMultipleOf<MSG> extends VxBaseValidator<MSG, num> {
     required this.metricStoreHolder,
     required this.optionsInventory,
     this.componentManagerConfig = VxComponentManagerConfig.defaultConfig,
-    this.successProducer,
-    this.failureProducer,
+    this.successProducers,
+    this.failureProducers,
   }) {
     optionsMap = VxOptionsMap(
         metricStoreHolder: metricStoreHolder,
@@ -135,24 +139,28 @@ class VxNumberMultipleOf<MSG> extends VxBaseValidator<MSG, num> {
   }
 
   List<MSG> _produceSuccess(Map<String, String> options, num value) {
-    return successProducer == null
+    return successProducers == null
         ? []
-        : successProducer!.map((prod) => prod.produce(options, value)).toList();
+        : successProducers!
+            .map((prod) => prod.produce(options, value))
+            .toList();
   }
 
   List<MSG> _produceFailure(Map<String, String> options, num value) {
-    return failureProducer == null
+    return failureProducers == null
         ? []
-        : failureProducer!.map((prod) => prod.produce(options, value)).toList();
+        : failureProducers!
+            .map((prod) => prod.produce(options, value))
+            .toList();
   }
 
   List<MSG> _evaluate(num value, num multipleOf, Map<String, String> options) {
     if (value % multipleOf == 0) {
-      if (successProducer != null) {
+      if (successProducers != null) {
         return _produceSuccess(options, value);
       }
     } else {
-      if (failureProducer != null) {
+      if (failureProducers != null) {
         return _produceFailure(options, value);
       }
     }
@@ -167,16 +175,16 @@ class VxNumberRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      List<VxMessageProducer<MSG, num>>? successProducer,
-      List<VxMessageProducer<MSG, num>>? failureProducer,
+      List<VxMessageProducer<MSG, num>>? successProducers,
+      List<VxMessageProducer<MSG, num>>? failureProducers,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxNumberRule<MSG>(
         name: name,
         numberComparator: VxNumberComparators.greaterThan,
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
-        successProducer: successProducer,
-        failureProducer: failureProducer,
+        successProducers: successProducers,
+        failureProducers: failureProducers,
         componentManagerConfig: componentManagerConfig);
   }
 
@@ -185,16 +193,16 @@ class VxNumberRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      List<VxMessageProducer<MSG, num>>? successProducer,
-      List<VxMessageProducer<MSG, num>>? failureProducer,
+      List<VxMessageProducer<MSG, num>>? successProducers,
+      List<VxMessageProducer<MSG, num>>? failureProducers,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxNumberRule<MSG>(
         name: name,
         numberComparator: VxNumberComparators.greaterThanOrEqual,
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
-        successProducer: successProducer,
-        failureProducer: failureProducer,
+        successProducers: successProducers,
+        failureProducers: failureProducers,
         componentManagerConfig: componentManagerConfig);
   }
 
@@ -203,16 +211,16 @@ class VxNumberRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      List<VxMessageProducer<MSG, num>>? successProducer,
-      List<VxMessageProducer<MSG, num>>? failureProducer,
+      List<VxMessageProducer<MSG, num>>? successProducers,
+      List<VxMessageProducer<MSG, num>>? failureProducers,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxNumberRule<MSG>(
         name: name,
         numberComparator: VxNumberComparators.lessThan,
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
-        successProducer: successProducer,
-        failureProducer: failureProducer,
+        successProducers: successProducers,
+        failureProducers: failureProducers,
         componentManagerConfig: componentManagerConfig);
   }
 
@@ -221,16 +229,16 @@ class VxNumberRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      List<VxMessageProducer<MSG, num>>? successProducer,
-      List<VxMessageProducer<MSG, num>>? failureProducer,
+      List<VxMessageProducer<MSG, num>>? successProducers,
+      List<VxMessageProducer<MSG, num>>? failureProducers,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxNumberRule<MSG>(
         name: name,
         numberComparator: VxNumberComparators.lessThanOrEqual,
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
-        successProducer: successProducer,
-        failureProducer: failureProducer,
+        successProducers: successProducers,
+        failureProducers: failureProducers,
         componentManagerConfig: componentManagerConfig);
   }
 
@@ -239,16 +247,16 @@ class VxNumberRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      List<VxMessageProducer<MSG, num>>? successProducer,
-      List<VxMessageProducer<MSG, num>>? failureProducer,
+      List<VxMessageProducer<MSG, num>>? successProducers,
+      List<VxMessageProducer<MSG, num>>? failureProducers,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxNumberRule<MSG>(
         name: name,
         numberComparator: VxNumberComparators.equalTo,
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
-        successProducer: successProducer,
-        failureProducer: failureProducer,
+        successProducers: successProducers,
+        failureProducers: failureProducers,
         componentManagerConfig: componentManagerConfig);
   }
 
@@ -257,16 +265,16 @@ class VxNumberRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      List<VxMessageProducer<MSG, num>>? successProducer,
-      List<VxMessageProducer<MSG, num>>? failureProducer,
+      List<VxMessageProducer<MSG, num>>? successProducers,
+      List<VxMessageProducer<MSG, num>>? failureProducers,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxNumberRule<MSG>(
         name: name,
         numberComparator: VxNumberComparators.notEqualTo,
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
-        successProducer: successProducer,
-        failureProducer: failureProducer,
+        successProducers: successProducers,
+        failureProducers: failureProducers,
         componentManagerConfig: componentManagerConfig);
   }
 
@@ -275,15 +283,15 @@ class VxNumberRules {
       {required String name,
       required ExMetricStoreHolder metricStoreHolder,
       required VxOptionsInventory optionsInventory,
-      List<VxMessageProducer<MSG, num>>? successProducer,
-      List<VxMessageProducer<MSG, num>>? failureProducer,
+      List<VxMessageProducer<MSG, num>>? successProducers,
+      List<VxMessageProducer<MSG, num>>? failureProducers,
       componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     return VxNumberMultipleOf<MSG>(
         name: name,
         metricStoreHolder: metricStoreHolder,
         optionsInventory: optionsInventory,
-        successProducer: successProducer,
-        failureProducer: failureProducer,
+        successProducers: successProducers,
+        failureProducers: failureProducers,
         componentManagerConfig: componentManagerConfig);
   }
 }

@@ -90,15 +90,21 @@ class VxMetrics {
   static ExMetricKey getKeyValueNotInt(
       {required String className,
       required String name,
-      String? specialisation}) {
+      String? specialisation,
+      String? page,
+      String? pageRow}) {
     final maybeSpecialisation =
         specialisation == null ? {} : {'class-specialisation': specialisation};
+    final maybePage = page == null ? {} : {'page': page};
+    final maybePageRow = pageRow == null ? {} : {'page-row': pageRow};
     return ExMetricKey(name: [
       'get-option-value'
     ], dimensions: {
       ...lib,
       'class': className,
       ...maybeSpecialisation,
+      ...maybePage,
+      ...maybePageRow,
       'method': 'validate',
       'name': name,
       'expected': 'integer',
@@ -112,15 +118,21 @@ class VxMetrics {
       {required String className,
       required String name,
       required String expected,
-      String? specialisation}) {
+      String? specialisation,
+      String? page,
+      String? pageRow}) {
     final maybeSpecialisation =
         specialisation == null ? {} : {'class-specialisation': specialisation};
+    final maybePage = page == null ? {} : {'page': page};
+    final maybePageRow = pageRow == null ? {} : {'page-row': pageRow};
     return ExMetricKey(name: [
       'get-option-value'
     ], dimensions: {
       ...lib,
       'class': className,
       ...maybeSpecialisation,
+      ...maybePage,
+      ...maybePageRow,
       'method': 'validate',
       'name': name,
       'expected': expected,

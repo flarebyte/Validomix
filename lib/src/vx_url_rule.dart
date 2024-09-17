@@ -4,10 +4,10 @@ import '../validomix.dart';
 
 /// Validates a URL.
 class VxUrlRule<MSG> extends VxBaseRule<MSG> {
-  final VxMessageProducer<MSG, String>? successProducer;
-  final VxMessageProducer<MSG, String>? failureProducer;
-  final VxMessageProducer<MSG, String>? secureFailureProducer;
-  final VxMessageProducer<MSG, String>? domainFailureProducer;
+  final List<VxMessageProducer<MSG, String>>? successProducers;
+  final List<VxMessageProducer<MSG, String>>? failureProducers;
+  final List<VxMessageProducer<MSG, String>>? secureFailureProducers;
+  final List<VxMessageProducer<MSG, String>>? domainFailureProducers;
   final String name;
   final ExMetricStoreHolder metricStoreHolder;
   final VxComponentManagerConfig componentManagerConfig;
@@ -23,10 +23,10 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
       {required this.name,
       required this.metricStoreHolder,
       required this.optionsInventory,
-      this.successProducer,
-      this.failureProducer,
-      this.secureFailureProducer,
-      this.domainFailureProducer,
+      this.successProducers,
+      this.failureProducers,
+      this.secureFailureProducers,
+      this.domainFailureProducers,
       this.componentManagerConfig = VxComponentManagerConfig.defaultConfig}) {
     optionsMap = VxOptionsMap(
         metricStoreHolder: metricStoreHolder,
@@ -55,27 +55,35 @@ class VxUrlRule<MSG> extends VxBaseRule<MSG> {
   }
 
   List<MSG> _produceSuccess(Map<String, String> options, String value) {
-    return successProducer == null
+    return successProducers == null
         ? []
-        : [successProducer!.produce(options, value)];
+        : successProducers!
+            .map((prod) => prod.produce(options, value))
+            .toList();
   }
 
   List<MSG> _produceFailure(Map<String, String> options, String value) {
-    return failureProducer == null
+    return failureProducers == null
         ? []
-        : [failureProducer!.produce(options, value)];
+        : failureProducers!
+            .map((prod) => prod.produce(options, value))
+            .toList();
   }
 
   List<MSG> _produceSecureFailure(Map<String, String> options, String value) {
-    return secureFailureProducer == null
+    return secureFailureProducers == null
         ? _produceFailure(options, value)
-        : [secureFailureProducer!.produce(options, value)];
+        : secureFailureProducers!
+            .map((prod) => prod.produce(options, value))
+            .toList();
   }
 
   List<MSG> _produceDomainFailure(Map<String, String> options, String value) {
-    return domainFailureProducer == null
+    return domainFailureProducers == null
         ? _produceFailure(options, value)
-        : [domainFailureProducer!.produce(options, value)];
+        : domainFailureProducers!
+            .map((prod) => prod.produce(options, value))
+            .toList();
   }
 
   bool _endsWithAnyDomain(String host, List<String> allowedEndings) {

@@ -54,9 +54,12 @@ class VxOptionsMap {
           key.name, componentManagerConfig)) {
         metricStoreHolder.store.addMetric(
             VxMetrics.getKeyNotFound(
-                className: ownerClassName,
-                name: key.name,
-                specialisation: classSpecialisation),
+              className: ownerClassName,
+              name: key.name,
+              specialisation: classSpecialisation,
+              page: options['page'],
+              pageRow: options['pageRow'],
+            ),
             1);
         return VxMapValue.ko(defaultValue);
       }
@@ -87,7 +90,9 @@ class VxOptionsMap {
           VxMetrics.getKeyValueBlank(
               className: ownerClassName,
               name: key.name,
-              specialisation: classSpecialisation),
+              specialisation: classSpecialisation,
+              page: options['page'],
+              pageRow: options['pageRow']),
           1);
       return VxMapValue.ko(defaultValue);
     }
@@ -112,7 +117,9 @@ class VxOptionsMap {
           VxMetrics.getKeyValueNotInt(
               className: ownerClassName,
               name: key.name,
-              specialisation: classSpecialisation),
+              specialisation: classSpecialisation,
+              page: options['page'],
+              pageRow: options['pageRow']),
           1);
       return VxMapValue.ko(defaultValue);
     }
@@ -122,7 +129,9 @@ class VxOptionsMap {
               className: ownerClassName,
               name: key.name,
               expected: VxOptionsInventoryDescriptors.integer,
-              specialisation: classSpecialisation),
+              specialisation: classSpecialisation,
+              page: options['page'],
+              pageRow: options['pageRow']),
           1);
     }
     final shouldbePositive =
@@ -133,7 +142,9 @@ class VxOptionsMap {
           VxMetrics.getKeyValueNotPositive(
               className: ownerClassName,
               name: key.name,
-              specialisation: classSpecialisation),
+              specialisation: classSpecialisation,
+              page: options['page'],
+              pageRow: options['pageRow']),
           1);
       return VxMapValue.ko(defaultValue);
     }
@@ -159,7 +170,9 @@ class VxOptionsMap {
           VxMetrics.getKeyValueNotInt(
               className: ownerClassName,
               name: key.name,
-              specialisation: classSpecialisation),
+              specialisation: classSpecialisation,
+              page: options['page'],
+              pageRow: options['pageRow']),
           1);
       return VxMapValue.ko(defaultValue);
     }
@@ -170,7 +183,9 @@ class VxOptionsMap {
               className: ownerClassName,
               name: key.name,
               expected: VxOptionsInventoryDescriptors.numeric,
-              specialisation: classSpecialisation),
+              specialisation: classSpecialisation,
+              page: options['page'],
+              pageRow: options['pageRow']),
           1);
     }
     final shouldbePositive =
@@ -181,7 +196,9 @@ class VxOptionsMap {
           VxMetrics.getKeyValueNotPositive(
               className: ownerClassName,
               name: key.name,
-              specialisation: classSpecialisation),
+              specialisation: classSpecialisation,
+              page: options['page'],
+              pageRow: options['pageRow']),
           1);
       return VxMapValue.ko(defaultValue);
     }
@@ -203,10 +220,12 @@ class VxOptionsMap {
     final boolValue = bool.tryParse(value);
     if (boolValue == null) {
       metricStoreHolder.store.addMetric(
-          VxMetrics.getKeyValueNotInt(
+          VxMetrics.getKeyValueNotBool(
               className: ownerClassName,
               name: key.name,
-              specialisation: classSpecialisation),
+              specialisation: classSpecialisation,
+              page: options['page'],
+              pageRow: options['pageRow']),
           1);
       return VxMapValue.ko(defaultValue);
     }
@@ -217,7 +236,9 @@ class VxOptionsMap {
               className: ownerClassName,
               name: key.name,
               expected: VxOptionsInventoryDescriptors.boolean,
-              specialisation: classSpecialisation),
+              specialisation: classSpecialisation,
+              page: options['page'],
+              pageRow: options['pageRow']),
           1);
     }
     return VxMapValue.ok(boolValue);
@@ -243,7 +264,9 @@ class VxOptionsMap {
               className: ownerClassName,
               name: key.name,
               expected: VxOptionsInventoryDescriptors.stringList,
-              specialisation: classSpecialisation),
+              specialisation: classSpecialisation,
+              page: options['page'],
+              pageRow: options['pageRow']),
           1);
     }
     final value = resultValue.value;

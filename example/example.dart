@@ -15,8 +15,8 @@ void main() {
       name: 'test',
       metricStoreHolder: metricStoreHolder,
       optionsInventory: optionsInventory,
-      successProducer: SimpleMessageProducer('Success'),
-      failureProducer: SimpleMessageProducer('Too many characters'));
+      successProducers: [SimpleMessageProducer('Success')],
+      failureProducers: [SimpleMessageProducer('Too many characters')]);
   final hello = rule.validate({'test#maxChars': "10"}, 'hello');
   final wayTooLong = rule.validate({'test#maxChars': "10"},
       'This is a long string that is more than 10 characters');

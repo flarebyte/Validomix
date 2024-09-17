@@ -203,7 +203,7 @@ class VxOptionsMap {
     final boolValue = bool.tryParse(value);
     if (boolValue == null) {
       metricStoreHolder.store.addMetric(
-          VxMetrics.getKeyValueNotInt(
+          VxMetrics.getKeyValueNotBool(
               className: ownerClassName,
               name: key.name,
               specialisation: classSpecialisation),

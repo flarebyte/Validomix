@@ -50,25 +50,32 @@ void main() {
     });
 
     test('getString returns default value when key is missing', () {
-      final options = {'ex#key1': 'value1'};
+      final options = {
+        'ex#key1': 'value1',
+        'page': 'page123',
+        'pageRow': 'row789'
+      };
       final result = vxOptionsMap.getString(
           options: options, id: key2, defaultValue: 'default');
       expect(result.value, 'default');
       expect(result.status, VxMapValueStatus.ko);
       expectMetricError(
           metricStoreHolder: metricStoreHolder,
-          expectations: [ExMetricDimStatus.notFound]);
+          expectations: [ExMetricDimStatus.notFound, 'page123', 'row789']);
     });
 
     test('getString returns default value when value is blank', () {
-      final options = {'ex#key1': ''};
+      final options = {'ex#key1': '', 'page': 'page123', 'pageRow': 'row789'};
       final result = vxOptionsMap.getString(
           options: options, id: key1, defaultValue: 'default');
       expect(result.value, 'default');
       expect(result.status, VxMapValueStatus.ko);
-      expectMetricError(
-          metricStoreHolder: metricStoreHolder,
-          expectations: ['not-blank', ExMetricDimDartErr.formatException]);
+      expectMetricError(metricStoreHolder: metricStoreHolder, expectations: [
+        'not-blank',
+        ExMetricDimDartErr.formatException,
+        'page123',
+        'row789'
+      ]);
     });
 
     test('getString returns default value when optional key is missing', () {
@@ -89,12 +96,15 @@ void main() {
     });
 
     test('getInt positive should return default if value is not positive', () {
-      final options = {'ex#key3': '-42'};
+      final options = {
+        'ex#key3': '-42',
+        'page': 'page123',
+      };
       final result = vxOptionsMap.getInt(options: options, id: key3);
       expect(result.status, VxMapValueStatus.ko);
       expectMetricError(
           metricStoreHolder: metricStoreHolder,
-          expectations: ['positive number']);
+          expectations: ['positive number', 'page123']);
     });
 
     test('getNumber positive should return default if value is not positive',
@@ -119,14 +129,14 @@ void main() {
     });
 
     test('getInt postive returns default value when key is negative', () {
-      final options = {'ex#key3': '-42'};
+      final options = {'ex#key3': '-42', 'pageRow': 'row42'};
       final result =
           vxOptionsMap.getInt(options: options, id: key3, defaultValue: 99);
       expect(result.value, 99);
       expect(result.status, VxMapValueStatus.ko);
       expectMetricError(
           metricStoreHolder: metricStoreHolder,
-          expectations: [ExMetricDimDartErr.formatException]);
+          expectations: [ExMetricDimDartErr.formatException, 'row42']);
     });
 
     test('getNumber returns value from options', () {
@@ -159,25 +169,25 @@ void main() {
     });
 
     test('getBool returns default value when key is missing', () {
-      final options = {'ex#key1': '3.14'};
+      final options = {'ex#key1': '3.14', 'pageRow': 'row42'};
       final result = vxOptionsMap.getBoolean(
           options: options, id: key4, defaultValue: false);
       expect(result.value, false);
       expect(result.status, VxMapValueStatus.ko);
       expectMetricError(
           metricStoreHolder: metricStoreHolder,
-          expectations: [ExMetricDimStatus.notFound]);
+          expectations: [ExMetricDimStatus.notFound, 'row42']);
     });
 
     test('getBool returns default value when key is missing', () {
-      final options = {'ex#key4': 'not-quite-true'};
+      final options = {'ex#key4': 'not-quite-true', 'pageRow': 'row42'};
       final result = vxOptionsMap.getBoolean(
           options: options, id: key4, defaultValue: false);
       expect(result.value, false);
       expect(result.status, VxMapValueStatus.ko);
       expectMetricError(
           metricStoreHolder: metricStoreHolder,
-          expectations: [ExMetricDimDartErr.formatException]);
+          expectations: [ExMetricDimDartErr.formatException, 'row42']);
     });
 
     test('getStringList returns value from options', () {
@@ -191,13 +201,13 @@ void main() {
     });
 
     test('getStringList returns default value when key is missing', () {
-      final options = {'ex-no-key11': 'value1'};
+      final options = {'ex-no-key11': 'value1', 'pageRow': 'row42'};
       final result = vxOptionsMap.getStringList(
           options: options, id: key11, defaultValue: ['default']);
       expect(result.status, VxMapValueStatus.ko);
       expectMetricError(
           metricStoreHolder: metricStoreHolder,
-          expectations: [ExMetricDimStatus.notFound]);
+          expectations: [ExMetricDimStatus.notFound, 'row42']);
       expect(result.value, ['default']);
     });
   });

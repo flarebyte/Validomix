@@ -17,12 +17,28 @@ void main() {
       expect(key.descriptors, containsAll(['desc1', 'desc2']));
     });
 
-    test('should throw an exception when adding a key with a duplicate name',
+    test(
+        'should throw an exception when adding a key with a duplicate name but different descriptors',
         () {
       inventory.addKey('DuplicateKey', ['desc1']);
 
       expect(
           () => inventory.addKey('DuplicateKey', ['desc2']), throwsException);
+    });
+
+    test(
+        'should add and retrieve a key successfully even if the key is a duplicate',
+        () {
+      final id = inventory.addKey('TestKey', ['desc1', 'desc2']);
+      final idDuplicate = inventory.addKey('TestKey', ['desc1', 'desc2']);
+      final key = inventory.getKey(id);
+      final keyDuplicate = inventory.getKey(idDuplicate);
+
+      expect(key.name, equals('TestKey'));
+      expect(keyDuplicate.name, equals('TestKey'));
+      expect(key.descriptors, containsAll(['desc1', 'desc2']));
+      expect(keyDuplicate.descriptors, containsAll(['desc1', 'desc2']));
+      expect(id, idDuplicate);
     });
 
     test(

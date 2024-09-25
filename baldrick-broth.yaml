@@ -2,7 +2,7 @@ model:
   project:
     title: From Strings to Objects Validomix validates all
     description: The Validomix library is designed to enforce validation rules on strings, triggered by various events, and to produce custom messages. It applies a series of validation rules, such as size and format checks, to input strings through a rule enforcement system.
-    version: 0.4.0
+    version: 0.5.0
     keywords:
       - validation
       - string validation

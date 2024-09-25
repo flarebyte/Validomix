@@ -22,12 +22,20 @@ class VxOptionsInventory {
 
   /// Adds a new key to the inventory.
   ///
-  /// Throws an exception if a key with the same name already exists.
+  /// Throws an exception if a key with the same name but different descriptors  already exists otherwise return the existing one.
   /// Returns an encrypted integer index of the added key.
   int addKey(String name, List<String> descriptors) {
     if (_keys.any((key) => key.name == name)) {
-      throw Exception('A key with the name "$name" already exists.');
+      final existing = _keys.firstWhere((key) => key.name == name);
+      final actualDescriptors = descriptors.join(' ');
+      final existingDescriptors = existing.descriptors.join(' ');
+      if (name == existing.name && actualDescriptors != existingDescriptors) {
+        throw Exception(
+            'A key with the name "$name" but different descriptors exists: actual is $actualDescriptors but expected is $existingDescriptors');
+      }
+      return cipher.encrypt(_keys.indexOf(existing));
     }
+
     final key = VxOptionsInventoryKey(name, descriptors);
     _keys.add(key);
     return cipher.encrypt(_keys.indexOf(key));

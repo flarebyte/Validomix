@@ -1,3 +1,8 @@
+## 0.5.0
+
+-   Allow options inventory to add identical duplicates as this facilitates
+    creating a suite of similar validators with conistent names.
+
 ## 0.4.0
 
 -   Publishers for success and failure are now a list. Metrics supports
